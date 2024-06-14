@@ -2,12 +2,13 @@
 import { signIn } from "next-auth/react";
 import Link from "next/link";
 import Image from "next/image";
-import Button from "../_components/Button";
-import Form from "../_components/Form";
-import Input from "../_components/Input";
-import kakao from "@/public/ikakao.png";
-import naver from "@/public/inaver.png";
-import google from "@/public/igoogle.png";
+
+import Form from "@/app/_components/Form";
+import Input from "@/app/_components/Input";
+import kakao from "@/../public/ikakao.png";
+import naver from "@/../public/inaver.png";
+import google from "@/../public/igoogle.png";
+import Button from "@/app/_components/Button";
 
 export default function Page() {
   return (
@@ -17,12 +18,12 @@ export default function Page() {
         <Input placeholder="아이디" />
         <Input placeholder="비밀번호" />
         <div className="flex flex-col items-end">
-          <Link href="/findIdPw">
+          <Link href="/signin/findIdPw">
             <p className="border-b border-black text-sm">
               아이디/비밀번호 찾기
             </p>
           </Link>
-          <Link href="/adminLogin">
+          <Link href="/signin/adminLogin">
             <p className="border-b border-gray-700 text-gray-700 text-sm mt-2">
               관리자 로그인
             </p>
@@ -30,7 +31,7 @@ export default function Page() {
         </div>
         <Button type="longBlue"> 로그인 </Button>
         <Button type="longWhite">
-          <Link href="/createUser"> 회원가입 </Link>
+          <Link href="/signin/createUser"> 회원가입 </Link>
         </Button>
       </div>
       <p className="text-xs text-center text-gray-600 bg-white pt-3"> SNS 로그인 </p>
@@ -43,3 +44,20 @@ export default function Page() {
   );
 }
 
+
+// NEXTAUTH_URL = http://localhost:3000/
+// NEXTAUTH_SECRET = 7b2002b23475c5ecfb4cd5f26a4b57d5
+
+// AUTH_GOOGLE_ID = 1069194134364-dkhrilql7rj39q282uh3amf7ihrbmblh.apps.googleusercontent.com
+
+// AUTH_GOOGLE_SECRET = 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
+
+// # Kakao Provider API
+// KAKAO_CLIENT_ID = 79e97b402dec41b958cb37d23906a6be
+// KAKAO_CLIENT_SECRET = fJRhWJ69Q2q4Ba8t4VeAFVkncMUgbFvc
+
+// NAVER_CLIENT_ID = rkhAutO0rUFmilmCzmDv
+// NAVER_CLIENT_SECRET = 8fNgJFUqFm
+
+// NEWS_CLIENT_ID = 1qFtXKv3mrSVIR2A05qv
+// NEWS_CLIENT_SECRET = 83nMF8AOIO

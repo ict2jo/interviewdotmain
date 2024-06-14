@@ -1,6 +1,6 @@
-import Button from "../_components/Button";
-import Form from "../_components/Form";
-import Input from "../_components/Input";
+import Button from "@/app/_components/Button";
+import Form from "@/app/_components/Form";
+import Input from "@/app/_components/Input";
 
 export default function Page() {
   return (

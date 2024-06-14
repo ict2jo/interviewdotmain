@@ -1,5 +1,5 @@
 import Link from "next/link";
-import Button from "../_components/Button";
+import Button from "@/app/_components/Button";
 
 export default function page() {
   return (
@@ -10,11 +10,11 @@ export default function page() {
       <p className="my-5">가입한 아이디와 비밀번호를 잊으셨습니까? </p>
       <div className="flex justify-center items-center gap-4">
         <Button type="longBlue">
-          <Link href="/findId">아이디찾기</Link>
+          <Link href="/signin/findId">아이디찾기</Link>
         </Button>
 
         <Button type="longBlue">
-          <Link href="/findPw">비밀번호찾기 </Link>
+          <Link href="/signin/findPw">비밀번호찾기 </Link>
         </Button>
       </div>
     </div>
