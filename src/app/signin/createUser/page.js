@@ -1,10 +1,11 @@
 'use client'
 import { useEffect, useReducer, useState } from "react";
-import Button from "../_components/Button";
-import Form from "../_components/Form";
-import Input from "../_components/Input";
-import { createUser } from "../_lib/actions";
-import Terms from "../_components/Terms";
+import Button from "@/app/_components/Button";
+import Form from "@/app/_components/Form";
+import Input from "@/app/_components/Input";
+
+import Terms from "@/app/_components/Terms";
+import { createUser } from "@/app/_lib/actions";
 
 
 function Page() {
