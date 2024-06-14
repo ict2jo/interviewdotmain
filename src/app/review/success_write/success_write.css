@@ -1,0 +1,68 @@
+.write_container{
+    text-align: center;
+    width: 1000px;
+    margin: 0 auto;
+}
+
+.write_container h1{
+    font-size: 30px;
+    text-align: center;
+    margin-bottom: 20px;
+    margin-top: 20px;
+}
+
+.write_list{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 130%;
+    margin-top: 20px;
+}
+
+.write_area{
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: flex-start;
+    max-width: 1000px;
+    margin-bottom: 30px;
+    margin-right: 5px;
+}
+.write_box {
+    background-color: white;
+    width: 700px;
+    padding: 20px;
+    border-top: 5px solid blue;
+    text-align: left;
+    margin-right: 100px;
+    margin-top: 50px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* 그림자 효과 추가 */
+}
+.write_box input{
+    border: 1px solid gray;
+}
+.write_sub{
+    background-color: white;
+    width: 300px;
+    height: 200px;
+    padding: 30px;
+    margin-top: 50px;
+    text-align: left;
+    border-top: 5px solid blue;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* 그림자 효과 추가 */
+}
+
+.write_sub input{
+    border: 1px solid gray;
+}
+.write_content{
+    background-color: white;
+    width: 70%;
+    height: 400px;
+    max-width: 1000px;
+    padding: 20px;
+    margin: 0 auto;
+    margin-bottom: 100px;
+    text-align: left;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* 그림자 효과 추가 */
+}

@@ -1,0 +1,64 @@
+.recruitmentlistwrap{
+    width: 1000px;
+    margin: 0 auto;
+    margin-top: 50px;
+}
+.listbox{
+    margin: 20px;
+    width: 1000px;
+    padding: 50px;
+    border-bottom: 1px solid #DCDCDC; 
+    padding-bottom: 70px;
+}
+.pagination{
+    display: flex;
+    justify-content: center;
+    margin-top: 20px;
+}
+.smalltext{
+    font-size: 15px;
+    margin-top: 20px;
+    color: gray;
+}
+
+.selectedValues {
+    margin-top: 20px;
+    display: flex;
+    flex-wrap: wrap; /* 요소들이 넘치면 자동으로 다음 줄로 이동하도록 설정 */
+    gap: 10px; /* 요소들 간의 간격을 설정 */
+}
+
+.selectedValuescjild {
+    width: 150px;
+}
+
+.selectedValues input[type="text"] {
+    margin-left:  212px; /* 왼쪽 여백을 auto로 설정하여 오른쪽으로 붙입니다 */
+    padding: 10px; /* 내부 여백을 설정하여 입력창의 내용이 잘 보이도록 합니다 */
+    width: 300px;
+    border: 1px solid #DCDCDC;
+    border-radius: 10px;
+    line-height: 5px;
+}
+.tatalcheck{
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    width: 1000px;
+    border-bottom: 1px solid #DCDCDC;
+}
+.totalItems{
+    margin-right: auto;
+    width: 300px;
+    padding: 30px 0px;
+    justify-content: flex-start;
+}
+
+.pagination{
+    display: flex;
+    justify-content: center;
+    margin-top: 20px;
+}
+.ingselect{
+    margin-right: 10px;
+}

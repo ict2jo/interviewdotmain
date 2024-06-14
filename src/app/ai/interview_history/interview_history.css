@@ -1,0 +1,46 @@
+body{
+    background-color: lightgray;
+}
+
+.container {
+    width: 100%;
+    height: 100%;
+    margin: 0 auto;
+}
+
+.white_box {
+    margin-top: 50px;
+    background-color: #fff;
+    border-radius: 20px;
+    padding: 20px;
+    width: 100%;
+    height: 105vh;
+    text-align: center;
+    position: relative;
+}
+.white_box h1{
+    text-align: center;
+    font-size: 30px;
+    font-weight: bold;
+    margin-bottom: 10px;
+}
+.history_title .MuiTableCell-head {
+    background-color: blue;
+    color: white;
+    text-align: center;
+}
+
+.history_title .MuiTableCell-root {
+    text-align: center;
+}
+.history_table_container {
+    border-radius: 15px;
+    overflow: hidden;
+}
+
+.paging_number{
+    margin-top: 30px;
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+}

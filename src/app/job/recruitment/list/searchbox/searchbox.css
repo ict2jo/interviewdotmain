@@ -1,0 +1,71 @@
+.searchmenu{
+    margin: 0 auto;
+    padding: 10px;
+    width: 1000px;
+}
+
+.searchmenu Grid item{
+    background-color: black;
+}
+.itemheader{
+    height: 50px;
+    line-height: 20px;
+    border: 1px solid #DCDCDC;
+    background-color: #ECF4FF;
+    text-align: center;
+}
+.itembody{
+    border: 1px solid #DCDCDC;
+}
+.listwrap{
+    background-color: white;
+    padding: 100px;
+}
+.select1 {
+    padding: 0px 10px;
+    padding-bottom: 20px;
+    
+}
+.select1 input[type=radio]{
+    display: none;
+}
+.select1 input[type=radio]+label{
+    display: inline-block;
+    cursor: pointer;
+    height: 30px;
+    width: 100px;
+    line-height: 32px;
+    text-align: center;
+    font-weight:bold;
+    font-size:13px;
+}
+.select1 input[type=radio]:checked + label,
+.active-label {
+    border: 1px solid #1400FF;
+    border-radius: 20px;
+    color: #1400FF;
+}
+.select2 {
+    padding: 0px 10px;
+    padding-bottom: 20px;
+    
+}
+.select2 input[type=radio]{
+    display: none;
+}
+.select2 input[type=radio]+label{
+    display: inline-block;
+    cursor: pointer;
+    height: 30px;
+    width: 110px;
+    line-height: 32px;
+    text-align: center;
+    font-weight:bold;
+    font-size:13px;
+}
+.select2 input[type=radio]:checked + label,
+.select2 .active-label {
+    border: 1px solid #1400FF;
+    border-radius: 20px;
+    color: #1400FF;
+}
