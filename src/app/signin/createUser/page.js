@@ -4,7 +4,7 @@ import 'react-datepicker/dist/react-datepicker.css';
 import ReactDatePicker from 'react-datepicker';
 import { useSession } from 'next-auth/react';
 import { useReducer } from "react";
-
+import Link from 'next/link';
 import Form from "@/app/_components/Form";
 import Input from "@/app/_components/Input";
 
@@ -193,7 +193,8 @@ function Page() {
           )}
         </div>
         {showTerms && <Terms isChecked={isChecked} />}
-        <Button type="mdBlue">회원가입</Button>
+        {/* <Button type="mdBlue">회원가입</Button> */}
+        <Link href="/signin/optionalInfo" class="bg-primary-500 rounded-3xl px-[3rem] py-3 text-white">회원가입</Link>
       </div>
     </Form >
   );

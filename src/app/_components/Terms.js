@@ -1,5 +1,5 @@
 'use client'
-import React, { useEffect } from 'react'
+import React from 'react'
 import Term from './Term'
 import termsData from '@/app/api/data/terms.json'
 
