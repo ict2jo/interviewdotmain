@@ -1,6 +1,5 @@
 import "./_style/globals.css";
-import AuthContext from "./api/auth/AuthContext";
-import {CssBaseline, ThemeProvider } from '@mui/material';
+import { CssBaseline, ThemeProvider } from '@mui/material';
 import theme from './_components/defaultTheme.js';
 const metadata = {
   title: "인터뷰닷",
@@ -13,15 +12,14 @@ export default function RootLayout({ children }) {
       <body>
         <ThemeProvider theme={theme}>
           <CssBaseline />
-        <AuthContext>
-        </AuthContext>
-        {children}
-        {/* <div className="flex-1 px-8 py-12 bg-gray-100">
+
+          {children}
+          {/* <div className="flex-1 px-8 py-12 bg-gray-100">
         </div> 
           <main className="max-w-7xl mx-auto w-full"></main>
         */}
-        
-        <footer>Copyright by ... </footer>
+
+          <footer>Copyright by ... </footer>
         </ThemeProvider>
       </body>
     </html>
