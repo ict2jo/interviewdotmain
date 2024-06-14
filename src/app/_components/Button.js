@@ -1,5 +1,5 @@
 function Button({ children, type }) {
-  const base = "font-bold hover:opacity-50";
+  const base = "font-bold hover:shadow";
 
   const styles = {
     outline:
