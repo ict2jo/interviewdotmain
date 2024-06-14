@@ -20,8 +20,6 @@ export default function RootLayout({ children }) {
         </div> 
           <main className="max-w-7xl mx-auto w-full"></main>
         */}
-        
-        <footer>Copyright by ... </footer>
         </ThemeProvider>
       </body>
     </html>

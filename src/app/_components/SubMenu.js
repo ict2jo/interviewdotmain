@@ -1,32 +1,34 @@
 "use client"
 
+import { Typography } from "@mui/material";
 import Link from "next/link";
 
 
 
-export default function Layout() {
+export default function Layout({handleMenuClick}) {
   return (
     <ul className="absolute left-0 mt-2 bg-white border border-gray-300 shadow-lg">
       <li className="whitespace-nowrap">
-        <Link href="/job/news" className="block px-4 py-2 hover:bg-primary-100">
+        <Typography className="block px-4 py-2 hover:bg-primary-100"
+        onClick={() => handleMenuClick("news")}>
           뉴스
-        </Link>
+        </Typography>
       </li>
       <li className="whitespace-nowrap">
-        <Link
-          href="/job/events"
+        <Typography
+          onClick={() => handleMenuClick("event")}
           className="block px-4 py-2 hover:bg-primary-100"
         >
           이벤트
-        </Link>
+        </Typography>
       </li>
       <li className="whitespace-nowrap">
-        <Link
-          href="/job/recruitment/list"
+        <Typography
+          onClick={() => handleMenuClick("recruitment")}
           className="block px-4 py-2 hover:bg-primary-100"
         >
           채용정보
-        </Link>
+        </Typography>
       </li>
     </ul>
   );
