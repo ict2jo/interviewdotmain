@@ -9,6 +9,7 @@ import Main from "./main/page";
 import Interview_start from "./interview/interview_start/page";
 import Job from "./job/page";
 import List from "./job/recruitment/list/page";
+import Loading from "./loading/page";
 
 
 function Home(){
@@ -17,11 +18,18 @@ function Home(){
 
   const router = useRouter();
     
+    // 로컬 스토리지에서 상태 불러오기
     useEffect(() => {
-        //if(!menuStore.isAuthenticated){
-        //    router.push("/")
-        //}
-    },[menuStore]);
+        const savedMenu = localStorage.getItem('selectedMenu');
+        if (savedMenu) {
+            menuStore.setSelectedMenu(savedMenu);
+        }
+    }, [menuStore]);
+
+    // 선택된 메뉴가 변경될 때마다 로컬 스토리지에 저장
+    useEffect(() => {
+        localStorage.setItem('selectedMenu', menuStore.selectedMenu);
+    }, [menuStore.selectedMenu]);
 
     const renderContent = () => {
         switch(menuStore.selectedMenu){
@@ -48,7 +56,7 @@ function Home(){
             case "review" :
                 return <Review />; //면접후기
             default:
-                return <Main />
+                return <Loading />
     }
     }
     return(
