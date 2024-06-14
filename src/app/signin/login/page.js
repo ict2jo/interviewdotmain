@@ -44,3 +44,20 @@ export default function Page() {
   );
 }
 
+
+// NEXTAUTH_URL = http://localhost:3000/
+// NEXTAUTH_SECRET = 7b2002b23475c5ecfb4cd5f26a4b57d5
+
+// AUTH_GOOGLE_ID = 1069194134364-dkhrilql7rj39q282uh3amf7ihrbmblh.apps.googleusercontent.com
+
+// AUTH_GOOGLE_SECRET = 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
+
+// # Kakao Provider API
+// KAKAO_CLIENT_ID = 79e97b402dec41b958cb37d23906a6be
+// KAKAO_CLIENT_SECRET = fJRhWJ69Q2q4Ba8t4VeAFVkncMUgbFvc
+
+// NAVER_CLIENT_ID = rkhAutO0rUFmilmCzmDv
+// NAVER_CLIENT_SECRET = 8fNgJFUqFm
+
+// NEWS_CLIENT_ID = 1qFtXKv3mrSVIR2A05qv
+// NEWS_CLIENT_SECRET = 83nMF8AOIO
