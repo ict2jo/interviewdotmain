@@ -36,9 +36,9 @@ export default function Page() {
       </div>
       <p className="text-xs text-center text-gray-600 bg-white pt-3"> SNS 로그인 </p>
       <div className="flex justify-center items-center gap-3 mt-3">
-        <Image src={kakao} alt="kakao icon" className="w-[50px]" onClick={() => signIn("kakao", { redirect: true, callbackUrl: "/" })} />
-        <Image src={naver} alt="naver icon" className="w-[50px]" onClick={() => signIn('naver', { redirect: true, callbackUrl: "/" })} />
-        <Image src={google} alt="google icon" className="w-[50px]" onClick={() => signIn('google', { redirect: true, callbackUrl: "/" })} />
+        <Image src={kakao} alt="kakao icon" className="w-[50px]" onClick={() => signIn("kakao", { redirect: true, callbackUrl: "/signin/createUser" })} />
+        <Image src={naver} alt="naver icon" className="w-[50px]" onClick={() => signIn('naver', { redirect: true, callbackUrl: "/signin/createUser" })} />
+        <Image src={google} alt="google icon" className="w-[50px]" onClick={() => signIn('google', { redirect: true, callbackUrl: "/signin/createUser" })} />
       </div>
     </Form>
   );

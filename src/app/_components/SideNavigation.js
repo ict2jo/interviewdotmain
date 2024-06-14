@@ -26,7 +26,6 @@ export default function SideNavigation() {
             </Link>
             <li>
               <button className="hover:bg-primary-100 transition-colors" onClick={() => {
-                console.log('click');
                 signOut()
               }}>로그아웃</button>
             </li>
