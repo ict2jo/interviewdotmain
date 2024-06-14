@@ -5,12 +5,12 @@ const KEY = "631411887293319c018c3eeeb7413e40";
 const OptionContext = createContext();
 
 const initialState = {
-  school: null,
-  schoolName: null,
-  major: null,
-  currentJob: null,
+  school: "",
+  schoolName: "",
+  major: "",
+  currentJob: "",
   region: [],
-  selectedJob: null,
+  selectedJob: [],
   jobSearchingFor: [],
   status: "ready",
   page: 1,
@@ -29,15 +29,18 @@ function reducer(state, action) {
     case "job":
       return { ...state, currentJob: action.payload, status: "answered" };
     case "selectedJob":
-      return { ...state, selectedJob: action.payload, status: "answered" };
+      return { ...state, selectedJob: [...state.selectedJob, action.payload], status: "answered" };
     case "jobSearching":
       return {
         ...state,
-        jobSearchingFor: [...action.payload],
+        jobSearchingFor: [...state.jobSearchingFor, action.payload],
         status: "answered",
       };
     case "region":
-      return { ...state, region: [...action.payload], status: "answered" };
+      return { ...state, region: [...state.region, action.payload], status: "answered" };
+
+    case "deleteJob":
+      return { ...state, selectedJob: state.selectedJob.filter(job => job !== action.payload) }
     default:
       throw new Error("Action unknown");
   }
@@ -69,10 +72,17 @@ function OptionProvider({ children }) {
   };
 
   const handleNext = () => {
-    console.log("click");
     dispatch({ type: "next" });
   };
 
+  const deleteItem = (itemToRemove) => ({
+    type: deleteItem,
+    payload: itemToRemove
+  });
+
+  const handleRemoveJob = (jobToRemove) => {
+    dispatch({ type: "deleteJob", payload: jobToRemove });
+  };
   return (
     <OptionContext.Provider
       value={{
@@ -88,6 +98,7 @@ function OptionProvider({ children }) {
         handleSelectChange,
         handleInputChange,
         handleNext,
+        handleRemoveJob
       }}
     >
       {children}
