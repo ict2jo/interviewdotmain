@@ -2,6 +2,7 @@
 
 import { useSession } from "next-auth/react";
 import Link from "next/link";
+import { signOut } from "next-auth/react";
 
 export default function SideNavigation() {
   const { data: session, status } = useSession();
@@ -25,7 +26,6 @@ export default function SideNavigation() {
             </Link>
             <li>
               <button className="hover:bg-primary-100 transition-colors" onClick={() => {
-                console.log('click');
                 signOut()
               }}>로그아웃</button>
             </li>

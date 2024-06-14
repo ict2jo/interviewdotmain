@@ -116,22 +116,6 @@ function Page() {
           </>
         )}
 
-        <div className="w-full h-12 px-2 custom-datepicker-wrapper">
-          <span>생년월일</span>
-          <ReactDatePicker
-            selected={birth ? moment(birth, 'YYMMDD').toDate() : null}
-            onChange={handleDateChange}
-            dateFormat="yyMMdd"
-            maxDate={new Date()}
-            showYearDropdown
-            showMonthDropdown
-            dropdownMode="select"
-            placeholderText='생년월일을 선택해주세요'
-            className='custom-datepicker'
-            value={displayDate}
-          />
-        </div>
-        {/* <Input type="number" placeholder="생년월일 예)990101" onChange={handleBirthChange} /> */}
         <div className="relative w-full">
           <Input placeholder="아이디" onChange={(e) => dispatch({ type: 'id', payload: e.target.value })} />
           <button type="button" class="bg-gray-400 text-gray-700 py-2 px-2 rounded-xl w-14 h-8 text-[10px] absolute right-5 top-2 font-bold hover:opacity-90" onClick={validateId}>
@@ -148,6 +132,21 @@ function Page() {
           </p>
         </div>
         <Input placeholder="비밀번호 재확인" value={checkPw} onChange={(e) => dispatch({ type: 'checkPw', payload: e.target.value })} />
+        <div className="w-full h-12 px-2 custom-datepicker-wrapper">
+          <span>생년월일</span>
+          <ReactDatePicker
+            selected={birth ? moment(birth, 'YYMMDD').toDate() : null}
+            onChange={handleDateChange}
+            dateFormat="yyMMdd"
+            maxDate={new Date()}
+            showYearDropdown
+            showMonthDropdown
+            dropdownMode="select"
+            placeholderText='생년월일을 선택해주세요'
+            className='custom-datepicker'
+            value={displayDate}
+          />
+        </div>
         <Input type="number" placeholder="전화번호" value={phone} onChange={(e) => dispatch({ type: 'phone', payload: e.target.value })} />
         <div className="flex gap-2 border-b-2 border-gray-500 w-full mt-5 relative">
           <input
