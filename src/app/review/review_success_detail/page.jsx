@@ -1,11 +1,11 @@
 "use client"
 
 import { Button, Pagination, Rating } from "@mui/material"
-import "./interview_success_detail.css"
-import Header from "../_components/Header"
+import "./review_success_detail.css"
+import Header from "../../_components/Header"
 import Link from "next/link"
 
-export default function Interview_Success_Detail() {
+export default function Review_Success_Detail() {
     return(
         <>
         <Header />
@@ -37,8 +37,8 @@ export default function Interview_Success_Detail() {
                </p>
            </div>
            <div>
-               <Button className="write_btn1" variant="contained"><Link href={"./interview_success"}>목록</Link></Button>
-               <Button className="write_btn2" variant="contained"><Link href={"success_write"}>작성 하기</Link></Button>
+               <Button className="write_btn1" variant="contained"><Link href={"./review_success"}>목록</Link></Button>
+               <Button className="write_btn2" variant="contained"><Link href={"./review_success_write"}>작성 하기</Link></Button>
            </div>
           
    </div>

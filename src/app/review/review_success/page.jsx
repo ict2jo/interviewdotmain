@@ -1,11 +1,11 @@
 "use client"
 
 import { Button, Pagination, Rating, Typography } from "@mui/material"
-import "./interview_success.css"
+import "./review_success.css"
 import Link from "next/link"
-import Header from "../_components/Header"
+import Header from "../../_components/Header"
 
-export default function Interview_Success() {
+export default function Review_Success() {
     return (
         <>
         <Header />
@@ -13,7 +13,7 @@ export default function Interview_Success() {
             <h1>합격자 후기</h1>
                 <div className="success_list">
                 <div className="success_box1">
-                    <Link href={"./interview_success_detail"}>
+                    <Link href={"./review_success_detail"}>
                     <h1>합격 후기 1</h1><Rating name="half-rating" defaultValue={3} precision={2.0} />
                     <h2>회사: 삼성</h2>
                     <h3>제목: 첫 면접 합격</h3>

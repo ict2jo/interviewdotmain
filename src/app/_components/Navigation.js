@@ -63,7 +63,7 @@ export default function Navigation() {
         </li>
         <li className="whitespace-nowrap">
           <Link
-            href="/community"
+            href="/review/review_community"
             className="hover:bg-primary-100 transition-colors"
           >
             면접후기
