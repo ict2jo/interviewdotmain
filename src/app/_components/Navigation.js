@@ -1,12 +1,15 @@
 "use client";
 import Link from "next/link";
-import { useRef, useState } from "react";
+import { useContext, useRef, useState } from "react";
 import SubMenu from "./SubMenu";
 import Interview_result_submenu from "./interview_result_submenu";
+import { MenuContext } from "@/stores/StoreContext";
+import { Typography } from "@mui/material";
 
 export default function Navigation() {
   const [isSubmenuVisible, setSubmenuVisible] = useState(false);
   const submenuTimeoutRef = useRef(null);
+  const menuStore = useContext(MenuContext);
 
   const handleMouseEnter = () => {
     if (submenuTimeoutRef.current) {
@@ -20,33 +23,39 @@ export default function Navigation() {
       setSubmenuVisible(false);
     }, 200); // 200ms 후에 서브메뉴를 숨김
   };
+
+  const handleMenuClick = async (menu) => {
+    menuStore.setSelectedMenu(menu)
+  }
+
   return (
     <nav className="z-10 text-xl">
       <ul className="flex gap-16 items-center">
         <li className="whitespace-nowrap">
-          <Link
-            href="/interview/interview_start"
-            className="hover:bg-primary-100 transition-colors"
-          >
+          <Typography className="hover:bg-primary-100 transition-colors"
+          onClick={() => handleMenuClick("ai")} >
             AI면접
-          </Link>
+          </Typography>
         </li>
 
-        <li
-            className="relative whitespace-nowrap"
+        <li className="relative whitespace-nowrap"
             onMouseEnter={handleMouseEnter}
             onMouseLeave={handleMouseLeave}
         >
+          <div>
+          <Typography  className="block"
+              onClick={() => handleMenuClick("airesult")}>
             면접 결과 관리
-          {isSubmenuVisible && <Interview_result_submenu />}
+          </Typography>
+        </div>
+          {isSubmenuVisible && <Interview_result_submenu handleMenuClick={handleMenuClick}/>}
         </li>
         <li className="whitespace-nowrap">
-          <Link
-            href="/introduction"
+          <Typography
             className="hover:bg-primary-100 transition-colors"
-          >
+            onClick={() => handleMenuClick("self")}>
             자기소개서
-          </Link>
+          </Typography>
         </li>
         <li
           className="relative whitespace-nowrap"
@@ -54,20 +63,20 @@ export default function Navigation() {
           onMouseLeave={handleMouseLeave}
         >
           <div className="hover:bg-primary-100 transition-colors">
-            <Link href="/job/news" className="block">
+            <Typography className="block"
+              onClick={() => handleMenuClick("job")}>
               취업정보
-            </Link>
+            </Typography>
 
-            {isSubmenuVisible && <SubMenu />}
+            {isSubmenuVisible && <SubMenu handleMenuClick={handleMenuClick}/>}
           </div>
         </li>
         <li className="whitespace-nowrap">
-          <Link
-            href="/community"
+          <Typography
             className="hover:bg-primary-100 transition-colors"
-          >
+            onClick={() => handleMenuClick("review")}>
             면접후기
-          </Link>
+          </Typography>
         </li>
       </ul>
     </nav>

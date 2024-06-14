@@ -1,10 +1,10 @@
 "use client"
 
 import Link from "next/link"
-import "./community.css"
-import Header from "../_components/Header"
+import "./review_community.css"
+import Header from "../../_components/Header"
 
-export default function Community() {
+export default function Review_Community() {
     
 
     return(
@@ -13,12 +13,12 @@ export default function Community() {
 
         <div className="comm_container">
             <div className="bord_box_1">
-                <Link href={"./interview_review"}>
+                <Link href={"./review_list"}>
                     면접 후기
                 </Link>
             </div>
             <div className="bord_box_2">
-                <Link href={"./interview_success"}>
+                <Link href={"./review_success"}>
                     합격자 면접 후기
                 </Link>
             </div>

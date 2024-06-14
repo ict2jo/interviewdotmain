@@ -78,7 +78,6 @@ export default function list() {
 
     return (
         <>
-        <Header />
         <div className="recruitmentlistwrap">
             <Searchbox
                 workRgnLst={workRgnLst}
