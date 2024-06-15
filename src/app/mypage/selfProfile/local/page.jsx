@@ -50,7 +50,7 @@ export default function Local() {
         );
     };
 return(
-    <FormControl sx={{ m: 0, width: 300 }}>
+    <FormControl sx={{ m: 0, width: 683.5 }}>
                 <InputLabel id="demo-multiple-name-label">업종을 선택하세요</InputLabel>
                     <Select
                     labelId="demo-multiple-name-label"

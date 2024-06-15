@@ -10,7 +10,8 @@ import Main from "./main/page";
 import Interview_start from "./interview/interview_start/page";
 import Job from "./job/page";
 import List from "./job/recruitment/list/page";
-import Loading from "./loading/page";
+import Selfprofile from "./mypage/selfProfile/page";
+import Career from "./mypage/Career/page";
 
 
 function Home(){
@@ -34,6 +35,8 @@ function Home(){
 
     const renderContent = () => {
         switch(menuStore.selectedMenu){
+            case "main" :
+                return <Main />;
             case "ai" :
                 return <Interview_start />;
             case "Airesult" :
@@ -46,6 +49,8 @@ function Home(){
                 return <Airesult />; //면접 가이드
             case "airesult_question" :
                 return <Airesult />; //질문 저장소
+            case "self" :
+                return <Career/>;
             case "job" :
                 return <Job />;
             case "news" :
@@ -57,7 +62,7 @@ function Home(){
             case "review" :
                 return <Review />; //면접후기
             default:
-                return <Loading />
+                return <Main />
     }
     }
     return(
