@@ -1,25 +1,25 @@
+// Review_List.js
+
 "use client"
 
-import { Button, Pagination } from "@mui/material"
-import "./review_list.css"
-import Header from "../../_components/Header"
-import Link from "next/link"
+import { Pagination } from "@mui/material";
+import "./review_list.css";
 
 export default function Review_List() {
+    
+
     return (
         <>
-        <Header />
         <div className="review_container">
             <h1>면접 후기</h1>
             <div className="review_list">
                 <div className="review_box_1">
-                    <div className="review_box_1sub "></div>
-                    <Link href={"./"}>
-                    <h1>면접 후기</h1>
-                    <h2>SANSUNG</h2>
-                    <h3>제목입니다아다아다앙</h3>
-                    <h2>내용~~~~~~~~~~내용~~~~~~~~~~내용</h2>
-                    </Link>
+                    <div className="review_box_1sub">
+                        <h1>면접 후기</h1>
+                        <h2>SANSUNG</h2>
+                        <h3>제목입니다아다아다앙</h3>
+                        <h2>내용~~~~~~~~~~내용~~~~~~~~~~내용</h2>
+                    </div>
                 </div>
                 <div className="review_box_2">
                     <div className="review_box_2sub "></div>

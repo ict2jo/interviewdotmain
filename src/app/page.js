@@ -11,6 +11,7 @@ import Interview_start from "./interview/interview_start/page";
 import Job from "./job/page";
 import List from "./job/recruitment/list/page";
 import Loading from "./loading/page";
+import Review_Community from "./review/review_community/page";
 
 
 function Home(){
@@ -55,7 +56,7 @@ function Home(){
             case "recruitment" :
                 return <List />;
             case "review" :
-                return <Review />; //면접후기
+                return <Review_Community />; //면접후기
             default:
                 return <Loading />
     }

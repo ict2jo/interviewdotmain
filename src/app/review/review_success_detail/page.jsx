@@ -8,7 +8,6 @@ import Link from "next/link"
 export default function Review_Success_Detail() {
     return(
         <>
-        <Header />
         <div className="detail_container">
         <h1>합격자 후기</h1>
            <div className="detail_list">

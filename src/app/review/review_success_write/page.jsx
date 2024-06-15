@@ -22,14 +22,13 @@ export default function Review_Success_Write() {
 
     return (
         <>
-            <Header />
             <div className="write_container">
                 <h1>합격자 후기 작성</h1>
                 <div className="write_list">
                     <div className="write_area">
                         <div className="write_box">
                             <h2>합격자 후기</h2>
-                            작성자 : 편조이<br/>
+                            작성자 : 편조이<br />
                             제목   : <input type="text" />
                         </div>
                         <div className="write_sub">
@@ -47,7 +46,8 @@ export default function Review_Success_Write() {
                     />
                 </div>
                 <div>
-               <Button className="write_btn2" variant="contained"><Link href={"./review_success"}>작성 완료</Link></Button>
+                    <Button className="write_btn1" variant="contained"><Link href={"./review_success"}>목록</Link></Button>
+                    <Button className="write_btn2" variant="contained"><Link href={"./review_success"}>작성 완료</Link></Button>
                 </div>
             </div>
         </>
