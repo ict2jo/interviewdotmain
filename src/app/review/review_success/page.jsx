@@ -8,7 +8,6 @@ import Header from "../../_components/Header"
 export default function Review_Success() {
     return (
         <>
-        <Header />
         <div className="success_container">
             <h1>합격자 후기</h1>
                 <div className="success_list">
