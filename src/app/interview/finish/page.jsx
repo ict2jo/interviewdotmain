@@ -1,9 +1,9 @@
 "use client";
 import React, {useEffect, useState} from 'react';
-import './interview_finish.css'
+import './finish.css'
 import {Button} from "@mui/material";
 
-export default function Interview_finish(){
+export default function Finish(){
     return(
         <div class="container">
             <div class="white_box">

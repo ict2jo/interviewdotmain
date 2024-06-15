@@ -28,7 +28,6 @@ export default function QuestionRepository() {
 
     return (
         <>
-        <Header/>
     <div className="container">
         <div className="white_box">
             <div className="title">

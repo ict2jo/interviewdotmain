@@ -30,7 +30,6 @@ export default function Interview_feedback() {
 
     return(
         <>
-        <Header />
         <div className='feedback_container'>
         <h1>AI 피드백</h1>
             <div className="question">

@@ -1,10 +1,10 @@
 "use client"
 
-import './interview_start.css'
-export default function Interview_start(params) {
+import './starthome.css'
+export default function Starthome(params) {
 
     const openPopup = () => {
-        window.open('/interview/interview_select', 'interview', 'width=1000,height=800');
+        window.open('/interview/select', 'interview', 'width=1000,height=800');
     };
     
     return (
