@@ -2,10 +2,10 @@
 
 import { Button, Checkbox } from "@mui/material";
 import { useState } from "react";
-import './interview_select.css'
+import './select.css'
 import Header from "@/app/_components/Header";
 
-export default function Interview_select() {
+export default function Select() {
     // 유형 하나만 선택 가능, 아무곳이나 눌러도 체크 가능
     const [selectedCheckbox, setSelectedCheckbox] = useState(null);
 
