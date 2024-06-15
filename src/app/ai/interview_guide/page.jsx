@@ -30,7 +30,6 @@ export default function Interview_guide() {
 
     return (
         <>
-        <Header />
         <div className='guide_container'>
             <h1>면접 준비하기</h1>
 
