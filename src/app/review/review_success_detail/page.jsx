@@ -2,12 +2,23 @@
 
 import { Button, Pagination, Rating } from "@mui/material"
 import "./review_success_detail.css"
-import Header from "../../_components/Header"
 import Link from "next/link"
+import { useRouter } from "next/navigation"
+import Header from "@/app/_components/Header"
 
 export default function Review_Success_Detail() {
+    const router = useRouter();
+
+    const handleSuccessList = () => {
+        router.push("./review_success")
+    };
+    const handleSuccessWrite = () => {
+        router.push("./review_success_write")
+    };
+
     return(
         <>
+        <Header />
         <div className="detail_container">
         <h1>합격자 후기</h1>
            <div className="detail_list">
@@ -36,8 +47,8 @@ export default function Review_Success_Detail() {
                </p>
            </div>
            <div>
-               <Button className="write_btn1" variant="contained"><Link href={"./review_success"}>목록</Link></Button>
-               <Button className="write_btn2" variant="contained"><Link href={"./review_success_write"}>작성 하기</Link></Button>
+               <Button className="write_btn1" variant="contained" onClick={handleSuccessList}>목록</Button>
+               <Button className="write_btn2" variant="contained" onClick={handleSuccessWrite}>작성 하기</Button>
            </div>
           
    </div>
