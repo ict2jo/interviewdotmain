@@ -1,7 +1,13 @@
+.recruitmentlistwrapbg{
+    background-color: white ;
+    margin: 0px;
+}
+
+
 .recruitmentlistwrap{
     width: 1000px;
     margin: 0 auto;
-    margin-top: 50px;
+    padding-top: 50px;
 }
 .listbox{
     margin: 20px;
