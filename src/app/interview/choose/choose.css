@@ -3,6 +3,7 @@
     display: flex;
     justify-content: center;
     align-items: center;
+    margin: 0 auto;
 }
 
 .white_box {
@@ -54,5 +55,5 @@
     width: 200px;
     height: 100px;
     cursor: pointer;
-    right: 100px;
+    right: -50px;
 }

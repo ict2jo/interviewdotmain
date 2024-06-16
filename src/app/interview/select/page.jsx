@@ -23,8 +23,18 @@ export default function Select() {
         );
     };
 
+    const handleConfirm = () => {
+        if (selectedCheckbox === 1) {
+            window.location.href = '/interview/choose';
+        } else if (selectedCheckbox === 2) {
+            window.location.href = '/interview/start';
+        }
+    };
 
-    
+    const handleClose = () => {
+        window.close();
+    };
+
 
     return(
         <div className="container">
@@ -60,8 +70,8 @@ export default function Select() {
             </div>
         </div>
 
-        <Button variant="outlined">뒤로가기</Button>
-        <Button variant="contained">확인</Button>
+            <Button variant="outlined" onClick={handleClose}>뒤로가기</Button>
+            <Button variant="contained" onClick={handleConfirm}>확인</Button>
         </div>
     )
 }

@@ -4,17 +4,20 @@ import './starthome.css'
 export default function Starthome(params) {
 
     const openPopup = () => {
-        window.open('/interview/select', 'interview', 'width=1000,height=800');
+        const width = 1200;
+        const height = 800;
+        const left = (window.innerWidth - width) / 2 + window.screenX;
+        const top = (window.innerHeight - height) / 2 + window.screenY;
+        window.open('/interview/select', 'interview', `width=${width},height=${height},left=${left},top=${top}`);
     };
-    
-    return (
-        <>       
-        <div className="interview_start">
-            <button onClick={openPopup}>
-                면접 연습 시작하기
-            </button>
-        </div>
-        </>
 
+    return (
+        <>
+            <div className="interview_start">
+                <button onClick={openPopup}>
+                    면접 연습 시작하기
+                </button>
+            </div>
+        </>
     );
 }

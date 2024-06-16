@@ -31,15 +31,24 @@ export default function Interview() {
     }, [selectedQuestions]);
 
     const go_next_page = () => {
-        confirm(`선택하신 문항은 총 ${selectedCount}개 입니다. \n맞으면 확인 틀리면 취소를 눌러주세요.`);
+        if (confirm(`선택하신 문항은 총 ${selectedCount}개 입니다. \n맞으면 확인 틀리면 취소를 눌러주세요.`)) {
+            if (selectedCount > 0) {
+                location.href = "start";
+            } else {
+                alert("선택하신 문항이 없습니다. 최소 1개 이상 선택해 주세요.");
+            }
+        }else{
+            return;
+        }
     }
 
+
+
     return (
-        <div className="Header">
-        <Header/>
         <div className="container">
             <div className="white_box">
                 <h1 className="title">질문 리스트</h1>
+                <span>최대 10개의 질문을 선택 하실 수 있습니다.</span>
                 <div className="count">{selectedCount} / 10</div>
                 <div className="scroll_box">
                     <div className="questions">
@@ -56,6 +65,5 @@ export default function Interview() {
             </div>
             <ArrowRightIcon onClick={go_next_page} className="go_next_page"/>
         </div>
-</div>
     );
 }
