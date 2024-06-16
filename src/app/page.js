@@ -17,6 +17,8 @@ import Interview_feedback from "./ai/interview_feedback/page";
 import Interview_guide from "./ai/interview_guide/page";
 import QuestionRepository from "./ai/question_repository/page";
 import Starthome from "./interview/starthome/page";
+import Calendar from "./mypage/Schedule/page";
+import Inquiry from "./mypage/Inquiry/page";
 
 
 function Home(){
@@ -55,7 +57,7 @@ function Home(){
             case "airesult_question" :
                 return <QuestionRepository />; //질문 저장소
             case "self" :
-                return <Career/>;
+                return <Career/>; //자기소개서
             case "job" :
                 return <Job />;
             case "news" :
@@ -66,6 +68,14 @@ function Home(){
                 return <List />;
             case "review" :
                 return <Review_Community />; //면접후기
+            case "profile" :
+                return <Selfprofile />;
+            case "career" :
+                return <Career />;
+            case "schedule" :
+                return <Calendar />;
+            case "inquiry" :
+                return <Inquiry />;
             default:
                 return <Main />
     }

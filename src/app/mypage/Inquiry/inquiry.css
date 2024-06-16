@@ -1,0 +1,9 @@
+.tablewrap{
+    margin: 0 auto;
+}
+.pagenation{
+    display: flex;
+    justify-content: center;
+    margin-top: 20px;
+    border: none;
+}
