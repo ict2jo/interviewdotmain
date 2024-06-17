@@ -16,6 +16,8 @@ import Interview_feedback from "./ai/interview_feedback/page";
 import Interview_guide from "./ai/interview_guide/page";
 import QuestionRepository from "./ai/question_repository/page";
 import Starthome from "./interview/starthome/page";
+import Chathome from "../../pages/chathome";
+
 
 
 function Home(){
@@ -42,7 +44,7 @@ function Home(){
             case "main" :
                 return <Main />;
             case "ai" :
-                return <Starthome />;
+                return <Chathome />;
             case "Airesult" :
                 return <Airesult />;
             case "airesult_history" :
