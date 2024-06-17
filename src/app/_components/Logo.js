@@ -1,4 +1,4 @@
-"use client"
+"use client";
 
 import { MenuContext } from "@/stores/StoreContext";
 import { Typography } from "@mui/material";
@@ -11,10 +11,13 @@ function Logo() {
     menuStore.setSelectedMenu(menu)
   }
   return (
-    <Typography className="flex items-center gap-4 z-10"
-    onClick={() => handleMenuClick("main")}>
-      <span className="text-xl font-semibold text-primary-950">인터뷰닷</span>
-    </Typography>
+
+    <Link href="/" className="flex items-center gap-4 z-10 ">
+      <span className="text-xl font-semibold text-primary-950 whitespace-nowrap">
+        인터뷰닷
+      </span>
+    </Link>
+
   );
 }
 

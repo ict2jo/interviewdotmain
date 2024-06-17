@@ -1,4 +1,6 @@
-import React, { createContext, useEffect, useState } from 'react';
+"use client";
+import Spinner from "@/app/_components/Spinner";
+import React, { createContext, useEffect, useState } from "react";
 
 const NewsContext = createContext();
 
@@ -7,10 +9,10 @@ export const NewsProvider = ({ children }) => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
-  useEffect(() => {
-    const fetchNews = async () => {
+  useEffect(function () {
+    async function fetchNews() {
       try {
-        const res = await fetch('http://localhost:3000/api/route');
+        const res = await fetch("/api/route");
         if (!res.ok) {
           throw new Error(`HTTP error! status: ${res.status}`);
         }
@@ -25,23 +27,18 @@ export const NewsProvider = ({ children }) => {
         setError(error.message);
         setLoading(false);
       }
-    };
-
+    }
     fetchNews();
   }, []);
 
-  if (loading) return <div>Loading...</div>;
+  if (loading) return <Spinner />;
   if (error) return <div>Error: {error}</div>;
 
   const value = {
-    news
+    news,
   };
 
-  return (
-    <NewsContext.Provider value={value}>
-      {children}
-    </NewsContext.Provider>
-  );
+  return <NewsContext.Provider value={value}>{children}</NewsContext.Provider>;
 };
 
 export { NewsContext };

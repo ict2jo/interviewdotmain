@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useMemo, useEffect } from "react";
+import { useState, useEffect } from "react";
 
 const KEY = "631411887293319c018c3eeeb7413e40";
 
@@ -25,13 +25,12 @@ export default function useJobLists() {
         }
 
         const data = await res.json();
-        const jobDatas = data.dataSearch.content.map(job => ({
+        const jobDatas = data.dataSearch.content.map((job) => ({
           profession: job.profession || "기타",
         }));
 
-
         setJobLists(jobDatas);
-        setJobContainer(data.dataSearch.content)
+        setJobContainer(data.dataSearch.content);
       } catch (error) {
         console.error("Failed to fetch data:", error);
       }

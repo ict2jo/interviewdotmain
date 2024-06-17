@@ -1,7 +1,7 @@
 "use client";
 import { createContext, useContext, useReducer } from "react";
+import { useNavigate } from "react-router-dom";
 
-const KEY = "631411887293319c018c3eeeb7413e40";
 const OptionContext = createContext();
 
 const initialState = {
@@ -12,41 +12,45 @@ const initialState = {
   region: [],
   selectedJob: [],
   jobSearchingFor: [],
-  status: "ready",
   page: 1,
+  error: null,
 };
 
 function reducer(state, action) {
   switch (action.type) {
-    case "school":
-      return { ...state, school: action.payload, status: "answered" };
-    case "schoolName":
-      return { ...state, schoolName: action.payload, status: "answered" };
-    case "major":
-      return { ...state, major: action.payload, status: "answered" };
+    case "updateField":
+      return { ...state, [action.field]: action.payload };
     case "next":
-      return { ...state, page: state.page + 1, status: "next" };
-    case "job":
-      return { ...state, currentJob: action.payload, status: "answered" };
-    case "selectedJob":
-      return { ...state, selectedJob: [...state.selectedJob, action.payload], status: "answered" };
-    case "jobSearching":
+      return { ...state, page: state.page + 1 };
+    case "prev":
+      return { ...state, page: state.page - 1 };
+    case "addItem":
       return {
         ...state,
-        jobSearchingFor: [...state.jobSearchingFor, action.payload],
-        status: "answered",
+        [action.field]: [...state[action.field], action.payload],
       };
-    case "region":
-      return { ...state, region: [...state.region, action.payload], status: "answered" };
-
-    case "deleteJob":
-      return { ...state, selectedJob: state.selectedJob.filter(job => job !== action.payload) }
+    case "removeItem":
+      if (Array.isArray(state[action.field])) {
+        return {
+          ...state,
+          [action.field]: state[action.field].filter(
+            (item) => item !== action.payload
+          ),
+        };
+      }
+      console.error(`State field ${action.field} is not an array`);
+      return state;
+    case "submitSuccess":
+      return { ...state, submitted: true, error: null };
+    case "submitFailure":
+      return { ...state, error: action.payload };
     default:
-      throw new Error("Action unknown");
+      throw new Error(`Unknown action type: ${action.type}`);
   }
 }
 
 function OptionProvider({ children }) {
+  const navigate = useNavigate();
   const [
     {
       school,
@@ -56,33 +60,53 @@ function OptionProvider({ children }) {
       region,
       selectedJob,
       jobSearchingFor,
-      status,
       page,
+      error,
     },
     dispatch,
   ] = useReducer(reducer, initialState);
 
-  const handleSelectChange = (e) => {
-    const { name, value } = e.target;
-    dispatch({ type: name, payload: value });
-  };
-
-  const handleInputChange = (type) => (e) => {
-    dispatch({ type, payload: e.target.value });
+  const handleFieldChange = (field) => (e) => {
+    dispatch({ type: "updateField", field, payload: e.target.value });
   };
 
   const handleNext = () => {
     dispatch({ type: "next" });
   };
-
-  const deleteItem = (itemToRemove) => ({
-    type: deleteItem,
-    payload: itemToRemove
-  });
-
-  const handleRemoveJob = (jobToRemove) => {
-    dispatch({ type: "deleteJob", payload: jobToRemove });
+  const handlePrev = () => {
+    dispatch({ type: "prev" });
   };
+
+  const handleAddItem = (field) => (item) => {
+    dispatch({ type: "addItem", field, payload: item });
+  };
+
+  const handleRemoveItem = (field) => (item) => {
+    dispatch({ type: "removeItem", field, payload: item });
+  };
+
+  const handleSubmit = async () => {
+    try {
+      const response = await fetch("/api/submit", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(state), // 현재 상태를 서버로 전송
+      });
+
+      if (response.ok) {
+        dispatch({ type: "submitSuccess" });
+        navigate("/");
+      } else {
+        const errorData = await response.json();
+        dispatch({ type: "submitFailure", payload: errorData.message });
+      }
+    } catch (error) {
+      dispatch({ type: "submitFailure", payload: error.message });
+    }
+  };
+
   return (
     <OptionContext.Provider
       value={{
@@ -93,12 +117,13 @@ function OptionProvider({ children }) {
         selectedJob,
         region,
         jobSearchingFor,
-        status,
         page,
-        handleSelectChange,
-        handleInputChange,
+        handleFieldChange,
         handleNext,
-        handleRemoveJob
+        handlePrev,
+        handleAddItem,
+        handleRemoveItem,
+        handleSubmit,
       }}
     >
       {children}

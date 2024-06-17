@@ -1,101 +1,42 @@
-'use client'
-import moment from 'moment';
-import 'react-datepicker/dist/react-datepicker.css';
-import ReactDatePicker from 'react-datepicker';
-import { useSession } from 'next-auth/react';
-import { useReducer } from "react";
-import Link from 'next/link';
+"use client";
+
+import "react-datepicker/dist/react-datepicker.css";
+import ReactDatePicker from "react-datepicker";
+import { useSession } from "next-auth/react";
+import Link from "next/link";
 import Form from "@/app/_components/Form";
 import Input from "@/app/_components/Input";
-
-import Button from '@/app/_components/Button';
+import Button from "@/app/_components/Button";
 import Terms from "@/app/_components/Terms";
-import { createUser } from "@/app/_lib/actions";
+import {
+  CreateUserProvider,
+  useCreateUser,
+} from "@/app/_lib/hooks/CreateUserContext";
 
-function reducer(state, action) {
-  switch (action.type) {
-    case "name":
-      return { ...state, name: action.payload };
-    case "email":
-      return { ...state, email: action.payload };
-    case "birth":
-      return { ...state, birth: action.payload };
-    case "displayDate":
-      return { ...state, displayDate: action.payload };
-    case "id":
-      return { ...state, id: action.payload };
-    case "pw":
-      return { ...state, pw: action.payload };
-    case "phone":
-      return { ...state, phone: action.payload };
-    case "showTerms":
-      return { ...state, showTerms: action.payload };
-    case "isChecked":
-      return { ...state, isChecked: action.payload };
-    default:
-      return state;
-  }
-}
-
-function Page() {
-  const { data: session, status } = useSession();
-  const initialState = {
-    name: session?.user?.name || "",
-    email: session?.user?.email || "",
-    birth: "",
-    id: "",
-    pw: "",
-    checkPw: "",
-    phone: "",
-    showTerms: false,
-    isChecked: false,
-  };
-
-  const [{ name, email, birth, id, pw, checkPw, phone, showTerms, isChecked, displayDate }, dispatch] = useReducer(reducer, initialState);
-
-  function validateId(id) {
-    const idRegex = /^[a-z0-9_-]{5,20}$/;
-    if (!idRegex.test(id)) {
-      alert('5-20자, 영문 소문자, 숫자, 특수문자 (-), (_)만 사용해주세요')
-      return false;
-    }
-    return true
-  }
-
-  function validatePw(pw) {
-    const pwRegex = /^(?=.*[a-z])(?=.*[0-9])(?=.*[_-])(?=.*[^a-zA-Z0-9_-]).{8,16}$/;
-    if (!pwRegex.test(pw)) {
-      alert('5-20자, 영문 소문자, 숫자, 특수문자 (-), (_)만 사용해주세요')
-      return false;
-    }
-    return true
-  }
-  const handleDateChange = (date) => {
-    if (date) {
-      const formattedDisplayDate = moment(date).format('YYYY년 MM월 DD일');
-      const formattedDate = moment(date).format('YYMMDD');
-      dispatch({ type: 'displayDate', payload: formattedDisplayDate });
-      dispatch({ type: 'birth', payload: formattedDate });
-    }
-  };
-
-  function validateForm() {
-    if (pw !== checkPw) {
-      alert("비밀번호가 일치하지 않습니다.");
-      return false;
-    }
-    return true;
-  };
-
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    if (!validateForm()) {
-      return;
-    }
-    //`회원가입 처리
-    createUser({ name, email, birth, id, pw, phone });
-  };
-
+function PageContent() {
+  const { data: session } = useSession();
+  const {
+    name,
+    email,
+    birth,
+    id,
+    pw,
+    checkPw,
+    phone,
+    showTerms,
+    isChecked,
+    displayDate,
+    selectedOption,
+    isCustomDomain,
+    handleFieldChange,
+    validateId,
+    validatePw,
+    handleDateChange,
+    validateForm,
+    handleSubmit,
+    dispatch,
+    handleOptionChange,
+  } = useCreateUser();
 
   return (
     <Form onSubmit={handleSubmit} width="w-2/4">
@@ -106,19 +47,62 @@ function Page() {
       <div className="flex flex-col items-center justify-center gap-5">
         {session?.user ? (
           <>
-            <Input defaultValue={session.user.name} onChange={(e) => dispatch({ type: 'name', payload: e.target.value })} />
-            <Input defaultValue={session.user.email} onChange={(e) => dispatch({ type: 'email', payload: e.target.value })} />
+            <input
+              name="name"
+              defaultValue={session.user.name}
+              onChange={handleFieldChange("name")}
+              className="w-full h-12 px-2 bg-gray-100 rounded-xl placeholder-gray-600 text-xs cursor-pointer"
+            />
+            <input
+              name="email"
+              defaultValue={session.user.email}
+              onChange={handleFieldChange("email")}
+              className="w-full h-12 px-2 bg-gray-100 rounded-xl placeholder-gray-600 text-xs cursor-pointer"
+            />
           </>
         ) : (
           <>
-            <Input placeholder="이름" onChange={(e) => dispatch({ type: 'name', payload: e.target.value })} />
-            <Input placeholder="이메일" onChange={(e) => dispatch({ type: 'email', payload: e.target.value })} />
+            <Input
+              name="name"
+              placeholder="이름"
+              onChange={handleFieldChange("name")}
+              value={name}
+            />
+            <div className="w-full flex gap-1 items-center">
+              <Input
+                name="email"
+                width="w-3/6 flex-grow"
+                placeholder="이메일"
+                onChange={handleFieldChange("email")}
+                value={email}
+              />
+              {!isCustomDomain && <span className="text-gray-700 px-3">@</span>}
+              <select
+                className="flex-grow h-12 bg-gray-200 px-2 text-gray-700 text-center rounded-xl leading-10"
+                onChange={handleOptionChange}
+              >
+                <option value="">선택</option>
+                <option value="gmail.com">gmail.com</option>
+                <option value="naver.com">naver.com</option>
+                <option value="daum.net">daum.net</option>
+                <option value="직접작성">직접작성</option>
+              </select>
+            </div>
           </>
         )}
 
         <div className="relative w-full">
-          <Input placeholder="아이디" onChange={(e) => dispatch({ type: 'id', payload: e.target.value })} />
-          <button type="button" class="bg-gray-400 text-gray-700 py-2 px-2 rounded-xl w-14 h-8 text-[10px] absolute right-5 top-2 font-bold hover:opacity-90" onClick={validateId}>
+          <Input
+            name="id"
+            placeholder="아이디"
+            onChange={handleFieldChange("id")}
+            value={id}
+          />
+          <button
+            type="button"
+            class="bg-gray-400 text-gray-700 py-2 px-2 rounded-xl w-14 h-8 text-[10px] absolute right-5 top-2 font-bold hover:opacity-90"
+            onClick={validateId}
+          >
             중복확인
           </button>
           <p className="text-[11px] px-5 pt-2">
@@ -126,33 +110,50 @@ function Page() {
           </p>
         </div>
         <div className="w-full">
-          <Input placeholder="비밀번호" onChange={(e) => dispatch({ type: 'pw', payload: e.target.value })} />
+          <Input
+            name="pw"
+            type="password"
+            placeholder="비밀번호"
+            onChange={handleFieldChange("pw")}
+            value={pw}
+          />
           <p className="text-[11px] px-5 pt-2">
             8-16자, 영문 대·소문자, 숫자, 특수문자 2종류 이상 사용
           </p>
         </div>
-        <Input placeholder="비밀번호 재확인" value={checkPw} onChange={(e) => dispatch({ type: 'checkPw', payload: e.target.value })} />
+        <Input
+          name="checkPw"
+          type="password"
+          placeholder="비밀번호 확인"
+          value={checkPw}
+          onChange={handleFieldChange("checkPw")}
+        />
         <div className="w-full h-12 px-2 custom-datepicker-wrapper">
           <span>생년월일</span>
           <ReactDatePicker
-            selected={birth ? moment(birth, 'YYMMDD').toDate() : null}
+            selected={birth ? moment(birth, "YYMMDD").toDate() : null}
             onChange={handleDateChange}
-            dateFormat="yyMMdd"
+            dateFormat="yyyy년 MM월 dd일"
             maxDate={new Date()}
             showYearDropdown
             showMonthDropdown
             dropdownMode="select"
-            placeholderText='생년월일을 선택해주세요'
-            className='custom-datepicker'
+            placeholderText="생년월일을 선택해주세요"
+            className="custom-datepicker"
             value={displayDate}
           />
         </div>
-        <Input type="number" placeholder="전화번호" value={phone} onChange={(e) => dispatch({ type: 'phone', payload: e.target.value })} />
+        <Input
+          type="number"
+          placeholder="전화번호"
+          value={phone}
+          onChange={(e) => dispatch(handleFieldChange("checkPw"))}
+        />
         <div className="flex gap-2 border-b-2 border-gray-500 w-full mt-5 relative">
           <input
             type="checkbox"
             className="absolute bottom-3"
-            onClick={() => dispatch({ type: 'isChecked', payload: !isChecked })}
+            onClick={() => dispatch({ type: "isChecked", payload: !isChecked })}
           />
           <p className="font-bold text-sm px-5 py-2">
             모든 약관 사항에 전체 동의합니다.
@@ -165,7 +166,7 @@ function Page() {
               strokeWidth="1.5"
               stroke="currentColor"
               className="size-6"
-              onClick={() => dispatch({ type: 'showTerms', payload: false })}
+              onClick={() => dispatch({ type: "showTerms", payload: false })}
             >
               <path
                 strokeLinecap="round"
@@ -181,7 +182,7 @@ function Page() {
               strokeWidth="1.5"
               stroke="currentColor"
               className="size-6"
-              onClick={() => dispatch({ type: 'showTerms', payload: true })}
+              onClick={() => dispatch({ type: "showTerms", payload: true })}
             >
               <path
                 strokeLinecap="round"
@@ -193,10 +194,21 @@ function Page() {
         </div>
         {showTerms && <Terms isChecked={isChecked} />}
         {/* <Button type="mdBlue">회원가입</Button> */}
-        <Link href="/signin/optionalInfo" class="bg-primary-500 rounded-3xl px-[3rem] py-3 text-white">회원가입</Link>
+        <Link
+          href="/signin/optionalInfo"
+          class="bg-primary-500 rounded-3xl px-[3rem] py-3 text-white"
+        >
+          회원가입
+        </Link>
       </div>
-    </Form >
+    </Form>
   );
 }
 
-export default Page;
+export default function Page() {
+  return (
+    <CreateUserProvider>
+      <PageContent />
+    </CreateUserProvider>
+  );
+}

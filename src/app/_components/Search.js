@@ -2,7 +2,7 @@ import Input from "./Input";
 
 function Search() {
   return (
-    <div className="w-full flex justify-center">
+    <div className="flex justify-center items-center ml-auto">
       <div className="relative">
         <input
           className="w-56 h-8 pl-2 pr-10 border border-gray-700 bg-gray-400 rounded-full placeholder-gray-800 text-xs shadow-md"
@@ -14,7 +14,7 @@ function Search() {
           viewBox="0 0 24 24"
           strokeWidth="1.5"
           stroke="currentColor"
-          className="w-6 h-6 absolute right-2 top-1/2 transform -translate-y-1/2"
+          className="w-6 h-6 absolute right-2 top-1"
         >
           <path
             strokeLinecap="round"

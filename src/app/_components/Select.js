@@ -2,19 +2,25 @@
 import React from "react";
 import { useOptions } from "../_lib/hooks/OptionContext";
 
-export default function Select({ name, children, value }) {
-  const { handleSelectChange } = useOptions();
-  const handleChange = (e) => {
-    handleSelectChange(e);
-  };
+export default function Select({
+  name,
+  children,
+  value,
+  multiple,
+  onChange,
+  height = "h-10",
+}) {
+  const { handleFieldChange } = useOptions();
+
   return (
-    <>
-      <select
-        name={name}
-        value={value}
-        onChange={handleChange}
-        className="w-full h-10 bg-gray-200 text-gray-700 text-center leading-10"
-      >{children}</select>
-    </>
+    <select
+      name={name}
+      value={value}
+      multiple={multiple}
+      onChange={onChange}
+      className={`w-full ${height} bg-gray-200 text-gray-700 text-center rounded-xl leading-10}`}
+    >
+      {children}
+    </select>
   );
 }
