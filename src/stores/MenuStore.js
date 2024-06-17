@@ -3,6 +3,7 @@ import { makeAutoObservable } from "mobx";
 
 class MenuStore{
     selectedMenu = "main" ;  // 선택된 메뉴
+    inquiryList = [];
     
     constructor(){
         // MobX 스토어를 자동으로 관찰 가능하게 설정
@@ -12,6 +13,9 @@ class MenuStore{
     // 메뉴 변경 
     setSelectedMenu(menu){
         this.selectedMenu = menu;
+    }
+    setInquiryList(inquiryList){
+        this.inquiryList = inquiryList;
     }
 }
 
