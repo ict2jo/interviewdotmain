@@ -1,0 +1,124 @@
+/* 일요일 날짜: 빨간색 */
+.fc-day-sun a {
+    color: red;
+}
+/* 토요일 날짜: 파란색 */
+.fc-day-sat a {
+    color: blue;
+}
+.calendarwrap{
+    background-color: white ;
+}
+.calendar{
+    width: 1000px;
+    margin: 0 auto;
+}
+/* 각 클래스의 색상을 바꾸는 방법도 있지만 지정된 변수들을 재할당하여 색상 및 크기를 조절 하는 방법을 사용했습니다.  */
+:root {
+    --fc-small-font-size: 0.85em;
+  
+    --fc-page-bg-color: #fff;
+    --fc-neutral-bg-color: hsla(0, 0%, 82%, 0.3);
+    --fc-neutral-text-color: grey;
+    --fc-border-color: #ddd;
+  
+    --fc-button-text-color: #fff;
+  
+    --fc-button-bg-color: #f3af00;
+    --fc-button-border-color: #f3af00;
+  
+    --fc-button-hover-bg-color: #f8cf66;
+    --fc-button-hover-border-color: #f8cf66;
+  
+    --fc-button-active-bg-color: #f8cf66;
+    --fc-button-active-border-color: #f8cf66;
+  
+    --fc-event-bg-color: #3788d8;
+    --fc-event-border-color: #3788d8;
+    --fc-event-text-color: #fff;
+    --fc-event-selected-overlay-color: rgba(0, 0, 0, 0.25);
+  
+    --fc-more-link-bg-color: #d0d0d0;
+    --fc-more-link-text-color: inherit;
+  
+    --fc-event-resizer-thickness: 8px;
+    --fc-event-resizer-dot-total-width: 8px;
+    --fc-event-resizer-dot-border-width: 1px;
+  
+    --fc-non-business-color: hsla(0, 0%, 84%, 0.3);
+  
+    --fc-bg-event-color: #8fdf82;
+    --fc-bg-event-opacity: 0.3;
+  
+    --fc-highlight-color: rgba(188, 232, 241, 0.3);
+    --fc-today-bg-color: rgba(255, 220, 40, 0.15);
+  
+    --fc-now-indicator-color: red;
+  
+    --fc-daygrid-event-dot-width: 8px;
+  }
+  
+  .fc {
+    height: 90vh;
+    margin: 20px;
+  }
+  
+  .fc-daygrid-event {
+    border: none;
+  }
+  
+  /* 요일 행 높이지정 */
+  .fc .fc-scrollgrid-section table {
+    height: 50px;
+  }
+  
+  /* 요일 행 TEXT 중간 정렬 */
+  .fc td,
+  .fc th {
+    vertical-align: middle;
+  }
+  
+  /* 타임 그리드(주별 & 일별)에서의 이벤트 */
+  .fc-v-event {
+    border-radius: 10px;
+    padding: 5px;
+    color: black;
+  }
+  
+  /* 타임 그리드 하루종일 일정 */
+  .fc-scrollgrid-shrink {
+    height: 70px;
+  }
+  
+  /* 타임 그리드 30분당 일정 */
+  .fc .fc-timegrid-slot-label {
+    height: 50px;
+  }
+  
+  /* 타임 그리드(주별 & 일별)에서 시간 TEXT */
+  .fc-timegrid-event .fc-event-time {
+    font-size: 1rem;
+    color: #727272;
+  }
+  
+  /* 데이 그리드(월별)에서 시간 TEXT */
+  .fc-direction-ltr .fc-daygrid-event .fc-event-time {
+    font-size: 1rem;
+    color: #727272;
+  }
+  
+  /* 타임 그리드(주별 & 일별)에서 내용 TEXT */
+  .fc-timegrid-event .fc-event-title {
+    font-size: 1.2rem;
+    color: black;
+  }
+  
+  /* 데이 그리드(월별)에서 내용 TEXT */
+  .fc-daygrid-block-event .fc-event-title {
+    font-size: 1rem;
+    color: black;
+  }
+  
+  .fc-event-main-frame {
+    border-radius: 20px;
+  }

@@ -7,10 +7,18 @@ import { MenuContext } from "@/stores/StoreContext";
 import Header from "./_components/Header";
 
 import Main from "./main/page";
-import Interview_start from "./interview/interview_start/page";
 import Job from "./job/page";
 import List from "./job/recruitment/list/page";
-import Loading from "./loading/page";
+import Review_Community from "./review/review_community/page";
+import Selfprofile from "./mypage/selfProfile/page";
+import Career from "./mypage/Career/page";
+import Interview_history from "./ai/interview_history/page";
+import Interview_feedback from "./ai/interview_feedback/page";
+import Interview_guide from "./ai/interview_guide/page";
+import QuestionRepository from "./ai/question_repository/page";
+import Starthome from "./interview/starthome/page";
+import Chathome from "../../pages/chathome";
+
 
 
 function Home(){
@@ -34,18 +42,22 @@ function Home(){
 
     const renderContent = () => {
         switch(menuStore.selectedMenu){
+            case "main" :
+                return <Main />;
             case "ai" :
-                return <Interview_start />;
+                return <Chathome />;
             case "Airesult" :
                 return <Airesult />;
             case "airesult_history" :
-                return <Airesult />; //면접 기록
+                return <Interview_history />; //면접 기록
             case "airesult_feedback" :
-                return <Airesult />; //AI 피드백
+                return <Interview_feedback />; //AI 피드백
             case "airesult_guide" :
-                return <Airesult />; //면접 가이드
+                return <Interview_guide />; //면접 가이드
             case "airesult_question" :
-                return <Airesult />; //질문 저장소
+                return <QuestionRepository />; //질문 저장소
+            case "self" :
+                return <Career/>; //자기소개서
             case "job" :
                 return <Job />;
             case "news" :
@@ -55,9 +67,17 @@ function Home(){
             case "recruitment" :
                 return <List />;
             case "review" :
-                return <Review />; //면접후기
+                return <Review_Community />; //면접후기
+            case "profile" :
+                return <Selfprofile />;
+            case "career" :
+                return <Career />;
+            case "schedule" :
+                return <Calendar />;
+            case "inquiry" :
+                return <Inquiry />;
             default:
-                return <Loading />
+                return <Main />
     }
     }
     return(

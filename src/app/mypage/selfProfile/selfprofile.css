@@ -7,9 +7,44 @@ height: 100%;
     background-color: white;
     margin: 50px auto;
     width: 50%;
-    height: 1000px;
+    height: 1200px;
     padding: 100px;
+}
+.mymaintext{
+    text-align: center;
 }
 .inputs{
     width: 500px;
+}
+.mypagetop{
+    display: flex;
+    align-items: center;
+}
+.userimg{
+    width: 150px;
+    height: 150px;
+    background-color: aquamarine;
+    border-radius: 100px;
+    margin: 30px;
+}
+.profile{
+    width: 150px;
+    line-height: 33px;
+}
+.inputs{
+    width: 300px;
+}
+.bluetext{
+    margin-top: 50px;
+    color: #1400FF;
+}
+.mypagebottum{
+    margin: 30px;
+}
+.mysmallfont{
+    margin: 20px 0px;
+}
+.mybut{
+    margin: 70px auto;
+    text-align: center;
 }

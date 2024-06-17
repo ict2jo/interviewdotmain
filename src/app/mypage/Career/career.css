@@ -1,0 +1,44 @@
+body{
+background-color: #F1F1F1;
+width: 100%;
+height: 100%;
+}
+.mymaintext{
+    margin: 20px auto;
+    margin-top: 50px;
+    text-align: left;
+    padding: 0px 470px;
+}
+.whitebox{
+    background-color: white;
+    margin: 0px auto;
+    width: 50%;
+    padding: 30px;
+}
+.blueline{
+    background-color: #1400FF;
+    width: 50%;
+    height: 10px;
+    margin: 0px auto;
+
+}
+.mybut{
+    margin: 70px auto;
+    text-align: center;
+}
+.myname{
+    display: flex;
+    align-items: left;
+}
+.myname1{
+    line-height: 20px;
+    margin-bottom: 20px;
+}
+.myinfotitle{
+    width: 80px;
+    line-height: 30px;
+}
+.myinfodetail{
+    width: 500px;
+    line-height: 30px;
+}

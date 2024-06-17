@@ -3,10 +3,27 @@
 import { useSession } from "next-auth/react";
 import Link from "next/link";
 import { signOut } from "next-auth/react";
+import { useState } from "react";
 
 export default function SideNavigation() {
   const { data: session, status } = useSession();
+  const [isSubmenuVisible, setSubmenuVisible] = useState(false);
+  const handleMouseEnter = () => {
+    if (submenuTimeoutRef.current) {
+      clearTimeout(submenuTimeoutRef.current);
+    }
+    setSubmenuVisible(true);
+  };
 
+  const handleMouseLeave = () => {
+    submenuTimeoutRef.current = setTimeout(() => {
+      setSubmenuVisible(false);
+    }, 200); // 200ms 후에 서브메뉴를 숨김
+  };
+
+  const handleMenuClick = async (menu) => {
+    menuStore.setSelectedMenu(menu)
+  }
   return (
     <nav className="z-10 text-xl">
       <ul className="flex gap-3 items-center text-sm">
@@ -15,6 +32,8 @@ export default function SideNavigation() {
             <Link
               href="/mypage"
               className="hover:text-accent-400 transition-colors flex items-center gap-4"
+              onMouseEnter={handleMouseEnter}
+              onMouseLeave={handleMouseLeave}
             >
               <img
                 className="h-8 rounded-full"
@@ -24,6 +43,7 @@ export default function SideNavigation() {
               />
               <span>{session.user.name}</span>
             </Link>
+              {isSubmenuVisible && <SubMenu handleMenuClick={handleMenuClick}/>}
             <li>
               <button className="hover:bg-primary-100 transition-colors" onClick={() => {
                 signOut()

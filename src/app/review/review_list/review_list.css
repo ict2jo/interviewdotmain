@@ -35,6 +35,7 @@
     cursor: pointer;
 }
 
+
 .review_box_1 h1, .review_box_2 h1, .review_box_3 h1, .review_box_4 h1{
     font-size: 20px;
     font-weight: 600;
@@ -46,7 +47,6 @@
     font-size: 10px;
     color: gray;
 }
-
 .review_box_1sub, .review_box_2sub, .review_box_3sub, .review_box_4sub {
     background-color: lightgray;
     width: 250px;
@@ -59,12 +59,15 @@
     
 }
 
+
+
 /* 동일 스타일 적용 */
 .review_box_1, .review_box_2, .review_box_3, .review_box_4 {
     padding-top: 200px;
 }
 
 .paging{
-    margin-bottom: 200px;
     margin: 0 auto;
+    margin-left: 440px;
+    
 }
