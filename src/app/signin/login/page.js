@@ -9,6 +9,7 @@ import kakao from "@/../public/ikakao.png";
 import naver from "@/../public/inaver.png";
 import google from "@/../public/igoogle.png";
 import Button from "@/app/_components/Button";
+import { useEffect } from "react";
 
 export default function Page() {
   const { data: session, status } = useSession();
