@@ -1,5 +1,5 @@
 "use client";
-import { signIn } from "next-auth/react";
+import { signIn, useSession } from "next-auth/react";
 import Link from "next/link";
 import Image from "next/image";
 
@@ -9,8 +9,19 @@ import kakao from "@/../public/ikakao.png";
 import naver from "@/../public/inaver.png";
 import google from "@/../public/igoogle.png";
 import Button from "@/app/_components/Button";
+import { useEffect } from "react";
 
 export default function Page() {
+  const { data: session, status } = useSession();
+
+  useEffect(() => {
+    // When the session status changes to 'authenticated'
+    if (status === "authenticated") {
+      const jwtToken = session?.accessToken; // Assuming this is where the \
+      localStorage.setItem("accessToken", jwtToken);
+    }
+  }, [session, status]);
+
   return (
     <Form width="w-1/3">
       <div className="flex flex-col gap-5 border-b-2 border-gray-500 pb-5">
