@@ -5,10 +5,15 @@ import './starthome.css'
 export default function Starthome(params) {
 
     const openPopup = () => {
-        window.open('/interview/select', 'interview', 'width=1000,height=800');
+        const width = 1200;
+        const height = 800;
+        const left = (window.innerWidth - width) / 2 + window.screenX;
+        const top = (window.innerHeight - height) / 2 + window.screenY;
+        window.open('/interview/select', 'interview', `width=${width},height=${height},left=${left},top=${top}`);
     };
 
-    const [question, setQuestion] = useState('');
+
+  const [question, setQuestion] = useState('');
   const [answer, setAnswer] = useState();
 
   const handleSubmit = async (e) => {
@@ -56,8 +61,6 @@ export default function Starthome(params) {
         <button type='submit'>질문하기</button>
       </form>
       <div>{answer}</div>
-        
         </>
-
     );
 }

@@ -3,30 +3,23 @@
     width: 1000px;
     margin: 0 auto;
 }
-
 .list_container h1{
     font-size: 30px;
     text-align: center;
     margin-bottom: 20px;
     margin-top: 20px; 
 }
-
 .review_list{
     display: flex;
     flex-direction: column;
     align-items: center;
     width: 130%;
-    margin-top: 20px;
 }
-
-.review_row{
+.review_area{
     display: flex;
     flex-direction: row;
-    justify-content: center;
-    align-items: flex-start;
     max-width: 1000px;
-    margin-bottom: 30px;
-    margin-right: 5px;
+    margin-bottom: 20px;
 }
 .review_box{
     background-color: white;
@@ -34,65 +27,41 @@
     padding: 20px;
     border-top: 5px solid blue;
     text-align: left;
-    margin-right: 100px;
     margin-top: 50px;
+    margin-right: 10px;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* 그림자 효과 추가 */
 }
-.review_box h1{
-    text-align: left;
-    font-size: 20px;
-    font-weight: 600px;
-    color: blue;
-    margin-bottom: 10px; 
+.review_box input{
+    border: 1px solid lightgray;
+    border-radius: 5px;
+    margin: 5px;
 }
-.review_box h2{
-    font-size: 16px;
-    color: gray;
-    margin-bottom: 10px;
-}
-.review_box h3{
-    font-size: 14px;
-    color: black;
-    margin-bottom: 10px; 
-}
-.review_box h4{
-    font-size: 10px;
-    color: gray;
-    margin-bottom: 10px;
-}
-.list_sub{
+.review_sub{
     background-color: white;
-    width: 200px;
+    width: 300px;
     height: 200px;
-    padding: 30px;
+    padding: 34px;
     margin-top: 50px;
+    margin-left: 15px;
     text-align: left;
     border-top: 5px solid blue;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* 그림자 효과 추가 */
 }
-.list_sub h1{
-    text-align: left;
-    font-size: 18px; 
+.review_sub input{
+    border: 1px solid gray;
 }
-.list_content{
+.review_content{
     background-color: white;
-    width: 70%;
+    width: 680px;
     height: 400px;
     max-width: 1000px;
     padding: 20px;
-    margin: 0 auto;
     margin-bottom: 100px;
+    margin-left: 150px;
     text-align: left;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* 그림자 효과 추가 */
 }
+.review_content .ql-editor{
+    height: 300px;
+}
 
-.list_content p{
-    font-size: 12px;
-    color: black;
-    text-align: center;
-    margin-bottom: 50px;  
-}
-.write_btn1{
-    background-color: white;
-    color: black;
-}

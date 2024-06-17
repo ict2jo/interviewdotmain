@@ -9,6 +9,7 @@ import Header from "./_components/Header";
 import Main from "./main/page";
 import Job from "./job/page";
 import List from "./job/recruitment/list/page";
+import Review_Community from "./review/review_community/page";
 import Selfprofile from "./mypage/selfProfile/page";
 import Career from "./mypage/Career/page";
 import Interview_history from "./ai/interview_history/page";
@@ -56,7 +57,7 @@ function Home(){
             case "airesult_question" :
                 return <QuestionRepository />; //질문 저장소
             case "self" :
-                return <Career/>;
+                return <Career/>; //자기소개서
             case "job" :
                 return <Job />;
             case "news" :
@@ -66,7 +67,15 @@ function Home(){
             case "recruitment" :
                 return <List />;
             case "review" :
-                return <Review />; //면접후기
+                return <Review_Community />; //면접후기
+            case "profile" :
+                return <Selfprofile />;
+            case "career" :
+                return <Career />;
+            case "schedule" :
+                return <Calendar />;
+            case "inquiry" :
+                return <Inquiry />;
             default:
                 return <Main />
     }

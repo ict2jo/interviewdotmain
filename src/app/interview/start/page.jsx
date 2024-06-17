@@ -4,12 +4,20 @@ import React, { useState, useEffect } from 'react';
 import './start.css';
 import { Button, Grid } from "@mui/material";
 import Image from 'next/image';
-import sample_image from "@/public/sample.png";
+import sample_image from "@/../public/sample.png";
 import { usePagination, PaginationItemType } from "@nextui-org/react";
 import { ChevronIcon } from "@/app/_components/ChevronIcon";
+import {useRouter} from "next/navigation";
 
 export default function Start() {
     const [time, setTime] = useState(90);
+    const router = useRouter();
+    const { activePage, range, setPage, onNext } = usePagination({
+        total: 6,
+        showControls: true,
+        siblings: 1,
+        boundaries: 1,
+    });
 
     useEffect(() => {
         const timer = setInterval(() => {
@@ -23,33 +31,24 @@ export default function Start() {
         }, 1000);
 
         return () => clearInterval(timer);
-    }, []);
+    }, [activePage]);
 
     const minutes = Math.floor(time / 60);
     const seconds = time % 60;
 
-    // 타이머가 멈추면 다음페이지로 이동하게
-    /* if (time == 0){
-        location.href="/";
-    } */
-
-    // 페이징
-    const { activePage, range, setPage,onNext } = usePagination({
-        total: 6,
-        showControls: true,
-        siblings: 1,
-        boundaries: 1,
-    });
-
     const handlePageChange = (page) => {
         setPage(page);
-        setTime(90);// 타이머 재설정
+        setTime(90); // 타이머 재설정
     };
 
     const nextPage = () => {
-        onNext();
+        if (activePage === 6) {
+            router.push("/interview/finish");
+        } else {
+            onNext();
+            setTime(90); // 타이머 재설정
+        }
     };
-
 
     return (
         <div className="container">
@@ -77,33 +76,33 @@ export default function Start() {
                     <Button variant="contained" className="check_button">확인</Button>
                 </div>
                 <div className="paging_number">
-                <ul className="flex gap-2 items-center pagination_container">
-                    {range.map((page, index) => {
-                        if (page === PaginationItemType.PREV || page === PaginationItemType.NEXT) {
-                            return null;
-                        }
+                    <ul className="flex gap-2 items-center pagination_container">
+                        {range.map((page, index) => {
+                            if (page === PaginationItemType.PREV || page === PaginationItemType.NEXT) {
+                                return null;
+                            }
 
-                        if (page === PaginationItemType.DOTS) {
+                            if (page === PaginationItemType.DOTS) {
+                                return (
+                                    <li key={`dots-${index}`} className="w-4 h-4">
+                                        ...
+                                    </li>
+                                );
+                            }
+
                             return (
-                                <li key={`dots-${index}`} className="w-4 h-4">
-                                    ...
+                                <li key={`page-${index}`} aria-label={`page ${page}`} className="w-4 h-4">
+                                    <button
+                                        className={`pagination_button ${activePage === page ? "active" : ""}`}
+                                        onClick={() => handlePageChange(page)}
+                                    >
+                                        {page}
+                                    </button>
                                 </li>
                             );
-                        }
-
-                        return (
-                            <li key={`page-${index}`} aria-label={`page ${page}`} className="w-4 h-4">
-                                <button
-                                    className={`pagination_button ${activePage === page ? "active" : ""}`}
-                                    onClick={() => handlePageChange(page)}
-                                >
-                                    {page}
-                                </button>
-                            </li>
-                        );
-                    })}
-                </ul>
-            </div>
+                        })}
+                    </ul>
+                </div>
             </div>
         </div>
     );
