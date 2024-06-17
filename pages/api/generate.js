@@ -1,45 +1,48 @@
-import { Configuration, OpenAIApi } from 'openai';
+import dotenv from 'dotenv';
+import { OpenAI } from 'openai';
 
-const configuration = new Configuration({
+dotenv.config({ path: __dirname + '/.env' });
+
+const openai = new OpenAI({
   apiKey: process.env.OPENAI_API_KEY,
 });
 
-const openai = new OpenAIApi(configuration);
-
 export default async function handler(req, res) {
-  if (!configuration.apiKey) {
-    return res.status(500).json({
-      error: {
-        message: 'OpenAI API key not configured',
-      },
-    });
+  if (req.method !== 'POST') {
+    return res.status(405).json({ error: 'Method Not Allowed' });
   }
-
-  const question = req.body.question || '';
-
-  if (question.trim().length === 0) {
-    return res.status(400).json({
-      error: {
-        message: 'Question is required',
-      },
-    });
-  }
-
   try {
-    const response = await openai.createCompletion({
-      model: 'text-davinci-003',
-      prompt: `I am a highly intelligent question answering bot. If you ask me ${question} that is rooted in truth, I will give you the answer to Korean. If you ask me a question that is nonsense, trickery, or has no clear answer, I will respond with "잘 모르겠습니다.".\n`,
-      temperature: 0,
-      max_tokens: 100,
-    });
+    const { question } = req.body;
 
-    return res.status(200).json({ result: response.data.choices[0].text.trim() });
-  } catch (error) {
-    console.error('Error with OpenAI API request:', error);
-    return res.status(500).json({
-      error: {
-        message: 'An error occurred during your request.',
-      },
+    const response = await openai.chat.completions.create({
+      model: "gpt-3.5-turbo",
+      messages: [
+        {
+          role: "assistant",
+          content: "You will be provided with statements, Please give me an appropriate answer to my question in Korean."
+        },
+        {
+          role: "user",
+          content: question
+        }
+      ],
+      temperature: 0.7,
+      // max_tokens: 64,s
+      top_p: 1,
     });
+    
+
+    // console.log('OpenAI API Response:', response.choices[0].message.content); // 응답 데이터 출력
+
+    let answer = '';
+
+    if (response && response.choices && response.choices.length > 0) {
+      answer = response.choices[0].message.content.trim();
+    }
+
+    res.status(200).json({ answer });
+  } catch (error) {
+    console.error('Error:', error);
+    res.status(500).json({ error: 'An error occurred' });
   }
 }
