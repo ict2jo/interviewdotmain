@@ -1,32 +1,72 @@
-import { Button } from "@mui/material";
+"use client"
+
+import { observer } from "mobx-react-lite";
+import { useRouter } from "next/navigation";
+import { useContext, useEffect } from "react";
+import { MenuContext } from "@/stores/StoreContext";
 import Header from "./_components/Header";
-import Footer from "./_components/Footer";
-import Image from "next/image";
-import bg from "./../../public/images/bg.png"
-import Link from "next/link";
-export default function Home() {
-  return (
-    <>
-      <div className="w-full flex flex-col justify-center items-center mb-20">
+
+import Main from "./main/page";
+import Interview_start from "./interview/interview_start/page";
+import Job from "./job/page";
+import List from "./job/recruitment/list/page";
+import Loading from "./loading/page";
+
+
+function Home(){
+   // useContext 훅으로 MobX Store 가져오기 
+  const menuStore = useContext(MenuContext)  
+
+  const router = useRouter();
+    
+    // 로컬 스토리지에서 상태 불러오기
+    useEffect(() => {
+        const savedMenu = localStorage.getItem('selectedMenu');
+        if (savedMenu) {
+            menuStore.setSelectedMenu(savedMenu);
+        }
+    }, [menuStore]);
+
+    // 선택된 메뉴가 변경될 때마다 로컬 스토리지에 저장
+    useEffect(() => {
+        localStorage.setItem('selectedMenu', menuStore.selectedMenu);
+    }, [menuStore.selectedMenu]);
+
+    const renderContent = () => {
+        switch(menuStore.selectedMenu){
+            case "ai" :
+                return <Interview_start />;
+            case "Airesult" :
+                return <Airesult />;
+            case "airesult_history" :
+                return <Airesult />; //면접 기록
+            case "airesult_feedback" :
+                return <Airesult />; //AI 피드백
+            case "airesult_guide" :
+                return <Airesult />; //면접 가이드
+            case "airesult_question" :
+                return <Airesult />; //질문 저장소
+            case "job" :
+                return <Job />;
+            case "news" :
+                return <Job />; //뉴스
+            case "event" :
+                return <Job />; //이벤트
+            case "recruitment" :
+                return <List />;
+            case "review" :
+                return <Review />; //면접후기
+            default:
+                return <Loading />
+    }
+    }
+    return(
+        <div>
         <Header />
-        {/* <Button variant="text">Text</Button>
-          <Button variant="contained">Contained</Button>
-          <Button variant="outlined">Outlined</Button> */}
-        <div className="w-1/3 mt-10">
-          {/*  임시 이미지 */}
-          <Image src={bg} className="" alt="background image" />
+        {renderContent()}
+        <footer>Copyright by ... </footer>
         </div>
-        <p className="text-3xl m-10 font-extrabold mpt-10">
-          인터뷰 닷으로 취업하자{" "}
-        </p>
-        <Link
-          href="/"
-          className="bg-primary-500 text-white py-2 w-48 h-12 rounded-full font-bold hover:opacity-95 text-center leading-8"
-        >
-          바로 시작하기
-        </Link>
-      </div>
-      <Footer />
-    </>
-  );
+    )
 }
+
+export default observer(Home);

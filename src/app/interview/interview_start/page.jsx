@@ -1,6 +1,5 @@
 "use client"
 
-import Header from '@/app/_components/Header';
 import './interview_start.css'
 export default function Interview_start(params) {
 
@@ -10,7 +9,6 @@ export default function Interview_start(params) {
     
     return (
         <>       
-        <Header />
         <div className="interview_start">
             <button onClick={openPopup}>
                 면접 연습 시작하기
