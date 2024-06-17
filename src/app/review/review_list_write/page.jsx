@@ -17,6 +17,7 @@ export default function Review_List_Write() {
     };
     return(
         <>
+            <Header />
             <div className="list_container">
                 <h1>면접 후기 작성</h1>
                 <div className="review_list">

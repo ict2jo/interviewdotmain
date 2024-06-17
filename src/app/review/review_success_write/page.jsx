@@ -22,6 +22,7 @@ export default function Review_Success_Write() {
 
     return (
         <>
+        <Header />
             <div className="write_container">
                 <h1>합격자 후기 작성</h1>
                 <div className="write_list">

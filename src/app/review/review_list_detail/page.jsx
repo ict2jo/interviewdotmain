@@ -4,10 +4,21 @@ import Header from "@/app/_components/Header"
 import { Button, Pagination, Rating } from "@mui/material"
 import "./review_list_detail.css"
 import Link from "next/link"
+import { useRouter } from "next/navigation"
 
 export default function Review_List_Detail() {
+    const router = useRouter();
+
+    const handlewrite = () => {
+        router.push("./review_list_write")
+    };
+    const handlelist = () => {
+        router.push("./review_list")
+    };
+
     return (
         <>
+            <Header />
             <div className="list_container">
                 <h1>면접 후기</h1>
                 <div className="review_list">
@@ -34,8 +45,8 @@ export default function Review_List_Detail() {
                     </p>
                 </div>
                 <div>
-                <Button className="write_btn1" variant="contained"><Link href={"./review_list"}>목록</Link></Button>    
-                <Button className="write_btn1" variant="contained"><Link href={"./review_list_write"}>작성 하기</Link></Button>
+                <Button className="write_btn1" variant="contained" onClick={handlelist}>목록</Button>    
+                <Button className="write_btn1" variant="contained" onClick={handlewrite}>작성 하기</Button>
                 </div>
             </div>
 
