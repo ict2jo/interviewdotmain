@@ -22,22 +22,28 @@ function PageContent() {
     id,
     pw,
     checkPw,
-    phone,
+    phone1,
+    phone2,
+    phone3,
+    phonenumber,
     showTerms,
     isChecked,
+    isMatched,
     displayDate,
     selectedOption,
     isCustomDomain,
     handleFieldChange,
     validateId,
-    validatePw,
+    validPw,
     handleDateChange,
     validateForm,
     handleSubmit,
     dispatch,
     handleOptionChange,
+    handleNumberChange,
   } = useCreateUser();
 
+  console.log("ismatched", isMatched);
   return (
     <Form onSubmit={handleSubmit} width="w-2/4">
       <p className="font-semibold">환영합니다.</p>
@@ -101,7 +107,7 @@ function PageContent() {
           <button
             type="button"
             class="bg-gray-400 text-gray-700 py-2 px-2 rounded-xl w-14 h-8 text-[10px] absolute right-5 top-2 font-bold hover:opacity-90"
-            onClick={validateId}
+            onClick={() => validateId(id)}
           >
             중복확인
           </button>
@@ -111,23 +117,44 @@ function PageContent() {
         </div>
         <div className="w-full">
           <Input
+            autocomplete="new-password"
             name="pw"
             type="password"
             placeholder="비밀번호"
-            onChange={handleFieldChange("pw")}
+            onChange={(e) =>
+              dispatch({ type: "validatePw", payload: e.target.value })
+            }
             value={pw}
           />
-          <p className="text-[11px] px-5 pt-2">
-            8-16자, 영문 대·소문자, 숫자, 특수문자 2종류 이상 사용
-          </p>
+          {!validPw ? (
+            <p className="text-[11px] px-5 pt-2">
+              8-16자, 영문 대·소문자, 숫자, 특수문자 2종류 이상 사용
+            </p>
+          ) : (
+            <p className="text-[11px] px-5 pt-2 text-green-600">
+              사용가능한 비밀번호입니다.
+            </p>
+          )}
         </div>
-        <Input
-          name="checkPw"
-          type="password"
-          placeholder="비밀번호 확인"
-          value={checkPw}
-          onChange={handleFieldChange("checkPw")}
-        />
+        <div className="w-full">
+          <Input
+            autocomplete="new-password"
+            name="checkPw"
+            type="password"
+            placeholder="비밀번호 확인"
+            value={checkPw}
+            onChange={(e) =>
+              dispatch({ type: "checkPw", payload: e.target.value })
+            }
+          />
+          {isMatched ? (
+            <p className="text-[11px] px-5 pt-2 text-green-600">
+              비밀번호가 일치합니다.
+            </p>
+          ) : (
+            <p className="text-[11px] px-5 pt-2"> 비밀번호를 확인해주세요. </p>
+          )}
+        </div>
         <div className="w-full h-12 px-2 custom-datepicker-wrapper">
           <span>생년월일</span>
           <ReactDatePicker
@@ -143,12 +170,33 @@ function PageContent() {
             value={displayDate}
           />
         </div>
-        <Input
-          type="number"
-          placeholder="전화번호"
-          value={phone}
-          onChange={(e) => dispatch(handleFieldChange("checkPw"))}
-        />
+        <div className="w-full">
+          <div className="w-full flex justify-between gap-2">
+            <input
+              className="w-full h-12 px-2 bg-gray-100 rounded-xl placeholder-gray-600 text-xs cursor-pointer"
+              type="number"
+              defaultValue="010"
+              name={phone1}
+              onChange={handleNumberChange("phone1")}
+              maxLength={4}
+            />
+            <span>_</span>
+            <Input
+              type="number"
+              name={phone2}
+              onChange={handleNumberChange("phone2")}
+              maxLength={4}
+            />
+            <span>_</span>
+            <Input
+              type="number"
+              name={phone3}
+              maxLength={4}
+              onChange={handleNumberChange("phone3")}
+            />
+          </div>
+          <p className="text-[11px] px-5 pt-2">전화번호를 입력해주세요.</p>
+        </div>
         <div className="flex gap-2 border-b-2 border-gray-500 w-full mt-5 relative">
           <input
             type="checkbox"
