@@ -17,8 +17,8 @@ import Interview_feedback from "./ai/interview_feedback/page";
 import Interview_guide from "./ai/interview_guide/page";
 import QuestionRepository from "./ai/question_repository/page";
 import Starthome from "./interview/starthome/page";
-import Chathome from "../../pages/chathome";
 import JobTest from "./job/test/JobTest";
+import Verification from "../../pages/verification";
 
 function Home() {
   // useContext 훅으로 MobX Store 가져오기
@@ -44,7 +44,9 @@ function Home() {
       case "main":
         return <Main />;
       case "ai":
-        return <Chathome />;
+        return <Starthome />;
+      case "verification":
+      return <Verification />;
       case "Airesult":
         return <Airesult />;
       case "airesult_history":
