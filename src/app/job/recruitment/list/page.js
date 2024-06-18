@@ -77,7 +77,7 @@ export default function list() {
     };
 
     return (
-        <>
+        <div className="recruitmentlistwrapbg">
         <div className="recruitmentlistwrap">
             <Searchbox
                 workRgnLst={workRgnLst}
@@ -103,6 +103,6 @@ export default function list() {
                 className="pagination"
                 />
         </div>
-        </>
+        </div>
     );
 }

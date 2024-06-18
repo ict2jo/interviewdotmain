@@ -1,0 +1,67 @@
+.list_container{
+    text-align: center;
+    width: 1000px;
+    margin: 0 auto;
+}
+.list_container h1{
+    font-size: 30px;
+    text-align: center;
+    margin-bottom: 20px;
+    margin-top: 20px; 
+}
+.review_list{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 130%;
+}
+.review_area{
+    display: flex;
+    flex-direction: row;
+    max-width: 1000px;
+    margin-bottom: 20px;
+}
+.review_box{
+    background-color: white;
+    width: 700px;
+    padding: 20px;
+    border-top: 5px solid blue;
+    text-align: left;
+    margin-top: 50px;
+    margin-right: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* 그림자 효과 추가 */
+}
+.review_box input{
+    border: 1px solid lightgray;
+    border-radius: 5px;
+    margin: 5px;
+}
+.review_sub{
+    background-color: white;
+    width: 300px;
+    height: 200px;
+    padding: 34px;
+    margin-top: 50px;
+    margin-left: 15px;
+    text-align: left;
+    border-top: 5px solid blue;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* 그림자 효과 추가 */
+}
+.review_sub input{
+    border: 1px solid gray;
+}
+.review_content{
+    background-color: white;
+    width: 680px;
+    height: 400px;
+    max-width: 1000px;
+    padding: 20px;
+    margin-bottom: 100px;
+    margin-left: 150px;
+    text-align: left;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* 그림자 효과 추가 */
+}
+.review_content .ql-editor{
+    height: 300px;
+}
+

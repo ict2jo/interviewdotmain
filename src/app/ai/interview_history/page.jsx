@@ -18,7 +18,6 @@ import Header from "@/app/_components/Header";
 export default function Interview_history(){
     return(
         <>
-        <Header/>
         <div className="container">
             <div className="white_box">
             <div className="title">
