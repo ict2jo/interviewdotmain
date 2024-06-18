@@ -1,6 +1,6 @@
 "use client";
 import { createContext, useContext, useReducer } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate } from "next/router";
 
 const OptionContext = createContext();
 

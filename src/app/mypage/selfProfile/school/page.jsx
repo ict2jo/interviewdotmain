@@ -1,5 +1,3 @@
-"use client"
-
 import * as React from 'react';
 import OutlinedInput from '@mui/material/OutlinedInput';
 import MenuItem from '@mui/material/MenuItem';
@@ -10,55 +8,59 @@ import InputLabel from '@mui/material/InputLabel';
 const ITEM_HEIGHT = 28;
 const ITEM_PADDING_TOP = 2;
 const MenuProps = {
-PaperProps: {
+  PaperProps: {
     style: {
-    maxHeight: ITEM_HEIGHT * 4.5 + ITEM_PADDING_TOP,
-    width: 350,
+      maxHeight: ITEM_HEIGHT * 4.5 + ITEM_PADDING_TOP,
+      width: 350,
     },
-},
+  },
 };
 
 const schoollist = [
-'학력무관',
-'중졸이하',
-'고졸',
-'대졸(2~3년)',
-'대졸(4년)',
-'석사',
-'박사',
+  '학력무관',
+  '중졸이하',
+  '고졸',
+  '대졸(2~3년)',
+  '대졸(4년)',
+  '석사',
+  '박사',
 ];
-export default function Schoollist() {
-    const [personName, setPersonName] = React.useState([]);
 
-    const handleChange = (event) => {
-        const {
-        target: { value },
-        } = event;
-        setPersonName(
-        typeof value === 'string' ? value.split(',') : value,
-        );
-    };
-return(
+export default function Schoollist({ uvo, handleSchoollistChange }) {
+  const [p_class, setP_class] = React.useState([]); // uvo.p_job의 기본 값으로 설정
+
+  React.useEffect(() => {
+    if (uvo.p_class) {
+      setP_class(uvo.p_class.split(','));
+    } else {
+      setP_class([]);
+    }
+  }, [uvo.p_class]);
+
+  const handleChange = (event) => {
+    const { value } = event.target;
+    setP_class(value);
+    handleSchoollistChange(value.join(',').replace(/^,/, '')); // 맨 앞의 쉼표 제거 후 전달
+  };
+
+  return (
     <FormControl sx={{ m: 0, width: 683.5 }}>
-                <InputLabel id="demo-multiple-name-label">업종을 선택하세요</InputLabel>
-                    <Select
-                    labelId="demo-multiple-name-label"
-                    id="demo-multiple-name"
-                    multiple
-                    value={personName}
-                    onChange={handleChange}
-                    input={<OutlinedInput label="업종을 선택하세요" />}
-                    MenuProps={MenuProps}
-                    >
-                    {schoollist.map((schoollist) => (
-                        <MenuItem
-                        key={schoollist}
-                        value={schoollist}
-                        >
-                        {schoollist}
-                        </MenuItem>
-                    ))}
-                    </Select>
-                </FormControl>
-)
+      <InputLabel id="demo-multiple-name-label">학력을 선택하세요</InputLabel>
+      <Select
+        labelId="demo-multiple-name-label"
+        id="demo-multiple-name"
+        multiple
+        value={p_class}
+        onChange={handleChange}
+        input={<OutlinedInput label="p_class" />}
+        MenuProps={MenuProps}
+      >
+        {schoollist.map((k) => (
+          <MenuItem key={k} value={k}>
+            {k}
+          </MenuItem>
+        ))}
+      </Select>
+    </FormControl>
+  );
 }
