@@ -1,5 +1,6 @@
 'use client'
 import moment from 'moment';
+import axios from 'axios';
 import 'react-datepicker/dist/react-datepicker.css';
 import ReactDatePicker from 'react-datepicker';
 import { useSession } from 'next-auth/react';
@@ -7,10 +8,9 @@ import { useReducer } from "react";
 import Link from 'next/link';
 import Form from "@/app/_components/Form";
 import Input from "@/app/_components/Input";
-
 import Button from '@/app/_components/Button';
 import Terms from "@/app/_components/Terms";
-import { createUser } from "@/app/_lib/actions";
+
 
 function reducer(state, action) {
   switch (action.type) {
@@ -87,13 +87,20 @@ function Page() {
     return true;
   };
 
-  const handleSubmit = (e) => {
+  async function handleSubmit(e) {
     e.preventDefault();
     if (!validateForm()) {
       return;
     }
-    //`회원가입 처리
-    createUser({ name, email, birth, id, pw, phone });
+
+    try {
+      const response = await axios.post('http://localhost:8080/api/create', formData);
+      console.log('User created:', response.data);
+
+    } catch (error) {
+      console.error('Error creating user:', error);
+
+    }
   };
 
 
@@ -192,8 +199,8 @@ function Page() {
           )}
         </div>
         {showTerms && <Terms isChecked={isChecked} />}
-        {/* <Button type="mdBlue">회원가입</Button> */}
-        <Link href="/signin/optionalInfo" class="bg-primary-500 rounded-3xl px-[3rem] py-3 text-white">회원가입</Link>
+        <Button type="mdBlue" onClick={handleSubmit}>회원가입</Button>
+        {/* <Link href="/signin/optionalInfo" class="bg-primary-500 rounded-3xl px-[3rem] py-3 text-white">회원가입</Link> */}
       </div>
     </Form >
   );
