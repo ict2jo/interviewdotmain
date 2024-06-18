@@ -3,102 +3,41 @@ import moment from 'moment';
 import 'react-datepicker/dist/react-datepicker.css';
 import ReactDatePicker from 'react-datepicker';
 import { useSession } from 'next-auth/react';
-import { useReducer } from "react";
-import Link from 'next/link';
 import Form from "@/app/_components/Form";
 import Input from "@/app/_components/Input";
-
-import Button from '@/app/_components/Button';
 import Terms from "@/app/_components/Terms";
-import { createUser } from "@/app/_lib/actions";
+import { CreateUserProvider, useCreateUser } from '@/app/_lib/hooks/CreateUserContext';
 
-function reducer(state, action) {
-  switch (action.type) {
-    case "name":
-      return { ...state, name: action.payload };
-    case "email":
-      return { ...state, email: action.payload };
-    case "birth":
-      return { ...state, birth: action.payload };
-    case "displayDate":
-      return { ...state, displayDate: action.payload };
-    case "id":
-      return { ...state, id: action.payload };
-    case "pw":
-      return { ...state, pw: action.payload };
-    case "phone":
-      return { ...state, phone: action.payload };
-    case "showTerms":
-      return { ...state, showTerms: action.payload };
-    case "isChecked":
-      return { ...state, isChecked: action.payload };
-    default:
-      return state;
-  }
-}
 
-function Page() {
-  const { data: session, status } = useSession();
-  const initialState = {
-    name: session?.user?.name || "",
-    email: session?.user?.email || "",
-    birth: "",
-    id: "",
-    pw: "",
-    checkPw: "",
-    phone: "",
-    showTerms: false,
-    isChecked: false,
-  };
+function PageContent() {
 
-  const [{ name, email, birth, id, pw, checkPw, phone, showTerms, isChecked, displayDate }, dispatch] = useReducer(reducer, initialState);
-
-  function validateId(id) {
-    const idRegex = /^[a-z0-9_-]{5,20}$/;
-    if (!idRegex.test(id)) {
-      alert('5-20자, 영문 소문자, 숫자, 특수문자 (-), (_)만 사용해주세요')
-      return false;
-    }
-    return true
-  }
-
-  function validatePw(pw) {
-    const pwRegex = /^(?=.*[a-z])(?=.*[0-9])(?=.*[_-])(?=.*[^a-zA-Z0-9_-]).{8,16}$/;
-    if (!pwRegex.test(pw)) {
-      alert('5-20자, 영문 소문자, 숫자, 특수문자 (-), (_)만 사용해주세요')
-      return false;
-    }
-    return true
-  }
-  const handleDateChange = (date) => {
-    if (date) {
-      const formattedDisplayDate = moment(date).format('YYYY년 MM월 DD일');
-      const formattedDate = moment(date).format('YYMMDD');
-      dispatch({ type: 'displayDate', payload: formattedDisplayDate });
-      dispatch({ type: 'birth', payload: formattedDate });
-    }
-  };
-
-  function validateForm() {
-    if (pw !== checkPw) {
-      alert("비밀번호가 일치하지 않습니다.");
-      return false;
-    }
-    return true;
-  };
-
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    if (!validateForm()) {
-      return;
-    }
-    //`회원가입 처리
-    createUser({ name, email, birth, id, pw, phone });
-  };
+  const { data: session, status } = useSession()
+  const { dispatch,
+    name,
+    email,
+    birth,
+    id,
+    pw,
+    checkPw,
+    isMatched,
+    phone1,
+    phone2,
+    phone3,
+    showTerms,
+    isChecked,
+    displayDate,
+    isCustomDomain,
+    handleFieldChange,
+    validateId,
+    validPw,
+    handleDateChange,
+    handleSubmit,
+    handleOptionChange,
+    handleNumberChange } = useCreateUser()
 
 
   return (
-    <Form onSubmit={handleSubmit} width="w-2/4">
+    <Form width="w-2/4">
       <p className="font-semibold">환영합니다.</p>
       <p className="font-semibold border-b-2 border-primary-950 pb-5 mb-8">
         당신의 취업을 진심으로 응원해요.
@@ -170,14 +109,14 @@ function Page() {
         </div>
         <div className="w-full">
           <Input
-            autocomplete="new-password"
+            // autocomplete="new-password"
             name="pw"
             type="password"
             placeholder="비밀번호"
             onChange={(e) =>
               dispatch({ type: "validatePw", payload: e.target.value })
             }
-            value={pw}
+          // value={pw}
           />
           {!validPw ? (
             <p className="text-[11px] px-5 pt-2">
@@ -207,6 +146,28 @@ function Page() {
           ) : (
             <p className="text-[11px] px-5 pt-2"> 비밀번호를 확인해주세요. </p>
           )}
+        </div>  <div className="w-full">
+          <div className="w-full flex justify-between gap-2">
+            <input
+              className="w-full h-12 px-2 bg-gray-100 rounded-xl placeholder-gray-600 text-xs cursor-pointer"
+              type="number"
+              name={phone1}
+              onChange={handleNumberChange("phone1")}
+            />
+            <span>_</span>
+            <Input
+              type="number"
+              name={phone2}
+              onChange={handleNumberChange("phone2")}
+            />
+            <span>_</span>
+            <Input
+              type="number"
+              name={phone3}
+              onChange={handleNumberChange("phone3")}
+            />
+          </div>
+          <p className="text-[11px] px-5 pt-2">전화번호를 입력해주세요.</p>
         </div>
         <div className="w-full h-12 px-2 custom-datepicker-wrapper">
           <span>생년월일</span>
@@ -223,33 +184,7 @@ function Page() {
             value={displayDate}
           />
         </div>
-        <div className="w-full">
-          <div className="w-full flex justify-between gap-2">
-            <input
-              className="w-full h-12 px-2 bg-gray-100 rounded-xl placeholder-gray-600 text-xs cursor-pointer"
-              type="number"
-              defaultValue="010"
-              name={phone1}
-              onChange={handleNumberChange("phone1")}
-              maxLength={4}
-            />
-            <span>_</span>
-            <Input
-              type="number"
-              name={phone2}
-              onChange={handleNumberChange("phone2")}
-              maxLength={4}
-            />
-            <span>_</span>
-            <Input
-              type="number"
-              name={phone3}
-              maxLength={4}
-              onChange={handleNumberChange("phone3")}
-            />
-          </div>
-          <p className="text-[11px] px-5 pt-2">전화번호를 입력해주세요.</p>
-        </div>
+
         <div className="flex gap-2 border-b-2 border-gray-500 w-full mt-5 relative">
           <input
             type="checkbox"
@@ -294,8 +229,7 @@ function Page() {
           )}
         </div>
         {showTerms && <Terms isChecked={isChecked} />}
-        {/* <Button type="mdBlue">회원가입</Button> */}
-        <Link href="/signin/optionalInfo" class="bg-primary-500 rounded-3xl px-[3rem] py-3 text-white">회원가입</Link>
+        <button className="bg-primary-500 rounded-3xl px-[3rem] py-3 text-white" type="submit" onClick={handleSubmit}>회원가입</button>
       </div>
     </Form>
   );

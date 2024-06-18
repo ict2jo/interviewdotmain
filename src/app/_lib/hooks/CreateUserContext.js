@@ -2,8 +2,8 @@
 import moment from "moment";
 import { useReducer } from "react";
 import { useSession } from "next-auth/react";
+import axios from "axios";
 const { createContext, useContext } = require("react");
-
 const CreateUserContext = createContext();
 
 function reducer(state, action) {
@@ -12,6 +12,8 @@ function reducer(state, action) {
       return { ...state, displayDate: action.payload };
     case "updateField":
       return { ...state, [action.field]: action.payload };
+    case "birth":
+      return { ...state, birth: action.payload };
     case "validatePw":
       const pwRegex =
         /^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,16}$/;
@@ -34,11 +36,13 @@ function reducer(state, action) {
       return { ...state, showTerms: action.payload };
     case "isChecked":
       return { ...state, isChecked: action.payload };
+    case "updateRequiredTermsChecked":
+      return { ...state, requiredTermsChecked: action.payload };
     case "isSelected":
       if (action.payload === "직접작성") {
         return {
           ...state,
-          email: state.email + "@" + action.payload,
+          email: state.email,
           isCustomDomain: true,
         };
       } else {
@@ -93,6 +97,7 @@ function CreateUserProvider({ children }) {
       displayDate,
       selectedOption,
       isCustomDomain,
+      requiredTermsChecked,
       validPw,
       isMatched,
     },
@@ -102,6 +107,7 @@ function CreateUserProvider({ children }) {
   const handleFieldChange = (field) => (e) => {
     dispatch({ type: "updateField", field, payload: e.target.value });
   };
+
   function validateId(id) {
     const idRegex = /^[a-z0-9_-]{5,20}$/;
     if (!idRegex.test(id)) {
@@ -118,6 +124,7 @@ function CreateUserProvider({ children }) {
     if (date) {
       const formattedDisplayDate = moment(date).format("YYYY년 MM월 DD일");
       const formattedDate = moment(date).format("YYMMDD");
+      console.log("date", formattedDate);
       dispatch({ type: "displayDate", payload: formattedDisplayDate });
       dispatch({ type: "birth", payload: formattedDate });
     }
@@ -139,31 +146,55 @@ function CreateUserProvider({ children }) {
     };
   }
   function validateForm() {
-    if (pw !== checkPw) {
+    console.log(isMatched, "ismatched");
+    console.log(requiredTermsChecked, "requiredTermsChecked");
+    console.log(id, "id");
+    console.log(name, "name");
+    console.log(email, "email");
+    console.log(pw, "pw");
+    console.log(birth, "birth");
+    console.log(phone1, "phone1");
+    console.log(phone2, "phone2");
+    console.log(phone3, "phone3");
+    console.log(phonenumber, "phonenumber");
+
+
+    if (!isMatched) {
       alert("비밀번호가 일치하지 않습니다.");
       return false;
     }
     //  필수약관 체크 확인
-    if (!state.requiredTermsChecked) {
+    if (!requiredTermsChecked) {
       alert("필수 약관에 동의해야 합니다.");
       return false;
     }
-    if (isChecked) return true;
 
-    // 아이디 중복체크 확인
+    if (!id || !name || !email || !pw || !birth || !phone1 || !phone2 || !phone3) {
+      alert("모두 입력해주세요.");
+      return false;
+    }
 
-    //인풋 전체 필드 입력 확인
+    if (!isChecked) return false;
 
-    return true;
+    else return true;
   }
 
-  const handleSubmit = (e) => {
+  async function handleSubmit(e) {
     e.preventDefault();
+
     if (!validateForm()) {
+      console.log("submit called");
       return;
     }
-    //`회원가입 처리
-    // createUser({ name, email, birth, id, pw, phone });
+    console.log("submit called");
+    try {
+      const response = await axios.post('http://localhost:8080/api/create', { id, name, email, pw, birth, phonenumber });
+      console.log('User created:', response.data);
+
+    } catch (error) {
+      console.error('Error creating user:', error);
+
+    }
   };
 
   return (
@@ -186,6 +217,7 @@ function CreateUserProvider({ children }) {
         displayDate,
         selectedOption,
         isCustomDomain,
+        requiredTermsChecked,
         handleFieldChange,
         validateId,
         validPw,

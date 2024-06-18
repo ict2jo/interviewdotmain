@@ -6,7 +6,6 @@ export default function Input({
   type = "text",
   onChange,
   width = "w-full",
-  maxLength = null,
   value,
 }) {
   return (
@@ -16,7 +15,6 @@ export default function Input({
       className={`${width} h-12 px-2 bg-gray-100 rounded-xl placeholder-gray-600 text-xs cursor-pointer`}
       placeholder={placeholder}
       onChange={onChange}
-      maxLength={maxLength}
       value={value}
     />
   );

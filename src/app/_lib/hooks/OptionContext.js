@@ -1,6 +1,6 @@
 "use client";
 import { createContext, useContext, useReducer } from "react";
-import { useNavigate } from "react-router-dom";
+// import { useNavigate } from "react-router-dom";
 
 const OptionContext = createContext();
 
@@ -50,7 +50,7 @@ function reducer(state, action) {
 }
 
 function OptionProvider({ children }) {
-  const navigate = useNavigate();
+  // const navigate = useNavigate();
   const [
     {
       school,
