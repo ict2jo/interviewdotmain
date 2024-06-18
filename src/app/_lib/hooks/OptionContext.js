@@ -50,7 +50,7 @@ function reducer(state, action) {
 }
 
 function OptionProvider({ children }) {
-  const navigate = useNavigate();
+  // const navigate = useNavigate();
   const [
     {
       school,
