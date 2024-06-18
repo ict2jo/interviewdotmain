@@ -5,6 +5,7 @@ import SubMenu from "./SubMenu";
 import Interview_result_submenu from "./interview_result_submenu";
 import { MenuContext } from "@/stores/StoreContext";
 import { Typography } from "@mui/material";
+import Resume_submenu from "./Resume_submenu";
 
 export default function Navigation() {
   const [isSubmenuVisible, setSubmenuVisible] = useState(false);
@@ -50,13 +51,21 @@ export default function Navigation() {
         </div>
           {isSubmenuVisible && <Interview_result_submenu handleMenuClick={handleMenuClick}/>}
         </li>
-        <li className="whitespace-nowrap">
+
+        <li className="relative whitespace-nowrap"
+            onMouseEnter={handleMouseEnter}
+            onMouseLeave={handleMouseLeave}
+        >
+          <div>
           <Typography
             className="hover:bg-primary-100 transition-colors"
             onClick={() => handleMenuClick("self")}>
             자기소개서
           </Typography>
+          </div>
+          {isSubmenuVisible && <Resume_submenu handleMenuClick={handleMenuClick}/>}
         </li>
+
         <li
           className="relative whitespace-nowrap"
           onMouseEnter={handleMouseEnter}
