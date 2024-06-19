@@ -2,12 +2,12 @@
 
 import { Box,Pagination,} from "@mui/material";
 import axios from "axios";
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import './recruitmentlist.css';
 import Center from "./center/page";
 import Searchbox from "./searchbox/page";
 import Innerlist from "./innerlist/pags";
-import Header from "@/app/_components/Header";
+import { MenuContext } from "@/stores/StoreContext";
 
 export default function list() {
     const [list, setList] = useState([]);
@@ -22,19 +22,18 @@ export default function list() {
     const [workRgnText, setWorkRgnText] = useState("");
     const [searchQuery, setSearchQuery] = useState("");
     const [ongoingYn, setOngoingYn] = useState("");
-
+    const menuStore = useContext(MenuContext);
     useEffect(() => {
         fetchData();
     }, [pageNo, numOfRows, acbgCondLst, recrutSe, workRgnLst, searchQuery, ongoingYn]); 
 
     const fetchData = async () => {
         let queryParams = `serviceKey=B6imLe%2BFf%2B3fVWotgO%2BhgAihHyVI%2F7tlmTiqrvZifWgzl94sf9U4VL3GuwTIkEkjW3MsF%2BtQ3OnUHkqwMRmuMA%3D%3D&pageNo=${pageNo}&acbgCondLst=${acbgCondLst}&recrutSe=${recrutSe}&workRgnLst=${workRgnLst}&recrutPbancTtl=${searchQuery}&ongoingYn=${ongoingYn}`;
-
         const API_URL = `/recruitment/list?${queryParams}`;
 
         try {
             const response = await axios.get(API_URL);
-            console.log(response.data.result)
+            console.log(response.data.result);
             setList(response.data.result);
             setTotalItems(response.data.totalCount);
         } catch (error) {
@@ -76,6 +75,11 @@ export default function list() {
         setOngoingYn(prevState => prevState === "Y" ? "" : "Y");
     };
 
+    // const handleMyChange = () =>{
+    //     setAcbgCondLst(menuStore.uvolist.p_class)//학력
+    //     setRecrutSe(menuStore.uvolist.p_career)  //고용유형
+    //     setWorkRgnLst(menuStore.uvolist.p_location)//근무지
+    // }
     return (
         <div className="recruitmentlistwrapbg">
         <div className="recruitmentlistwrap">
@@ -92,7 +96,8 @@ export default function list() {
                 searchQuery={searchQuery} 
                 handleSearchChange={handleSearchChange} 
                 totalItems={totalItems} 
-                ongoingYn={ongoingYn} handleOngoingYnChange={handleOngoingYnChange} 
+                ongoingYn={ongoingYn} handleOngoingYnChange={handleOngoingYnChange}
+                //handleMyChange = {handleMyChange} 
                 />
             <Innerlist list={list} />
             <Pagination

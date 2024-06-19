@@ -9,23 +9,10 @@ const nextConfig = {
                 destination: "http://apis.data.go.kr/1051000/recruitment/:path*"
             },
             {
-                source : "/mypage/inquiry",
-                destination : "http://localhost:8080/mypage/inquiry"
-            },
-            {
-                source : "/mypage/inquirywrite",
-                destination : "http://localhost:8080/mypage/inquirywrite"
-            },
-            {
-                source : "/mypage/selfprofile",
-                destination : "http://localhost:8080/mypage/selfprofile"
-            },
-            {
-                source : "/mypage/editprofile",
-                destination : "http://localhost:8080/mypage/editprofile"
+                source: "/mypage/:path*",
+                    destination: "http://localhost:8080/mypage/:path*"
             }
         ];
     }
 };
-
 export default nextConfig;
