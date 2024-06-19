@@ -5,7 +5,7 @@ const nextConfig = {
     async rewrites(){
         return[
             {
-            source: "/recruitment/:path*",
+                source: "/recruitment/:path*",
                 destination: "http://apis.data.go.kr/1051000/recruitment/:path*"
             },
             {
@@ -16,6 +16,7 @@ const nextConfig = {
                 source : "/interview/choose",
                 destination : "http://localhost:8080/interview/choose"
             },
+            {
                 source : "/mypage/inquirywrite",
                 destination : "http://localhost:8080/mypage/inquirywrite"
             },
