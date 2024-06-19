@@ -1,19 +1,38 @@
 "use client"
 import * as React from 'react';
-import './career.css';
-import { Button, Input, Typography } from '@mui/material';
+import './introduction.css';
+import { useContext, useEffect} from 'react';
+import { Button } from '@mui/material';
+import { MenuContext } from '@/stores/StoreContext';
+import axios from 'axios';
 
+export default function Introduction() {
+    const menuStore = useContext(MenuContext);
+    useEffect(() => {
+        async function fetchData() {
+            try {
+                const response = await axios.get('/mypage/selfprofile');
+                menuStore.setUvoList(response.data);
+                console.log(response.data);
+            } catch (error) {
+                alert("실패");
+                console.error("데이터를 가져오는 중 오류가 발생했습니다:", error);
+            }
+        }
+        fetchData();
+    }, ['/mypage/selfprofile']);  
 
-export default function Career() {
     return(
         <div>
+            {menuStore.uvolist && menuStore.uvolist.map((k) => (
+            <>
             <h2 className='mymaintext'>자기소개서제목</h2> 
             <div className='blueline'></div>
             <div className='whitebox'>
                 <div className='myname'>
-                <h2 className='myname1'>편조이</h2>
+                <h2 className='myname1'>{k.name}</h2>
                 <p>&nbsp;</p>
-                <p>1997년 (만27세)</p>
+                <p>{k.birth}</p>
                 </div>
                 <div className='myname'>
                 <div className='myinfotitle'>
@@ -23,16 +42,16 @@ export default function Career() {
                     <p>경력</p>
                 </div>
                 <div className='myinfodetail'>
-                    <p>010-6800-4220</p>
-                    <p>서울특별시 강서구 화곡동</p>
-                    <p>대학교(4년제)</p>
-                    <p>신입</p>
+                    <p>{k.phonenumber}</p>
+                    <p>{k.addr}</p>
+                    <p>{k.p_job}</p>
+                    <p>{k.p_career}</p>
                 </div>
                 <div className='myinfotitle'>
                     <p>email</p>
                 </div>
                 <div className='myinfodetail'>
-                    <p>naver@naver.com</p>
+                    <p>{k.email}</p>
                 </div>
                 </div>
             </div>
@@ -45,8 +64,8 @@ export default function Career() {
                     <p>업종</p>
                 </div>
                 <div className='myinfodetail'>
-                    <p>서울</p>
-                    <p>백엔드 개발자</p>
+                    <p>{k.p_location}</p>
+                    <p>{k.p_job}</p>
                 </div>
                 </div>
             </div>
@@ -54,9 +73,8 @@ export default function Career() {
             <div className='blueline'></div>
             <div className='whitebox'>
                 <div className='myname'>
-                <div className='myinfotitle'>
-                </div>
                 <div className='myinfodetail'>
+                <p>{k.Field}</p>
                 </div>
                 </div>
             </div>
@@ -64,6 +82,8 @@ export default function Career() {
                 <Button variant="outlined">뒤로가기</Button>
                 <Button variant="contained">수정하기</Button>
                 </div>
+                </>
+            ))}
         </div>
     )
 }

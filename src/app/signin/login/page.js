@@ -30,7 +30,7 @@ export default function Page() {
       if (isNewUser) {
         router.push("/signin/createUser");
       } else {
-        router.push("/main");
+        router.push("/");
       }
     }
   }, [status, session, router]);
@@ -38,7 +38,7 @@ export default function Page() {
   useEffect(() => {
     authStore.loadToken();
     if (authStore.isAuthenticated) {
-      router.push("/main");
+      router.push("/");
     }
   }, [router, authStore]);
 

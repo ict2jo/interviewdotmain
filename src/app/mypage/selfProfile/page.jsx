@@ -86,7 +86,7 @@ export default function Selfprofile() {
                         <p>이메일</p>
                     </div>
                     {/* 사용자 정보 입력 폼 */}
-                    {menuStore.uvolist.map((uvo) => (
+                    {menuStore.uvolist && menuStore.uvolist.map((uvo) => (
                         <div key={uvo.u_idx} className='inputs'>
                             <FormControl fullWidth>
                                 <Input name='name' placeholder={uvo.name} onChange={handleInputChange} />
@@ -99,7 +99,7 @@ export default function Selfprofile() {
                 <hr />
                 <Typography className='bluetext'>관심분야</Typography>
                 {/* 관심 분야 설정 섹션 */}
-                {menuStore.uvolist.map((uvo) => (
+                {menuStore.uvolist && menuStore.uvolist.map((uvo) => (
                     <div className='mypagebottum'>
                         <p className='mysmallfont'>업종</p>
                         <Worklist uvo={uvo} handleWorklistChange={handleWorklistChange} />
