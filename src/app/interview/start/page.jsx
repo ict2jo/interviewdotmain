@@ -1,17 +1,23 @@
-"use client"
-
-import React, { useState, useEffect, useRef } from 'react';
+"use client";
+import React, { useEffect, useState, useRef } from 'react';
 import './start.css';
 import { Button, Grid } from "@mui/material";
 import { usePagination, PaginationItemType } from "@nextui-org/react";
-import { useRouter } from "next/navigation";
 import Webcam from 'react-webcam';
+import { useRouter } from "next/navigation";
+import questionStore from '@/stores/questionStore';
 
 const Start = () => {
-    const [time, setTime] = useState(90);
     const router = useRouter();
+    const [parsedQuestions, setParsedQuestions] = useState([]);
+
+    useEffect(() => {
+        setParsedQuestions(questionStore.selectedQuestions);
+    }, []);
+
+    const [time, setTime] = useState(90);
     const { activePage, range, setPage, onNext } = usePagination({
-        total: 6,
+        total: parsedQuestions.length,
         showControls: true,
         siblings: 1,
         boundaries: 1,
@@ -46,7 +52,7 @@ const Start = () => {
     };
 
     const nextPage = () => {
-        if (activePage === 6) {
+        if (activePage === parsedQuestions.length) {
             router.push("/interview/finish");
         } else {
             onNext();
@@ -92,12 +98,23 @@ const Start = () => {
         }
     };
 
+    useEffect(() => {
+        if (parsedQuestions.length > 0) {
+            const query = new URLSearchParams({
+                selectedQuestions: JSON.stringify(parsedQuestions)
+            }).toString();
+            router.replace(`/interview/start?${query}`);
+        }
+    }, [parsedQuestions]);
+
+    console.log('parsedQuestions:', parsedQuestions);
+
     return (
         <div className="container">
             <div className="white_box">
                 <div className="timer">{`${minutes}:${seconds < 10 ? '0' : ''}${seconds}`}</div>
                 <div className="question">
-                    <p>선택한 질문이 얼마나 길게 나올지 모르겠으니 일단 최대한 길게</p>
+                    <p>{parsedQuestions.length > 0 ? (parsedQuestions[activePage - 1]?.question || 'No question selected.') : 'No question selected.'}</p>
                 </div>
                 <Grid container spacing={0} className="content">
                     <Grid item xs={6} className="my_camera">
