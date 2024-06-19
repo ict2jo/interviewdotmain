@@ -7,7 +7,7 @@ import { useCreateUser } from "../_lib/hooks/CreateUserContext";
 export default function Terms() {
   const data = termsData.terms;
   const [marketing] = data[2].marketing;
-  const { isChecked, requiredTermsChecked, dispatch } = useCreateUser();
+  const { isChecked, dispatch } = useCreateUser();
   const [clickedTerms, setClickedTerms] = useState({
     service: false,
     privacy: false,
@@ -16,12 +16,12 @@ export default function Terms() {
 
   useEffect(() => {
     const areRequiredTermsChecked =
-      clickedTerms.service && clickedTerms.privacy;
+      (clickedTerms.service && clickedTerms.privacy) || isChecked;
     dispatch({
       type: "updateRequiredTermsChecked",
       payload: areRequiredTermsChecked,
     });
-  }, [clickedTerms, dispatch]);
+  }, [clickedTerms, isChecked, dispatch]);
 
   const handleIconClick = (term) => {
     setClickedTerms((prev) => ({
