@@ -13,6 +13,9 @@ const nextConfig = {
                 destination : "http://localhost:8080/mypage/inquiry"
             },
             {
+                source : "/interview/choose",
+                destination : "http://localhost:8080/interview/choose"
+            },
                 source : "/mypage/inquirywrite",
                 destination : "http://localhost:8080/mypage/inquirywrite"
             },
