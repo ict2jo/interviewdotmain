@@ -1,22 +1,21 @@
 "use client";
-import React, {useEffect, useState} from 'react';
-import './choose.css'
+import React, { useEffect, useState } from 'react';
+import './choose.css';
 import ArrowRightIcon from '@mui/icons-material/ArrowRight';
 import Header from "@/app/_components/Header";
 
 export default function Interview() {
     // useState 선언
+    const [questions, setQuestions] = useState([]);
     const [selectedQuestions, setSelectedQuestions] = useState([]);
     const [selectedCount, setSelectedCount] = useState(0);
 
     // 질문박스 클릭 시 실행되는 함수
     const handleClick = (question) => {
-        // 이미 선택된 항목이면 해제
         if (selectedQuestions.includes(question)) {
             const newSelectedQuestions = selectedQuestions.filter((selectedQuestion) => selectedQuestion !== question);
             setSelectedQuestions(newSelectedQuestions);
         } else {
-            // 선택된 항목의 개수가 10개를 넘어가면 알림
             if (selectedQuestions.length >= 10) {
                 alert("10개 이상 선택할 수 없습니다.");
                 return;
@@ -26,6 +25,7 @@ export default function Interview() {
             setSelectedQuestions(newSelectedQuestions);
         }
     };
+
     useEffect(() => {
         setSelectedCount(selectedQuestions.length);
     }, [selectedQuestions]);
@@ -37,12 +37,18 @@ export default function Interview() {
             } else {
                 alert("선택하신 문항이 없습니다. 최소 1개 이상 선택해 주세요.");
             }
-        }else{
+        } else {
             return;
         }
-    }
+    };
 
-
+    // 질문 리스트를 서버에서 받아오는 useEffect
+    useEffect(() => {
+        fetch('http://localhost:8080/interview/choose')
+            .then(response => response.json())
+            .then(data => setQuestions(data))
+            .catch(error => console.error('Error fetching questions:', error));
+    }, []);
 
     return (
         <div className="container">
@@ -52,13 +58,14 @@ export default function Interview() {
                 <div className="count">{selectedCount} / 10</div>
                 <div className="scroll_box">
                     <div className="questions">
-                        {/* length는 추후 질문리스트 받아오면 바꿔야함*/}
-                        {Array.from({length: 50}, (_, question) => (
+                        {questions.map((question) => (
                             <div
-                                key={question}
+                                key={question.id}  // 고유한 key prop 추가
                                 className={`question_box ${selectedQuestions.includes(question) ? 'selected' : ''}`}
                                 onClick={() => handleClick(question)}
-                            ></div>
+                            >
+                                {question.question}
+                            </div>
                         ))}
                     </div>
                 </div>

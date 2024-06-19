@@ -1,15 +1,13 @@
-"use client";
+"use client"
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import './start.css';
 import { Button, Grid } from "@mui/material";
-import Image from 'next/image';
-import sample_image from "@/../public/sample.png";
 import { usePagination, PaginationItemType } from "@nextui-org/react";
-import { ChevronIcon } from "@/app/_components/ChevronIcon";
-import {useRouter} from "next/navigation";
+import { useRouter } from "next/navigation";
+import Webcam from 'react-webcam';
 
-export default function Start() {
+const Start = () => {
     const [time, setTime] = useState(90);
     const router = useRouter();
     const { activePage, range, setPage, onNext } = usePagination({
@@ -18,6 +16,12 @@ export default function Start() {
         siblings: 1,
         boundaries: 1,
     });
+
+    // 웹캠 관련 상태
+    const webcamRef = useRef(null);
+    const [mediaRecorder, setMediaRecorder] = useState(null);
+    const [recordedChunks, setRecordedChunks] = useState([]);
+    const [isRecording, setIsRecording] = useState(false);
 
     useEffect(() => {
         const timer = setInterval(() => {
@@ -50,6 +54,44 @@ export default function Start() {
         }
     };
 
+    const startRecording = () => {
+        if (webcamRef.current) {
+            const stream = webcamRef.current.video.srcObject;
+            const recorder = new MediaRecorder(stream);
+            const chunks = [];
+
+            recorder.ondataavailable = (e) => {
+                if (e.data.size > 0) {
+                    chunks.push(e.data);
+                }
+            };
+
+            recorder.onstop = () => {
+                const blob = new Blob(chunks, { type: 'video/webm' });
+                setRecordedChunks(chunks);
+                const url = URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.style.display = 'none';
+                a.href = url;
+                a.download = 'recorded-video.webm';
+                document.body.appendChild(a);
+                a.click();
+                window.URL.revokeObjectURL(url);
+            };
+
+            recorder.start();
+            setMediaRecorder(recorder);
+            setIsRecording(true);
+        }
+    };
+
+    const stopRecording = () => {
+        if (mediaRecorder) {
+            mediaRecorder.stop();
+            setIsRecording(false);
+        }
+    };
+
     return (
         <div className="container">
             <div className="white_box">
@@ -59,22 +101,24 @@ export default function Start() {
                 </div>
                 <Grid container spacing={0} className="content">
                     <Grid item xs={6} className="my_camera">
-                        <Image
-                            src={sample_image}
-                            width={500}
-                            height={100}
-                            alt="Sample_Image"
-                            className="test_img"
+                        <Webcam
+                            audio={true}
+                            ref={webcamRef}
+                            screenshotFormat="image/jpeg"
+                            className="webcam_preview"
                         />
+                        <div className="button_container">
+                            {!isRecording ? (
+                                <Button variant="outlined" onClick={startRecording}>녹화 시작</Button>
+                            ) : (
+                                <Button variant="contained" onClick={stopRecording}>녹화 중지</Button>
+                            )}
+                        </div>
                     </Grid>
                     <Grid item xs={5} className="answer_form">
                         음성 답변 실시간 출력
                     </Grid>
                 </Grid>
-                <div className="button_container">
-                    <Button variant="outlined" className="re_button">재답변</Button>
-                    <Button variant="contained" className="check_button">확인</Button>
-                </div>
                 <div className="paging_number">
                     <ul className="flex gap-2 items-center pagination_container">
                         {range.map((page, index) => {
@@ -106,4 +150,6 @@ export default function Start() {
             </div>
         </div>
     );
-}
+};
+
+export default Start;
