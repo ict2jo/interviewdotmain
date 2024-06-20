@@ -1,18 +1,20 @@
-'use client'
-import moment from 'moment';
-import 'react-datepicker/dist/react-datepicker.css';
-import ReactDatePicker from 'react-datepicker';
-import { useSession } from 'next-auth/react';
+"use client";
+import moment from "moment";
+import "react-datepicker/dist/react-datepicker.css";
+import ReactDatePicker from "react-datepicker";
+import { useSession } from "next-auth/react";
 import Form from "@/app/_components/Form";
 import Input from "@/app/_components/Input";
 import Terms from "@/app/_components/Terms";
-import { CreateUserProvider, useCreateUser } from '@/app/_lib/hooks/CreateUserContext';
-
+import {
+  CreateUserProvider,
+  useCreateUser,
+} from "@/app/_lib/hooks/CreateUserContext";
 
 function PageContent() {
-
-  const { data: session, status } = useSession()
-  const { dispatch,
+  const { data: session, status } = useSession();
+  const {
+    dispatch,
     name,
     email,
     birth,
@@ -28,13 +30,13 @@ function PageContent() {
     displayDate,
     isCustomDomain,
     handleFieldChange,
-    validateId,
+    handleIdValidation,
     validPw,
     handleDateChange,
     handleSubmit,
     handleOptionChange,
-    handleNumberChange } = useCreateUser()
-
+    handleNumberChange,
+  } = useCreateUser();
 
   return (
     <Form width="w-2/4">
@@ -88,7 +90,6 @@ function PageContent() {
             </div>
           </>
         )}
-
         <div className="relative w-full">
           <Input
             name="id"
@@ -99,7 +100,7 @@ function PageContent() {
           <button
             type="button"
             class="bg-gray-400 text-gray-700 py-2 px-2 rounded-xl w-14 h-8 text-[10px] absolute right-5 top-2 font-bold hover:opacity-90"
-            onClick={() => validateId(id)}
+            onClick={() => handleIdValidation(id)}
           >
             중복확인
           </button>
@@ -116,7 +117,7 @@ function PageContent() {
             onChange={(e) =>
               dispatch({ type: "validatePw", payload: e.target.value })
             }
-          // value={pw}
+            // value={pw}
           />
           {!validPw ? (
             <p className="text-[11px] px-5 pt-2">
@@ -146,7 +147,8 @@ function PageContent() {
           ) : (
             <p className="text-[11px] px-5 pt-2"> 비밀번호를 확인해주세요. </p>
           )}
-        </div>  <div className="w-full">
+        </div>
+        <div className="w-full">
           <div className="w-full flex justify-between gap-2">
             <input
               className="w-full h-12 px-2 bg-gray-100 rounded-xl placeholder-gray-600 text-xs cursor-pointer"
@@ -184,7 +186,6 @@ function PageContent() {
             value={displayDate}
           />
         </div>
-
         <div className="flex gap-2 border-b-2 border-gray-500 w-full mt-5 relative">
           <input
             type="checkbox"
@@ -229,7 +230,13 @@ function PageContent() {
           )}
         </div>
         {showTerms && <Terms isChecked={isChecked} />}
-        <button className="bg-primary-500 rounded-3xl px-[3rem] py-3 text-white" type="submit" onClick={handleSubmit}>회원가입</button>
+        <button
+          className="bg-primary-500 rounded-3xl px-[3rem] py-3 text-white"
+          type="submit"
+          onClick={handleSubmit}
+        >
+          회원가입
+        </button>
       </div>
     </Form>
   );

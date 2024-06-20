@@ -3,6 +3,8 @@ import moment from "moment";
 import { useReducer } from "react";
 import { useSession } from "next-auth/react";
 import axios from "axios";
+import { useRouter } from "next/navigation";
+import { URL } from "@/app/api/boot/route";
 const { createContext, useContext } = require("react");
 const CreateUserContext = createContext();
 
@@ -60,6 +62,7 @@ function reducer(state, action) {
 
 function CreateUserProvider({ children }) {
   const { data: session } = useSession();
+  const router = useRouter();
   const initialState = {
     name: session?.user?.name || "",
     email: session?.user?.email || "",
@@ -108,13 +111,28 @@ function CreateUserProvider({ children }) {
     dispatch({ type: "updateField", field, payload: e.target.value });
   };
 
-  function validateId(id) {
+  async function handleIdValidation(id) {
     const idRegex = /^[a-z0-9_-]{5,20}$/;
     if (!idRegex.test(id)) {
       alert("5-20자, 영문 소문자, 숫자, 특수문자 (-), (_)만 사용해주세요");
       return false;
     }
-    return true;
+    try {
+      const response = await axios.get(`${URL}idCheck`, {
+        params: { id },
+      });
+      if (response.data.exists) {
+        alert("아이디가 이미 사용 중입니다. 다른 아이디를 사용해주세요.");
+        return false;
+      } else {
+        alert("사용 가능한 아이디입니다.");
+        return true;
+      }
+    } catch (error) {
+      console.error(error);
+      alert("아이디 중복 체크 중 오류가 발생했습니다. 다시 시도해주세요.");
+      return false;
+    }
   }
   const handleOptionChange = (e) => {
     dispatch({ type: "isSelected", payload: e.target.value });
@@ -145,8 +163,10 @@ function CreateUserProvider({ children }) {
       }
     };
   }
+
   function validateForm() {
     console.log(isMatched, "ismatched");
+    console.log(isChecked, "isChecked");
     console.log(requiredTermsChecked, "requiredTermsChecked");
     console.log(id, "id");
     console.log(name, "name");
@@ -158,44 +178,50 @@ function CreateUserProvider({ children }) {
     console.log(phone3, "phone3");
     console.log(phonenumber, "phonenumber");
 
-
     if (!isMatched) {
       alert("비밀번호가 일치하지 않습니다.");
       return false;
     }
     //  필수약관 체크 확인
-    if (!requiredTermsChecked) {
+    if (!requiredTermsChecked || !isChecked) {
       alert("필수 약관에 동의해야 합니다.");
       return false;
     }
 
-    if (!id || !name || !email || !pw || !birth || !phone1 || !phone2 || !phone3) {
-      alert("모두 입력해주세요.");
+    if (
+      !id ||
+      !name ||
+      !email ||
+      !pw ||
+      !birth ||
+      !phone1 ||
+      !phone2 ||
+      !phone3
+    ) {
+      alert("정보를 모두 입력해주세요.");
       return false;
-    }
-
-    if (!isChecked) return false;
-
-    else return true;
+    } else return true;
   }
 
   async function handleSubmit(e) {
     e.preventDefault();
 
-    if (!validateForm()) {
-      console.log("submit called");
-      return;
-    }
-    console.log("submit called");
+    if (!validateForm()) return;
     try {
-      const response = await axios.post('http://localhost:8080/api/create', { id, name, email, pw, birth, phonenumber });
-      console.log('User created:', response.data);
-
+      const response = await axios.post(`${URL}create`, {
+        id,
+        name,
+        email,
+        pw,
+        birth,
+        phonenumber,
+      });
+      console.log("User created:", response.data);
+      router.push("/signin/optionalInfo");
     } catch (error) {
-      console.error('Error creating user:', error);
-
+      console.error("Error creating user:", error);
     }
-  };
+  }
 
   return (
     <CreateUserContext.Provider
@@ -218,9 +244,9 @@ function CreateUserProvider({ children }) {
         selectedOption,
         isCustomDomain,
         requiredTermsChecked,
-        handleFieldChange,
-        validateId,
         validPw,
+        handleFieldChange,
+        handleIdValidation,
         handleDateChange,
         validateForm,
         handleSubmit,
