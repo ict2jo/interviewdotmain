@@ -1,7 +1,10 @@
+import Header from "../_components/Header";
+
 export default function Main() {
-    return(
+    return (
         <>
-        gg  
+            <Header />
+            gg
         </>
     )
 }

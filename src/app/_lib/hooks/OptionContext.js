@@ -87,7 +87,7 @@ function OptionProvider({ children }) {
 
   const handleSubmit = async () => {
     try {
-      const response = await fetch("/api/submit", {
+      const response = await fetch("/api/addInfos", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

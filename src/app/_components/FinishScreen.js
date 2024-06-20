@@ -5,6 +5,7 @@ import { useJobTest } from "../_lib/hooks/JobTestContext";
 import Link from "next/link";
 import { API_KEY, PostResultAPI, Q_NUM } from "../api/data/jobData";
 import { useEffect } from "react";
+//import axios from "axios";
 
 function FinishScreen() {
   const { gender, answers } = useJobTest();
@@ -13,24 +14,23 @@ function FinishScreen() {
   //const name = session?.user?.name || "";
 
   // post보낼 배열 준비
-  const postDictionary = {
-    apikey: API_KEY,
-    qestrnSeq: Q_NUM,
-    trgetSe: "100209",
-    name: name,
-    gender: gender,
-    grade: "2",
-    startDtm: Date.now(),
-
-    answers: answers
-      .map((answer, index) => {
-        return `${index + 1}=${answer}`; // 수정: index + 1로 문제 번호 맞추기
-      })
-      .join(" ")
-      .trim(),
-  };
 
   useEffect(() => {
+    const postDictionary = {
+      apikey: API_KEY,
+      qestrnSeq: Q_NUM,
+      trgetSe: "100209",
+      name: name,
+      gender: gender,
+      grade: "2",
+      startDtm: Date.now(),
+      answers: answers
+        .map((answer, index) => {
+          return `${index + 1}=${answer}`; // 수정: index + 1로 문제 번호 맞추기
+        })
+        .join(" ")
+        .trim(),
+    };
     const request = async () => {
       try {
         const response = await PostResultAPI(postDictionary);
@@ -42,7 +42,7 @@ function FinishScreen() {
     };
 
     request(); // useEffect 내에서 request 함수 호출 추가
-  }, [postDictionary]); // useEffect 두 번째 인자를 빈 배열로 전달하여 한 번만 호출되도록 설정
+  }, [answers, gender]); // useEffect 두 번째 인자를 빈 배열로 전달하여 한 번만 호출되도록 설정
 
   return (
     <>

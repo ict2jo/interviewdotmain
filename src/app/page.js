@@ -48,7 +48,7 @@ function Home() {
       case "ai":
         return <Starthome />;
       case "verification":
-      return <Verification />;
+        return <Verification />;
       case "Airesult":
         return <Airesult />;
       case "airesult_history":
@@ -78,7 +78,7 @@ function Home() {
       case "schedule":
         return <Calendar />;
       case "inquiry":
-        return <Inquiry/>;
+        return <Inquiry />;
       case "inquirywrite":
         return <Inquirywrite />;
       default:
