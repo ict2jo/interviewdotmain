@@ -3,10 +3,13 @@
 import { useSession } from "next-auth/react";
 import Link from "next/link";
 import { signOut } from "next-auth/react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import authStore from "@/stores/AuthStore";
 
 export default function SideNavigation() {
-  const { data: session, status } = useSession();
+  const [userName, setUserName] = useState('');
+  const [userImg, setUserImg] = useState('');
+  // const { data: session, status } = useSession();
   const [isSubmenuVisible, setSubmenuVisible] = useState(false);
   const handleMouseEnter = () => {
     if (submenuTimeoutRef.current) {
@@ -14,6 +17,15 @@ export default function SideNavigation() {
     }
     setSubmenuVisible(true);
   };
+
+  useEffect(() => {
+    const user = authStore.getUser();
+    if (user) {
+      setUserName(user.name)
+      setUserImg(user.u_img)
+      console.log(user);
+    }
+  }, []);
 
   const handleMouseLeave = () => {
     submenuTimeoutRef.current = setTimeout(() => {
@@ -27,7 +39,7 @@ export default function SideNavigation() {
   return (
     <nav className="z-10 text-xl">
       <ul className="flex gap-3 items-center text-sm">
-        {session?.user && (
+        {userName && (
           <>
             <Link
               href="/mypage"
@@ -37,20 +49,21 @@ export default function SideNavigation() {
             >
               <img
                 className="h-8 rounded-full"
-                src={session.user.image}
-                alt={session.user.name}
+                // src={session.user.image}
+                // alt={session.user.name}
                 referrerPolicy="no-referrer"
               />
-              <span>{session.user.name}</span>
+              {/* <span>{session.user.name}</span> */}
+              <span>{userName}</span>
             </Link>
-              {isSubmenuVisible && <SubMenu handleMenuClick={handleMenuClick}/>}
+            {isSubmenuVisible && <SubMenu handleMenuClick={handleMenuClick} />}
             <li>
               <button className="hover:bg-primary-100 transition-colors" onClick={() => {
                 signOut()
               }}>로그아웃</button>
             </li>
           </>
-        )} {!session?.user && (
+        )} {!userName && (
           <>
             <li>
               <Link

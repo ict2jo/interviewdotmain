@@ -10,10 +10,8 @@ import naver from "@/../public/inaver.png";
 import google from "@/../public/igoogle.png";
 import Button from "@/app/_components/Button";
 import { useEffect, useState } from "react";
-
 import authStore from "@/stores/AuthStore";
 import { useRouter } from "next/navigation";
-
 
 export default function Page() {
   const { data: session, status } = useSession()
@@ -49,16 +47,31 @@ export default function Page() {
     try {
       const response = await axios.post('http://localhost:8080/api/login', { id: user.id, pw: user.pw });
       if (response.data.token) {
-        authStore.setToken(response.data.token)
+
+        authStore.setToken(response.data.token);
+
+        const userLoggedIn = await axios.get("http://localhost:8080/api/user", {
+          params: {
+            id: user.id
+          },
+          headers: {
+            Authorization: `Bearer ${response.data.token}`
+          }
+        });
+
+        authStore.login(userLoggedIn.data, response.data.token);
         router.push("/main");
+
       }
     } catch (error) {
-      alert("로그인 실패")
+      console.error("Error during login:", error);
+      alert("로그인 실패");
       setUser({
         id: "",
         pw: ""
-      })
+      });
     }
+
   }
 
   function changeUserLoginInfo(e) {
