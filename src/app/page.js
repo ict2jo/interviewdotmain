@@ -16,7 +16,6 @@ import Interview_history from "./ai/interview_history/page";
 import Interview_feedback from "./ai/interview_feedback/page";
 import Interview_guide from "./ai/interview_guide/page";
 import QuestionRepository from "./ai/question_repository/page";
-import Chathome from "../../pages/chathome";
 import Inquirywrite from "./mypage/Inquiry/Inquirywrite/page";
 import Inquiry from "./mypage/Inquiry/page";
 import Starthome from "./interview/starthome/page";
@@ -49,7 +48,7 @@ function Home() {
       case "ai":
         return <Starthome />;
       case "verification":
-      return <Verification />;
+        return <Verification />;
       case "Airesult":
         return <Airesult />;
       case "airesult_history":
@@ -79,7 +78,7 @@ function Home() {
       case "schedule":
         return <Calendar />;
       case "inquiry":
-        return <Inquiry/>;
+        return <Inquiry />;
       case "inquirywrite":
         return <Inquirywrite />;
       default:

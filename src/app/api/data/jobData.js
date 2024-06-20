@@ -2,11 +2,9 @@
 import axios from "axios";
 
 export const API_KEY = "631411887293319c018c3eeeb7413e40";
-
 export const Q_NUM = "19";
-
 export const Q_URL = "https://www.career.go.kr/inspct/openapi/test";
-export const R_URL = "www.career.go.kr/inspct/openapi/test/report?";
+//export const R_URL = "https://www.career.go.kr/inspct/openapi/test/report?";
 
 export const GetQuestionAPI = async () => {
   try {
@@ -25,12 +23,27 @@ export const GetQuestionAPI = async () => {
 };
 
 export const PostResultAPI = async (data) => {
-  const pushResponse = await axios.post(
-    `${Q_URL}apikey=${API_KEY}&qestrnSeq=${Q_NUM}`,
-    data
-  );
-  const SEQ_NUM = pushResponse.data.RESULT.url.split("=")[1];
-  const pullResponse = await axios.get(`${R_URL}/report?seq=${SEQ_NUM}`);
+  // const pushResponse = await axios.post(
+  //   `${R_URL}apikey=${API_KEY}&questrnSeq=${Q_NUM}`,
+  //   data
+  // );
 
-  return pullResponse;
+  const response = await fetch(
+    `${Q_URL}/report?apikey=${API_KEY}&questrnSeq=${Q_NUM}`,
+    {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(data), // 현재 상태를 서버로 전송
+    }
+  );
+
+  const job = response.json();
+  console.log(job);
+  // const SEQ_NUM = pushResponse.data.RESULT.url.split("=")[1];
+  // console.log(SEQ_NUM);
+  // const pullResponse = await axios.get(`${R_URL}seq=${SEQ_NUM}`);
+
+  // return pullResponse;
 };

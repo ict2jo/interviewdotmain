@@ -12,7 +12,6 @@ export default function Page() {
         <div className="flex flex-col items-center justify-center gap-5 my-5">
           <Input placeholder="아이디" />
           <Input placeholder="이름" />
-          <Input placeholder="생년월일" />
           <div className="relative w-full">
             <Input placeholder="이메일주소" />
             <Button type="smGray">인증번호</Button>

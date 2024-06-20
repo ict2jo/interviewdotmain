@@ -16,7 +16,7 @@ export default function Terms() {
 
   useEffect(() => {
     const areRequiredTermsChecked =
-      (clickedTerms.service && clickedTerms.privacy) || isChecked;
+      clickedTerms.service && clickedTerms.privacy;
     dispatch({
       type: "updateRequiredTermsChecked",
       payload: areRequiredTermsChecked,
