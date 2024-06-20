@@ -1,6 +1,6 @@
 import { Box } from "@mui/material";
 import '../recruitmentlist.css';
-export default function Center({acbgCondText, recrutSeText, workRgnText, searchQuery, handleSearchChange, totalItems, ongoingYn, handleOngoingYnChange}){
+export default function Center({acbgCondText, recrutSeText, workRgnText, searchQuery, handleSearchChange, totalItems, ongoingYn, handleOngoingYnChange, handleMyChange}){
     return(
         <div>
             <Box className="selectedValues">
