@@ -11,7 +11,6 @@ import Job from "./job/page";
 import List from "./job/recruitment/list/page";
 import Review_Community from "./review/review_community/page";
 import Selfprofile from "./mypage/selfProfile/page";
-import Career from "./mypage/Career/page";
 import Interview_history from "./ai/interview_history/page";
 import Interview_feedback from "./ai/interview_feedback/page";
 import Interview_guide from "./ai/interview_guide/page";
@@ -23,6 +22,7 @@ import JobTest from "./job/test/JobTest";
 import Verification from "../../pages/verification";
 import Footer from "./_components/Footer";
 import Result from "./job/test/result/Result";
+import Introduction from "./mypage/Introduction/page";
 
 function Home() {
   // useContext 훅으로 MobX Store 가져오기
@@ -34,7 +34,7 @@ function Home() {
   useEffect(() => {
     const savedMenu = localStorage.getItem("selectedMenu");
     if (savedMenu) {
-      menuStore.setSelectedMenu(savedMenu);
+      menuStore.setUvoList(savedMenu);
     }
   }, [menuStore]);
 
@@ -78,7 +78,7 @@ function Home() {
       case "profile":
         return <Selfprofile />;
       case "career":
-        return <Career />;
+        return <Introduction />;
       case "schedule":
         return <Calendar />;
       case "inquiry":
