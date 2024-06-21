@@ -5,7 +5,8 @@ import { makeAutoObservable } from "mobx";
 class MenuStore {
     selectedMenu = "main";  // 선택된 메뉴
     isAuthenticated = false;     // 사용자 인증상태
-    token = null
+    token = null;
+    uvolist = null;
     constructor() {
 
         // MobX 스토어를 자동으로 관찰 가능하게 설정

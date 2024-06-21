@@ -12,6 +12,7 @@ import Button from "@/app/_components/Button";
 import { useEffect, useState } from "react";
 import authStore from "@/stores/AuthStore";
 import { useRouter } from "next/navigation";
+import menuStore from "@/stores/MenuStore";
 
 export default function Page() {
   const { data: session, status } = useSession();
@@ -62,8 +63,7 @@ export default function Page() {
         });
 
         authStore.login(userLoggedIn.data, response.data.token);
-        router.push("/main");
-
+        menuStore.setSelectedMenu('main');
       }
     } catch (error) {
       alert("로그인 실패")

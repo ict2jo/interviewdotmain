@@ -56,7 +56,7 @@ export default function SideNavigation() {
               {/* <span>{session.user.name}</span> */}
               <span>{userName}</span>
             </Link>
-            {isSubmenuVisible && <SubMenu handleMenuClick={handleMenuClick} />}
+            {isSubmenuVisible && <MySubmenu handleMenuClick={handleMenuClick} />}
             <li>
               <button className="hover:bg-primary-100 transition-colors" onClick={() => {
                 signOut()
