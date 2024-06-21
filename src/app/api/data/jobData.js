@@ -23,27 +23,23 @@ export const GetQuestionAPI = async () => {
 };
 
 export const PostResultAPI = async (data) => {
-  // const pushResponse = await axios.post(
-  //   `${R_URL}apikey=${API_KEY}&questrnSeq=${Q_NUM}`,
-  //   data
-  // );
-
-  const response = await fetch(
-    `${Q_URL}/report?apikey=${API_KEY}&questrnSeq=${Q_NUM}`,
-    {
-      method: "POST",
+  try {
+    const pushResponse = await axios.post(
+      "http://localhost:8080/api/report",
+      // `${Q_URL}/report?apikey=${API_KEY}&questrnSeq=${Q_NUM}`,
+      data, {
       headers: {
         "Content-Type": "application/json",
       },
-      body: JSON.stringify(data), // 현재 상태를 서버로 전송
     }
-  );
+    );
 
-  const job = response.json();
-  console.log(job);
-  // const SEQ_NUM = pushResponse.data.RESULT.url.split("=")[1];
-  // console.log(SEQ_NUM);
-  // const pullResponse = await axios.get(`${R_URL}seq=${SEQ_NUM}`);
+    const job = pushResponse.data;
+    console.log(job);
 
-  // return pullResponse;
+    return pushResponse;
+  } catch (error) {
+    console.error("Error posting result:", error);
+    throw error;
+  }
 };

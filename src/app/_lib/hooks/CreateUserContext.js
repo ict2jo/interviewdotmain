@@ -37,7 +37,7 @@ function reducer(state, action) {
     case "showTerms":
       return { ...state, showTerms: action.payload };
     case "isChecked":
-      return { ...state, isChecked: action.payload };
+      return { ...state, isChecked: action.payload, requiredTermsChecked: true };
     case "updateRequiredTermsChecked":
       return { ...state, requiredTermsChecked: action.payload };
     case "isSelected":

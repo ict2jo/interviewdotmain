@@ -8,10 +8,10 @@ import { JobTestProvider, useJobTest } from "@/app/_lib/hooks/JobTestContext";
 import Spinner from "@/app/_components/Spinner";
 import Error from "@/app/_components/Error";
 import StartScreen from "@/app/_components/StartScreen";
+import Result from "./result/Result";
 
 function PageContent() {
-  const { questions, status, index, answer, points, numQuestions, dispatch } =
-    useJobTest();
+  const { status } = useJobTest();
 
   return (
     <>
@@ -22,6 +22,7 @@ function PageContent() {
           {status === "ready" && <StartScreen />}
           {status === "active" && <JobQuestion />}
           {status === "finished" && <FinishScreen />}
+          {status === "result" && <Result />}
         </Form>
       </div>
       <Footer />

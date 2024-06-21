@@ -11,7 +11,8 @@ import google from "@/../public/igoogle.png";
 import Button from "@/app/_components/Button";
 import { useEffect, useState } from "react";
 import authStore from "@/stores/AuthStore";
-import { useRouter } from "next/navigation";
+import { URL } from "@/app/api/boot/route";
+import menuStore from "@/stores/MenuStore";
 
 export default function Page() {
   const { data: session, status } = useSession();
@@ -19,7 +20,6 @@ export default function Page() {
     id: "",
     pw: "",
   });
-  const router = useRouter();
 
   useEffect(() => {
     if (status === "authenticated" && session?.user) {
@@ -44,7 +44,7 @@ export default function Page() {
     e.preventDefault();
 
     try {
-      const response = await axios.post("http://localhost:8080/api/login", {
+      const response = await axios.post(`${URL}login`, {
         id: user.id,
         pw: user.pw,
       });
@@ -52,7 +52,7 @@ export default function Page() {
 
         authStore.setToken(response.data.token);
 
-        const userLoggedIn = await axios.get("http://localhost:8080/api/user", {
+        const userLoggedIn = await axios.get(`${URL}user`, {
           params: {
             id: user.id
           },
@@ -62,7 +62,7 @@ export default function Page() {
         });
 
         authStore.login(userLoggedIn.data, response.data.token);
-        router.push("/main");
+        menuStore.setSelectedMenu('option');
 
       }
     } catch (error) {
@@ -111,8 +111,7 @@ export default function Page() {
           </Link>
         </div>
         <Button type="longBlue" onClick={handleLogin}>
-          {" "}
-          로그인{" "}
+          로그인
         </Button>
         <Button type="longWhite">
           <Link href="/signin/createUser"> 회원가입 </Link>

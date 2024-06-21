@@ -52,3 +52,21 @@
   border-radius: 1rem;
   padding: 0.5rem;
 }
+
+.skyblue {
+  width: 50%;
+  height: 20rem;
+  padding: 1rem;
+  margin: auto;
+  background: linear-gradient(145deg, #e5feff, #c1d5e6);
+  box-shadow: 5px 5px 10px #8795a1, -5px -5px 10px #ffffff;
+  clip-path: polygon(
+    0% 0%,
+    100% 0%,
+    99% 87%,
+    25% 87%,
+    15% 100%,
+    15% 87%,
+    0 87%
+  );
+}
