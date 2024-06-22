@@ -1,54 +1,58 @@
 "use client";
 import React, { useEffect, useState, useContext } from 'react';
 import './selfprofile.css';
-import { Button, FormControl, Input, Typography } from '@mui/material';
-import Worklist from './worklist/page'; // Worklist 컴포넌트 임포트
+import { Button, FormControl, Input, Typography, CircularProgress } from '@mui/material';
+import Worklist from './worklist/page';
 import Schoollist from './school/page';
 import Local from './local/page';
 import Experience from './experience/page';
-import axios from 'axios'; // axios 임포트: HTTP 요청을 위해
+import axios from 'axios';
 import { MenuContext } from '@/stores/StoreContext';
+import authStore from '@/stores/AuthStore';
 
 export default function Selfprofile() {
+    const user = authStore.getUser();
     const menuStore = useContext(MenuContext);
-
-    // 상태 초기화: 사용자 정보를 담는 uvo 상태
+    const [loading, setLoading] = useState(true);
     const [uvo, setUvo] = useState({
-        name: '',
-        phonenumber: '',
-        email: '',
+        u_idx: user.u_idx,
+        id: user.id,
+        name: user.name,
+        phonenumber: user.phonenumber,
+        email: user.email,
         p_job: '',
         p_class: '',
         p_career: '',
         p_location: ''
     });
 
-    // 컴포넌트가 마운트될 때 사용자 정보를 가져오는 효과
     useEffect(() => {
         async function fetchData() {
             try {
-                const response = await axios.get('/mypage/selfprofile');
+                const response = await axios.get(`/mypage/selfprofile?u_idx=${user.u_idx}`);
                 menuStore.setUvoList(response.data);
-                console.log(response.data);
+                console.log("user.u_idx",user.u_idx);
+                console.log("response.datat",response.data);
+                menuStore.setUvoList(response.data);
+                console.log("uvolist",menuStore.uvolist);
+                setLoading(false);
             } catch (error) {
-                alert("실패");
+                alert("데이터를 가져오는 데 실패했습니다.");
                 console.error("데이터를 가져오는 중 오류가 발생했습니다:", error);
+                setLoading(false);
             }
         }
         fetchData();
-    }, ['/mypage/selfprofile']);
+    }, [menuStore, user.u_idx]);
 
-    // 입력값 변경을 처리하고 uvo 상태를 업데이트하는 함수
     const handleInputChange = (event) => {
         const { name, value } = event.target;
         setUvo({ ...uvo, [name]: value });
     };
-    
 
-    // 수정 완료 버튼 클릭 시 사용자 정보를 업데이트하는 함수
     async function editok() {
         try {
-            const response = await axios.post('/mypage/editprofile', uvo);
+            await axios.post('/mypage/editprofile', uvo);
             console.log('작성 완료:', uvo);
         } catch (error) {
             alert("작성 실패");
@@ -56,7 +60,6 @@ export default function Selfprofile() {
         }
     };
 
-    // 각 관심분야 목록 변경을 처리하는 함수들
     const handleWorklistChange = (selectedJob) => {
         setUvo({ ...uvo, p_job: selectedJob });
     };
@@ -73,6 +76,10 @@ export default function Selfprofile() {
         setUvo({ ...uvo, p_location: selectedLocation });
     };
 
+    if (loading) {
+        return <CircularProgress />;
+    }
+
     return (
         <div>
             <div className='profilebox'>
@@ -81,38 +88,36 @@ export default function Selfprofile() {
                 <div className='mypagetop'>
                     <div className='userimg'></div>
                     <div className='profile'>
-                        <p>이름</p>
-                        <p>휴대폰 번호</p>
-                        <p>이메일</p>
+                        <p>이름:</p>
+                        <p>휴대폰 번호:</p>
+                        <p>이메일: </p>
                     </div>
-                    {/* 사용자 정보 입력 폼 */}
-                    {menuStore.uvolist && menuStore.uvolist.map((uvo) => (
-                        <div key={uvo.u_idx} className='inputs'>
+                    {menuStore.uvolist.map((item) => (
+                        <div key={item.u_idx} className='inputs'>
                             <FormControl fullWidth>
-                                <Input name='name' placeholder={uvo.name} onChange={handleInputChange} />
-                                <Input name='phonenumber' placeholder={uvo.phonenumber} onChange={handleInputChange} />
-                                <Input name='email' placeholder={uvo.email} onChange={handleInputChange}/>
+                                <Input name='name' placeholder={item.name} onChange={handleInputChange} />
+                                <Input name='phonenumber' placeholder={item.phonenumber} onChange={handleInputChange} />
+                                <Input name='email' placeholder={item.email} onChange={handleInputChange} />
                             </FormControl>
                         </div>
                     ))}
                 </div>
                 <hr />
                 <Typography className='bluetext'>관심분야</Typography>
-                {/* 관심 분야 설정 섹션 */}
-                {menuStore.uvolist && menuStore.uvolist.map((uvo) => (
-                    <div className='mypagebottum'>
+                {menuStore.uvolist && menuStore.uvolist.map((item) => (
+                    <div key={item.u_idx} className='mypagebottum'>
                         <p className='mysmallfont'>업종</p>
-                        <Worklist uvo={uvo} handleWorklistChange={handleWorklistChange} />
+                        <Worklist uvo={item} handleWorklistChange={handleWorklistChange} />
                         
                         <p className='mysmallfont'>학력</p>
-                        <Schoollist uvo={uvo} handleSchoollistChange={handleSchoollistChange} />
+                        <Schoollist uvo={item} handleSchoollistChange={handleSchoollistChange} />
                         
                         <p className='mysmallfont'>경력</p>
-                        <Experience uvo={uvo} handleCareerlistChange={handleCareerlistChange} />
+                        <Experience uvo={item} handleCareerlistChange={handleCareerlistChange} />
                         
                         <p className='mysmallfont'>지역</p>
-                        <Local uvo={uvo} handleLocationlistChange={handleLocationlistChange} />
-                        {/* 뒤로 가기 및 수정 완료 버튼 */}
+                        <Local uvo={item} handleLocationlistChange={handleLocationlistChange} />
+                        
                         <div className='mybut'>
                             <Button variant="outlined" onClick={() => history.go(-1)}>뒤로가기</Button>
                             <Button variant="contained" onClick={editok}>수정완료</Button>
