@@ -3,14 +3,18 @@
 import { useSession } from "next-auth/react";
 import Link from "next/link";
 import { signOut } from "next-auth/react";
-import { useEffect, useState } from "react";
+import { useEffect, useRef , useState } from "react";
 import authStore from "@/stores/AuthStore";
+import MySubmenu from "./MySubMenu";
+import { Typography } from "@mui/material";
+import menuStore from "@/stores/MenuStore";
 
 export default function SideNavigation() {
   const [userName, setUserName] = useState('');
   const [userImg, setUserImg] = useState('');
   // const { data: session, status } = useSession();
   const [isSubmenuVisible, setSubmenuVisible] = useState(false);
+  const submenuTimeoutRef = useRef(null);
   const handleMouseEnter = () => {
     if (submenuTimeoutRef.current) {
       clearTimeout(submenuTimeoutRef.current);
@@ -30,7 +34,7 @@ export default function SideNavigation() {
   const handleMouseLeave = () => {
     submenuTimeoutRef.current = setTimeout(() => {
       setSubmenuVisible(false);
-    }, 200); // 200ms 후에 서브메뉴를 숨김
+    }, 400); // 200ms 후에 서브메뉴를 숨김
   };
 
   const handleMenuClick = async (menu) => {
@@ -41,8 +45,8 @@ export default function SideNavigation() {
       <ul className="flex gap-3 items-center text-sm">
         {userName && (
           <>
-            <Link
-              href="/mypage"
+            <Typography
+              onClick={() => handleMenuClick("profile")}
               className="hover:text-accent-400 transition-colors flex items-center gap-4"
               onMouseEnter={handleMouseEnter}
               onMouseLeave={handleMouseLeave}
@@ -55,8 +59,8 @@ export default function SideNavigation() {
               />
               {/* <span>{session.user.name}</span> */}
               <span>{userName}</span>
-            </Link>
-            {isSubmenuVisible && <SubMenu handleMenuClick={handleMenuClick} />}
+            </Typography>
+            {isSubmenuVisible && <MySubmenu handleMenuClick={handleMenuClick} />}
             <li>
               <button className="hover:bg-primary-100 transition-colors" onClick={() => {
                 signOut()

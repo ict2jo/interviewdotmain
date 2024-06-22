@@ -4,7 +4,7 @@ import { Typography } from "@mui/material";
 
 
 
-export default function Layout({handleMenuClick}) {
+export default function Submenu({handleMenuClick}) {
   return (
     <ul className="absolute left-0 mt-2 bg-white border border-gray-300 shadow-lg">
       <li className="whitespace-nowrap">
