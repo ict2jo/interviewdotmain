@@ -2,26 +2,46 @@
 import * as React from 'react';
 import './introduction.css';
 import { useContext, useEffect} from 'react';
-import { Button } from '@mui/material';
+import { Button, CircularProgress } from '@mui/material';
 import { MenuContext } from '@/stores/StoreContext';
 import axios from 'axios';
+import authStore from '@/stores/AuthStore';
 
 export default function Introduction() {
+    const user = authStore.getUser();
     const menuStore = useContext(MenuContext);
+    const [loading, setLoading] = React.useState(true);
+    const [uvo, setUvo] = React.useState({
+        u_idx: user.u_idx,
+        id: user.id,
+        name: user.name,
+        phonenumber: user.phonenumber,
+        email: user.email,
+        p_job: '',
+        p_class: '',
+        p_career: '',
+        p_location: '',
+        Field: ''
+    });
     useEffect(() => {
         async function fetchData() {
             try {
-                const response = await axios.get('/mypage/selfprofile');
+                const response = await axios.get(`/mypage/selfprofile?u_idx=${user.u_idx}`);
                 menuStore.setUvoList(response.data);
                 console.log(response.data);
+                setLoading(false);
             } catch (error) {
                 alert("실패");
                 console.error("데이터를 가져오는 중 오류가 발생했습니다:", error);
+                setLoading(false);
             }
         }
         fetchData();
-    }, ['/mypage/selfprofile']);  
+    }, [menuStore, user.u_idx]);  
 
+    if (loading) {
+        return <CircularProgress />;
+    }
     return(
         <div>
             {menuStore.uvolist && menuStore.uvolist.map((k) => (
@@ -74,7 +94,7 @@ export default function Introduction() {
             <div className='whitebox'>
                 <div className='myname'>
                 <div className='myinfodetail'>
-                <p>{k.Field}</p>
+                <p>{k.field}</p>
                 </div>
                 </div>
             </div>

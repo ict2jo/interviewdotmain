@@ -23,6 +23,7 @@ import Verification from "../../pages/verification";
 import Footer from "./_components/Footer";
 import Result from "./job/test/result/Result";
 import Introduction from "./mypage/Introduction/page";
+import Calendar from "./mypage/Schedule/page";
 
 function Home() {
   // useContext 훅으로 MobX Store 가져오기
@@ -77,7 +78,7 @@ function Home() {
         return <Review_Community />; //면접후기
       case "profile":
         return <Selfprofile />;
-      case "career":
+      case "intoduction":
         return <Introduction />;
       case "schedule":
         return <Calendar />;

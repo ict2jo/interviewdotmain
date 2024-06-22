@@ -33,7 +33,7 @@ const nextConfig = {
         destination: "http://apis.data.go.kr/1051000/recruitment/:path*",
       },
       {
-        source: "/mypage/:path*,
+        source: "/mypage/:path*",
         destination: "http://localhost:8080/mypage/:path*",
       },
       {

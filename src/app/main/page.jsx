@@ -13,7 +13,6 @@ export default function Main() {
     };
     return (
         <>
-
             <div className="w-full flex flex-col justify-center items-center mb-20">
 
                 {/* <Button variant="text">Text</Button>
@@ -32,7 +31,6 @@ export default function Main() {
                     바로 시작하기
                 </Typography>
             </div>
-
         </>
     )
 }

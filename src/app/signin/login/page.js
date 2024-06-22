@@ -12,6 +12,7 @@ import Button from "@/app/_components/Button";
 import { useEffect, useState } from "react";
 import authStore from "@/stores/AuthStore";
 import { URL } from "@/app/api/boot/route";
+import { useRouter } from "next/navigation";
 import menuStore from "@/stores/MenuStore";
 
 export default function Page() {
@@ -63,7 +64,6 @@ export default function Page() {
 
         authStore.login(userLoggedIn.data, response.data.token);
         menuStore.setSelectedMenu('option');
-
       }
     } catch (error) {
       alert("로그인 실패")

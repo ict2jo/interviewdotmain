@@ -7,7 +7,7 @@ import TableContainer from '@mui/material/TableContainer';
 import TableFooter from '@mui/material/TableFooter';
 import TableRow from '@mui/material/TableRow';
 import Pagination from '@mui/material/Pagination';
-import { Button, Table, TableHead } from '@mui/material';
+import { Button, CircularProgress, Table, TableHead } from '@mui/material'; // Import CircularProgress for loading indicator
 import './inquiry.css';
 import { MenuContext } from '@/stores/StoreContext';
 
@@ -15,6 +15,7 @@ export default function Inquiry() {
   const menuStore = useContext(MenuContext);
   const [page, setPage] = useState(1); // Current page state
   const [rowsPerPage] = useState(5); // Rows per page (fixed)
+  const [loading, setLoading] = useState(true); // Loading state
 
   useEffect(() => {
     fetchData();
@@ -24,11 +25,12 @@ export default function Inquiry() {
     try {
       const response = await axios.get("/mypage/inquiry");
       menuStore.setInquiryList(response.data);
-      localStorage.setItem('inquiryList', JSON.stringify(response.data)); // Update local storage
-      console.log("Data loaded successfully:", response.data);
+      console.log("menuStore.inquiryList:", menuStore.inquiryList);
+      setLoading(false); // Set loading to false after data is fetched
     } catch (error) {
       alert("Failed to load data.");
       console.error(error);
+      setLoading(false); // Handle loading state in case of error
     }
   };
 
@@ -38,7 +40,7 @@ export default function Inquiry() {
   };
 
   // Pagination logic
-  const rows = menuStore.inquiryList || []; // Inquiry list
+  const rows = menuStore.inquiryList || []; // Initialize as empty array if inquiryList is undefined
   const emptyRows = rowsPerPage - Math.min(rowsPerPage, rows.length - (page - 1) * rowsPerPage);
   const displayedRows = rows.slice((page - 1) * rowsPerPage, (page - 1) * rowsPerPage + rowsPerPage);
   const pageCount = Math.ceil(rows.length / rowsPerPage); // Total pages
@@ -52,6 +54,11 @@ export default function Inquiry() {
   const handleMenuClick = async (menu) => {
     menuStore.setSelectedMenu(menu);
   };
+
+  // Show loading indicator if data is still loading
+  if (loading) {
+    return <CircularProgress className="loading-spinner" />;
+  }
 
   return (
     <TableContainer sx={{ width: 600 }} className='tablewrap'>

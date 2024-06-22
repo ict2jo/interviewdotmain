@@ -24,20 +24,12 @@ const experience = [
 ];
 
 export default function Experience({ uvo, handleCareerlistChange }) {
-  const [p_career, setP_career] = React.useState([]);
-
-  React.useEffect(() => {
-    if (uvo.p_career) {
-      setP_career(uvo.p_career.split(','));
-    } else {
-      setP_career([]);
-    }
-  }, [uvo.p_career]);
+  const [p_career, setP_career] = React.useState(uvo.p_career || ''); // 기존 값 유지
 
   const handleChange = (event) => {
     const { value } = event.target;
     setP_career(value);
-    handleCareerlistChange(value); // 맨 앞의 쉼표 제거 후 전달
+    handleCareerlistChange(value);
   };
 
   return (
@@ -46,7 +38,6 @@ export default function Experience({ uvo, handleCareerlistChange }) {
       <Select
         labelId="demo-multiple-name-label"
         id="demo-multiple-name"
-        multiple
         value={p_career}
         onChange={handleChange}
         input={<OutlinedInput label="p_career" />}
