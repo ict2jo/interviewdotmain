@@ -117,7 +117,7 @@ function PageContent() {
             onChange={(e) =>
               dispatch({ type: "validatePw", payload: e.target.value })
             }
-            // value={pw}
+          // value={pw}
           />
           {!validPw ? (
             <p className="text-[11px] px-5 pt-2">
@@ -190,7 +190,7 @@ function PageContent() {
           <input
             type="checkbox"
             className="absolute bottom-3"
-            onClick={() => dispatch({ type: "isChecked", payload: !isChecked })}
+            onChange={(e) => dispatch({ type: "isChecked", payload: e.target.checked })}
           />
           <p className="font-bold text-sm px-5 py-2">
             모든 약관 사항에 전체 동의합니다.

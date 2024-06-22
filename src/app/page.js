@@ -20,6 +20,8 @@ import Inquiry from "./mypage/Inquiry/page";
 import Starthome from "./interview/starthome/page";
 import JobTest from "./job/test/JobTest";
 import Verification from "../../pages/verification";
+import Footer from "./_components/Footer";
+import Result from "./job/test/result/Result";
 import Introduction from "./mypage/Introduction/page";
 import Calendar from "./mypage/Schedule/page";
 
@@ -40,7 +42,7 @@ function Home() {
   // 선택된 메뉴가 변경될 때마다 로컬 스토리지에 저장
   useEffect(() => {
     localStorage.setItem("selectedMenu", menuStore.selectedMenu);
-  }, [menuStore.selectedMenu]);
+  }, []);
 
   const renderContent = () => {
     switch (menuStore.selectedMenu) {
@@ -64,8 +66,10 @@ function Home() {
         return <Inquiry />; //자기소개서
       case "job":
         return <Job />;
-      case "news":
-        return <JobTest />; //뉴스
+      case "jobTest":
+        return <JobTest />;
+      case "result":
+        return <Result />;
       case "event":
         return <Job />; //이벤트
       case "recruitment":
@@ -82,6 +86,8 @@ function Home() {
         return <Inquiry />;
       case "inquirywrite":
         return <Inquirywrite />;
+      case "option":
+        return <OptionalInfo />;
       default:
         return <Main />;
     }
@@ -90,7 +96,7 @@ function Home() {
     <div>
       <Header />
       {renderContent()}
-      <footer>Copyright by ... </footer>
+      <Footer />
     </div>
   );
 }

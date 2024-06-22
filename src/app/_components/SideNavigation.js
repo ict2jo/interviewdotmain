@@ -3,16 +3,21 @@
 import { useSession } from "next-auth/react";
 import Link from "next/link";
 import { signOut } from "next-auth/react";
-import { useEffect, useRef , useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import authStore from "@/stores/AuthStore";
+import SubMenu from "./SubMenu"
+import { useRouter } from "next/navigation";
 import MySubmenu from "./MySubMenu";
 import { Typography } from "@mui/material";
 import menuStore from "@/stores/MenuStore";
 
+
 export default function SideNavigation() {
+  const { data: session, status } = useSession();
+  const submenuTimeoutRef = useRef(null);
+  const router = useRouter();
   const [userName, setUserName] = useState('');
   const [userImg, setUserImg] = useState('');
-  // const { data: session, status } = useSession();
   const [isSubmenuVisible, setSubmenuVisible] = useState(false);
   const submenuTimeoutRef = useRef(null);
   const handleMouseEnter = () => {
@@ -27,7 +32,10 @@ export default function SideNavigation() {
     if (user) {
       setUserName(user.name)
       setUserImg(user.u_img)
-      console.log(user);
+    }
+    if (session?.user) {
+      setUserName(session.user.name)
+      setUserImg(session.user.image)
     }
   }, []);
 
@@ -40,6 +48,18 @@ export default function SideNavigation() {
   const handleMenuClick = async (menu) => {
     menuStore.setSelectedMenu(menu)
   }
+
+  function handleLogout() {
+    if (session?.user) {
+      signOut();
+      console.log("SNS 로그아웃");
+
+    } else {
+      console.log("logout");
+      authStore.logout();
+    }
+    router.push("/");
+  };
   return (
     <nav className="z-10 text-xl">
       <ul className="flex gap-3 items-center text-sm">
@@ -53,8 +73,8 @@ export default function SideNavigation() {
             >
               <img
                 className="h-8 rounded-full"
-                // src={session.user.image}
-                // alt={session.user.name}
+                src={userImg}
+                alt={userImg}
                 referrerPolicy="no-referrer"
               />
               {/* <span>{session.user.name}</span> */}
@@ -62,9 +82,7 @@ export default function SideNavigation() {
             </Typography>
             {isSubmenuVisible && <MySubmenu handleMenuClick={handleMenuClick} />}
             <li>
-              <button className="hover:bg-primary-100 transition-colors" onClick={() => {
-                signOut()
-              }}>로그아웃</button>
+              <button className="hover:bg-primary-100 transition-colors" onClick={handleLogout}>로그아웃</button>
             </li>
           </>
         )} {!userName && (
