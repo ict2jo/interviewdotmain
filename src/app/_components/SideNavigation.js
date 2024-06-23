@@ -14,7 +14,6 @@ import menuStore from "@/stores/MenuStore";
 
 export default function SideNavigation() {
   const { data: session, status } = useSession();
-  const submenuTimeoutRef = useRef(null);
   const router = useRouter();
   const [userName, setUserName] = useState('');
   const [userImg, setUserImg] = useState('');

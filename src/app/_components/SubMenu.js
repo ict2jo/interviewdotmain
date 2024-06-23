@@ -2,8 +2,6 @@
 
 import { Typography } from "@mui/material";
 
-export default function Layout({ handleMenuClick }) {
-
 
 export default function Submenu({handleMenuClick}) {
   return (
