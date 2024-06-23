@@ -1,4 +1,3 @@
-// stores/questionStore.js
 import { makeAutoObservable } from 'mobx';
 
 class QuestionStore {
