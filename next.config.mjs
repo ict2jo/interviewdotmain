@@ -11,6 +11,10 @@ const nextConfig = {
             {
                 source : "/mypage/inquiry",
                 destination : "http://localhost:8080/mypage/inquiry"
+            },
+            {
+                source: "/",
+                destination: "/checkout",
             }
         ];
     }

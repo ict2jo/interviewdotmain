@@ -19,6 +19,9 @@ import QuestionRepository from "./ai/question_repository/page";
 import Starthome from "./interview/starthome/page";
 import JobTest from "./job/test/JobTest";
 import Verification from "../../pages/verification";
+import { App } from "./pages/toss/App";
+
+
 
 function Home() {
   // useContext 훅으로 MobX Store 가져오기
@@ -77,6 +80,8 @@ function Home() {
         return <Calendar />;
       case "inquiry":
         return <Inquiry />;
+      case "toss":
+        return <App />;
       default:
         return <Main />;
     }
