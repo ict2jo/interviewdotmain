@@ -114,7 +114,7 @@ const Start = () => {
             <div className="white_box">
                 <div className="timer">{`${minutes}:${seconds < 10 ? '0' : ''}${seconds}`}</div>
                 <div className="question">
-                    <p>{parsedQuestions.length > 0 ? (parsedQuestions[activePage - 1]?.question || 'No question selected.') : 'No question selected.'}</p>
+                    <p>{parsedQuestions.length > 0 ? (parsedQuestions[activePage - 1]?.question || '질문을 받아오지 못했습니다.') : '질문을 받아오지 못했습니다.'}</p>
                 </div>
                 <Grid container spacing={0} className="content">
                     <Grid item xs={6} className="my_camera">
@@ -124,16 +124,6 @@ const Start = () => {
                             screenshotFormat="image/jpeg"
                             className="webcam_preview"
                         />
-                        <div className="button_container">
-                            {!isRecording ? (
-                                <Button variant="outlined" onClick={startRecording}>녹화 시작</Button>
-                            ) : (
-                                <Button variant="contained" onClick={stopRecording}>녹화 중지</Button>
-                            )}
-                        </div>
-                    </Grid>
-                    <Grid item xs={5} className="answer_form">
-                        음성 답변 실시간 출력
                     </Grid>
                 </Grid>
                 <div className="paging_number">

@@ -1,64 +1,16 @@
 .container {
-    height: 100vh;
-    display: flex;
-    justify-content: center;
-    align-items: center;
+    height: 50vh;
     margin: 0 auto;
-}
-
-.white_box {
-    background-color: #fff;
-    border-radius: 20px;
-    padding: 20px;
-    width: 100%;
     text-align: center;
-    position: relative;
+}
+.container h1 {
+    margin-top: 15%;
+    font-size: 30px;
+    font-weight: bold;
 }
 
-.count {
-    position: absolute;
-    left: 50%;
-    transform: translateX(-50%);
-}
-
-.title {
-    margin: 0;
-    font-size: 24px;
-}
-
-.scroll_box {
-    overflow-y: auto;
-    max-height: calc(100vh - 100px);
-    margin-top: 50px;
-}
-
-.questions {
+.button_container{
     display: flex;
     flex-direction: column;
-    gap: 20px;
-    align-items: flex-start; /* 질문 박스를 왼쪽 정렬 */
-}
-
-.question_box {
-    background-color: #f1f1f1;
-    border-radius: 10px;
-    height: 40px;
-    cursor: pointer;
-    transition: background-color 0.3s ease, color 0.3s ease; /* 텍스트 색상 전환 추가 */
-    padding: 10px; /* 질문 박스에 패딩 추가 */
-    display: flex;
-    align-items: center; /* 텍스트 수직 중앙 정렬 */
-}
-
-.question_box.selected {
-    background-color: #007bff;
-    color: #fff;
-}
-
-.go_next_page {
-    position: absolute;
-    width: 200px;
-    height: 100px;
-    cursor: pointer;
-    right: -50px;
+    font-weight: bold;
 }

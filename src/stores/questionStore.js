@@ -3,6 +3,8 @@ import { makeAutoObservable } from 'mobx';
 class QuestionStore {
     questions = [];
     selectedQuestions = [];
+    currentPage = 1;
+    itemsPerPage = 8;
 
     constructor() {
         makeAutoObservable(this);
@@ -26,6 +28,14 @@ class QuestionStore {
 
     get selectedCount() {
         return this.selectedQuestions.length;
+    }
+
+    setPage(page) {
+        this.currentPage = page;
+    }
+
+    getPage() {
+        return this.currentPage;
     }
 }
 

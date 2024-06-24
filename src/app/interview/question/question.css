@@ -1,0 +1,67 @@
+.container {
+    height: 100vh;
+    display: flex;
+    margin-top: 50px;
+}
+
+.white_box {
+    text-align: center;
+    position: absolute;
+}
+
+.count {
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+    top: 60px;
+}
+
+.title {
+    margin-bottom: 30px;
+}
+.title h1{
+    font-size: 24px;
+}
+
+.questions {
+    display: flex;
+    flex-direction: column;
+    gap: 30px;
+}
+
+.question_box {
+    background-color: #f1f1f1;
+    border-radius: 10px;
+    cursor: pointer;
+    transition: background-color 0.3s ease, color 0.3s ease;
+    padding: 10px;
+    text-align: left;
+}
+
+.question_box.selected {
+    background-color: #007bff;
+    color: #fff;
+}
+
+.pagination_container {
+    display: flex;
+    gap: 30px;
+    justify-content: center;
+    list-style-type: none;
+    padding: 0;
+}
+
+.pagination_button {
+    width: 24px;
+    height: 24px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: 50%;
+    cursor: pointer;
+}
+
+.pagination_button.active {
+    background-color: blue;
+    color: white;
+}
