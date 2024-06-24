@@ -3,11 +3,22 @@
 import { useSession } from "next-auth/react";
 import Link from "next/link";
 import { signOut } from "next-auth/react";
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
+import authStore from "@/stores/AuthStore";
+import SubMenu from "./SubMenu"
+import { useRouter } from "next/navigation";
+import MySubmenu from "./MySubMenu";
+import { Typography } from "@mui/material";
+import menuStore from "@/stores/MenuStore";
+
 
 export default function SideNavigation() {
   const { data: session, status } = useSession();
+  const router = useRouter();
+  const [userName, setUserName] = useState('');
+  const [userImg, setUserImg] = useState('');
   const [isSubmenuVisible, setSubmenuVisible] = useState(false);
+  const submenuTimeoutRef = useRef(null);
   const handleMouseEnter = () => {
     if (submenuTimeoutRef.current) {
       clearTimeout(submenuTimeoutRef.current);
@@ -15,42 +26,65 @@ export default function SideNavigation() {
     setSubmenuVisible(true);
   };
 
+  useEffect(() => {
+    const user = authStore.getUser();
+    if (user) {
+      setUserName(user.name)
+      setUserImg(user.u_img)
+    }
+    if (session?.user) {
+      setUserName(session.user.name)
+      setUserImg(session.user.image)
+    }
+  }, []);
+
   const handleMouseLeave = () => {
     submenuTimeoutRef.current = setTimeout(() => {
       setSubmenuVisible(false);
-    }, 200); // 200ms 후에 서브메뉴를 숨김
+    }, 400); // 200ms 후에 서브메뉴를 숨김
   };
 
   const handleMenuClick = async (menu) => {
     menuStore.setSelectedMenu(menu)
   }
+
+  function handleLogout() {
+    if (session?.user) {
+      signOut();
+      console.log("SNS 로그아웃");
+
+    } else {
+      console.log("logout");
+      authStore.logout();
+    }
+    router.push("/");
+  };
   return (
     <nav className="z-10 text-xl">
       <ul className="flex gap-3 items-center text-sm">
-        {session?.user && (
+        {userName && (
           <>
-            <Link
-              href="/mypage"
+            <Typography
+              onClick={() => handleMenuClick("profile")}
               className="hover:text-accent-400 transition-colors flex items-center gap-4"
               onMouseEnter={handleMouseEnter}
               onMouseLeave={handleMouseLeave}
             >
               <img
                 className="h-8 rounded-full"
-                src={session.user.image}
-                alt={session.user.name}
+                src={userImg}
+                alt={userImg}
                 referrerPolicy="no-referrer"
               />
-              <span>{session.user.name}</span>
-            </Link>
-              {isSubmenuVisible && <SubMenu handleMenuClick={handleMenuClick}/>}
+              {/* <span>{session.user.name}</span> */}
+              <span>{userName}</span>
+            </Typography>
+            {isSubmenuVisible && <MySubmenu handleMenuClick={handleMenuClick} />}
             <li>
-              <button className="hover:bg-primary-100 transition-colors" onClick={() => {
-                signOut()
-              }}>로그아웃</button>
+              <button className="hover:bg-primary-100 transition-colors" onClick={handleLogout}>로그아웃</button>
             </li>
           </>
-        )} {!session?.user && (
+        )} {!userName && (
           <>
             <li>
               <Link

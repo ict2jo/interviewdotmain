@@ -2,11 +2,9 @@
 import axios from "axios";
 
 export const API_KEY = "631411887293319c018c3eeeb7413e40";
-
 export const Q_NUM = "19";
-
 export const Q_URL = "https://www.career.go.kr/inspct/openapi/test";
-export const R_URL = "www.career.go.kr/inspct/openapi/test/report?";
+//export const R_URL = "https://www.career.go.kr/inspct/openapi/test/report?";
 
 export const GetQuestionAPI = async () => {
   try {
@@ -25,12 +23,23 @@ export const GetQuestionAPI = async () => {
 };
 
 export const PostResultAPI = async (data) => {
-  const pushResponse = await axios.post(
-    `${Q_URL}apikey=${API_KEY}&qestrnSeq=${Q_NUM}`,
-    data
-  );
-  const SEQ_NUM = pushResponse.data.RESULT.url.split("=")[1];
-  const pullResponse = await axios.get(`${R_URL}/report?seq=${SEQ_NUM}`);
+  try {
+    const pushResponse = await axios.post(
+      "http://localhost:8080/api/report",
+      // `${Q_URL}/report?apikey=${API_KEY}&questrnSeq=${Q_NUM}`,
+      data, {
+      headers: {
+        "Content-Type": "application/json",
+      },
+    }
+    );
 
-  return pullResponse;
+    const job = pushResponse.data;
+    console.log(job);
+
+    return pushResponse;
+  } catch (error) {
+    console.error("Error posting result:", error);
+    throw error;
+  }
 };

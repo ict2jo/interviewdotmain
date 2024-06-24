@@ -6,14 +6,12 @@ const JobTestContext = createContext();
 
 const initialState = {
   questions: [],
-
   //  // 'loading', 'error', 'ready', 'active', 'finished'
   status: "loading",
   index: 0,
   page: 0,
   answers: [],
-  points: 0,
-  gender: "",
+  gender: null,
 };
 
 function reducer(state, action) {
@@ -48,7 +46,6 @@ function reducer(state, action) {
       return {
         ...state,
         answers: newAnswers,
-        points: state.points + answer,
       };
     case "nextPage":
       return {
@@ -58,11 +55,15 @@ function reducer(state, action) {
 
     case "prevPage":
       return { ...state, page: state.page - 1 };
-      채ㅜㄴㅅ;
     case "finish":
       return {
         ...state,
         status: "finished",
+      };
+    case "result":
+      return {
+        ...state,
+        status: "result",
       };
     case "restart":
       return { ...initialState, questions: state.questions, status: "ready" };

@@ -1,5 +1,3 @@
-"use client"
-
 import * as React from 'react';
 import OutlinedInput from '@mui/material/OutlinedInput';
 import MenuItem from '@mui/material/MenuItem';
@@ -10,52 +8,47 @@ import InputLabel from '@mui/material/InputLabel';
 const ITEM_HEIGHT = 28;
 const ITEM_PADDING_TOP = 2;
 const MenuProps = {
-PaperProps: {
+  PaperProps: {
     style: {
-    maxHeight: ITEM_HEIGHT * 4.5 + ITEM_PADDING_TOP,
-    width: 350,
+      maxHeight: ITEM_HEIGHT * 4.5 + ITEM_PADDING_TOP,
+      width: 350,
     },
-},
+  },
 };
 
 const experience = [
-'신입',
-'경력',
-'신입+경력',
-'외국인 전형',
+  '신입',
+  '경력',
+  '신입+경력',
+  '외국인 전형',
 ];
-export default function Experience() {
-    const [personName, setPersonName] = React.useState([]);
 
-    const handleChange = (event) => {
-        const {
-        target: { value },
-        } = event;
-        setPersonName(
-        typeof value === 'string' ? value.split(',') : value,
-        );
-    };
-return(
+export default function Experience({ uvo, handleCareerlistChange }) {
+  const [p_career, setP_career] = React.useState(uvo.p_career || ''); // 기존 값 유지
+
+  const handleChange = (event) => {
+    const { value } = event.target;
+    setP_career(value);
+    handleCareerlistChange(value);
+  };
+
+  return (
     <FormControl sx={{ m: 0, width: 683.5 }}>
-                <InputLabel id="demo-multiple-name-label">업종을 선택하세요</InputLabel>
-                    <Select
-                    labelId="demo-multiple-name-label"
-                    id="demo-multiple-name"
-                    multiple
-                    value={personName}
-                    onChange={handleChange}
-                    input={<OutlinedInput label="업종을 선택하세요" />}
-                    MenuProps={MenuProps}
-                    >
-                    {experience.map((experience) => (
-                        <MenuItem
-                        key={experience}
-                        value={experience}
-                        >
-                        {experience}
-                        </MenuItem>
-                    ))}
-                    </Select>
-                </FormControl>
-)
+      <InputLabel id="demo-multiple-name-label">경력을 선택하세요</InputLabel>
+      <Select
+        labelId="demo-multiple-name-label"
+        id="demo-multiple-name"
+        value={p_career}
+        onChange={handleChange}
+        input={<OutlinedInput label="p_career" />}
+        MenuProps={MenuProps}
+      >
+        {experience.map((k) => (
+          <MenuItem key={k} value={k}>
+            {k}
+          </MenuItem>
+        ))}
+      </Select>
+    </FormControl>
+  );
 }

@@ -218,7 +218,7 @@ function PageContent() {
   );
 }
 
-export default function Page() {
+export default function OptionalInfo() {
   return (
     <Router>
       <OptionProvider>

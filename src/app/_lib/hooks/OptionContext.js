@@ -1,6 +1,6 @@
 "use client";
 import { createContext, useContext, useReducer } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate } from "next/router";
 
 const OptionContext = createContext();
 
@@ -50,7 +50,7 @@ function reducer(state, action) {
 }
 
 function OptionProvider({ children }) {
-  const navigate = useNavigate();
+  // const navigate = useNavigate();
   const [
     {
       school,
@@ -87,7 +87,7 @@ function OptionProvider({ children }) {
 
   const handleSubmit = async () => {
     try {
-      const response = await fetch("/api/submit", {
+      const response = await fetch("/api/addInfos", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

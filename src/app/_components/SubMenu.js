@@ -3,30 +3,21 @@
 import { Typography } from "@mui/material";
 
 
-
-export default function Layout({handleMenuClick}) {
+export default function Submenu({handleMenuClick}) {
   return (
     <ul className="absolute left-0 mt-2 bg-white border border-gray-300 shadow-lg">
-      <li className="whitespace-nowrap">
+      <li className="whitespace-nowrap cursor-pointer">
         <Typography className="block px-4 py-2 hover:bg-primary-100"
-        onClick={() => handleMenuClick("news")}>
-          뉴스
+          onClick={() => handleMenuClick("jobTest")}>
+          직업검사
         </Typography>
       </li>
-      <li className="whitespace-nowrap">
+      <li className="whitespace-nowrap cursor-pointer">
         <Typography
-          onClick={() => handleMenuClick("event")}
+          onClick={() => handleMenuClick("result")}
           className="block px-4 py-2 hover:bg-primary-100"
         >
-          이벤트
-        </Typography>
-      </li>
-      <li className="whitespace-nowrap">
-        <Typography
-          onClick={() => handleMenuClick("recruitment")}
-          className="block px-4 py-2 hover:bg-primary-100"
-        >
-          채용정보
+          검사결과
         </Typography>
       </li>
     </ul>
