@@ -12,33 +12,35 @@ export default async function handler(req, res) {
     return res.status(405).json({ error: 'Method Not Allowed' });
   }
 
+  const { question, feedback, type } = req.body;
+
   try {
-    const { question } = req.body;
+    let assistantId;
 
-    // 1. Assistant 객체 가져오기
-    const assistant = await openai.beta.assistants.retrieve(process.env.GPTSKEY1);
+    if (type === 'correction') {
+      assistantId = process.env.GPTSKEY1_1; 
+    } else if (type === 'rewrite') {
+      assistantId = process.env.GPTSKEY1_2; 
+    } else {
+      throw new Error('Invalid request type');
+    }
 
-    // 2. 스레드 생성
+    const assistant = await openai.beta.assistants.retrieve(assistantId);
     const thread = await openai.beta.threads.create();
 
-    // 3. 사용자 메시지 생성 (사용자가 제공한 질문 추가)
     await openai.beta.threads.messages.create(thread.id, {
       role: 'user',
-      content: question,
+      content: question, feedback,
     });
 
-    // 4. Assistant 실행 및 결과 대기
     const run = await openai.beta.threads.runs.create(thread.id, {
       assistant_id: assistant.id,
-      instructions: '', // 추가적인 지시사항이 필요하면 여기에 추가
+      instructions: '', 
     });
 
-    // 5. Assistant 실행 완료 후 결과 메시지 가져오기
     const message = await waitForCompletionAndGetMessage(openai, thread.id, run.id);
+    const contents = message.body.data[0].content[0].text.value;
 
-    const contents = message.body.data[0].content[0].text.value; // GPTs가 생성한 내용
-
-    // 6. 클라이언트에게 결과 전송
     res.status(200).json({ answer: contents });
   } catch (error) {
     console.error('Error:', error);
@@ -58,7 +60,7 @@ async function waitForCompletionAndGetMessage(client, threadId, runId) {
     }
   } catch (error) {
     console.error('Error while fetching messages:', error);
-    throw error; // 에러를 다시 던져서 handler 함수에서 처리할 수 있도록 함
+    throw error;
   }
 }
 
@@ -66,7 +68,7 @@ async function checkRunStatus(client, threadId, runId) {
   let run = await client.beta.threads.runs.retrieve(threadId, runId);
 
   while (run.status !== 'completed') {
-    await new Promise((resolve) => setTimeout(resolve, 1000)); // 1초 대기
+    await new Promise((resolve) => setTimeout(resolve, 1000));
     run = await client.beta.threads.runs.retrieve(threadId, runId);
   }
 }
