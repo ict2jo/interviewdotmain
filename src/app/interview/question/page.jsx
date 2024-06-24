@@ -7,6 +7,8 @@ import { useRouter, useSearchParams } from "next/navigation";
 import Pagination from '@mui/material/Pagination';
 import PaginationItem from '@mui/material/PaginationItem';
 import { styled } from '@mui/system';
+import ArrowBackIosNewIcon from '@mui/icons-material/ArrowBackIosNew';
+import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
 
 const StyledPaginationItem = styled(PaginationItem)(({ theme }) => ({
     '&.Mui-selected': {
@@ -68,7 +70,6 @@ const Question = observer(() => {
                             className={`question_box ${questionStore.selectedQuestions.includes(question) ? 'selected' : ''}`}
                             onClick={() => handleClick(question)}
                         >
-                            <span className="question_number">{startIndex + index + 1}</span>
                             {question.question}
                         </div>
                     ))}
@@ -83,6 +84,12 @@ const Question = observer(() => {
                         renderItem={(item) => <StyledPaginationItem {...item} />}
                     />
                 </div>
+            </div>
+            <div className="before_page">
+                <ArrowBackIosNewIcon style={{ fontSize: 40 }} onClick={go_next_page} className="go_next_page"/>
+            </div>
+            <div className="next_page">
+                <ArrowForwardIosIcon style={{ fontSize: 40 }} onClick={go_next_page} className="go_next_page"/>
             </div>
         </div>
     );
