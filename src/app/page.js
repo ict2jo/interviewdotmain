@@ -20,7 +20,7 @@ import Inquiry from "./mypage/Inquiry/page";
 import Starthome from "./interview/starthome/page";
 import JobTest from "./job/test/JobTest";
 import Verification from "../../pages/verification";
-import { App } from "./pages/toss/App";
+// import { App } from "./pages/toss/App";
 import Footer from "./_components/Footer";
 import Result from "./job/test/result/Result";
 import Introduction from "./mypage/Introduction/page";
@@ -86,8 +86,8 @@ function Home() {
         return <Calendar />;
       case "inquiry":
         return <Inquiry />;
-      case "toss":
-        return <App />;
+      // case "toss":
+      //   return <App />;
       case "inquirywrite":
         return <Inquirywrite />;
       case "inquiryedit":
