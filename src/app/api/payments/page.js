@@ -1,25 +1,56 @@
-export default async function Payments({ searchParams }) {
-  const secretKey = process.env.TOSS_SECRET_KEY || "";
-  const basicToken = Buffer.from(`${secretKey}:`, `utf-8`).toString("base64");
+"use client"; // 클라이언트 컴포넌트로 지정
+import { useEffect } from "react";
+import { useRouter, useSearchParams } from "next/navigation";
+import paymentStore from '@/stores/paymentStore'; 
 
-  const url = `https://api.tosspayments.com/v1/payments/orders/${searchParams.orderId}`;
-  const payments = await fetch(url, {
-    headers: {
-      Authorization: `Basic ${basicToken}`,
-      "Content-Type": "application/json",
-    },
-  }).then((res) => res.json());
+export default function Payments() {
+  const router = useRouter();
+  const searchParams = useSearchParams();
 
-  const { card } = payments;
+  useEffect(() => {
+    const requestData = {
+      orderId: paymentStore.orderId,
+      orderName: paymentStore.orderName,
+      customerName: paymentStore.customerName,
+      customerEmail: paymentStore.customerEmail,
+      amount: searchParams.get("amount"),
+      paymentKey: searchParams.get("paymentKey"),
+    };
+
+    async function confirm() {
+      const response = await fetch("/api/payments", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(requestData),
+      });
+
+      const json = await response.json();
+
+      if (!response.ok) {
+        router.push(`/fail?message=${json.message}&code=${json.code}`);
+        return;
+      }
+
+      // 결제 성공 비즈니스 로직을 구현하세요.
+    }
+    confirm();
+  }, [searchParams]);
+
   return (
-    <div>
-      <h1>결제가 완료되었습니다</h1>
-      <ul>
-        <li>
-          결제승인날짜{" "}
-          {Intl.DateTimeFormat().format(new Date(payments.approvedAt))}
-        </li>
-      </ul>
+    <div className="result wrapper">
+      <div className="box_section">
+        <h2>결제 성공</h2>
+        <p>{`주문번호: ${paymentStore.orderId}`}</p>
+        <p>{`주문상품: ${paymentStore.orderName}`}</p>
+        <p>{`주문자: ${paymentStore.customerName}`}</p>
+        <p>{`주문자 e-mail: ${paymentStore.customerEmail}`}</p>
+        <p>{`결제 금액: ${Number(
+          searchParams.get("amount")
+        ).toLocaleString()}원`}</p>
+        <p>{`paymentKey: ${searchParams.get("paymentKey")}`}</p>
+      </div>
     </div>
   );
 }
