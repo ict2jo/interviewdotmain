@@ -41,7 +41,7 @@ export default function SideNavigation() {
   const handleMouseLeave = () => {
     submenuTimeoutRef.current = setTimeout(() => {
       setSubmenuVisible(false);
-    }, 400); // 200ms 후에 서브메뉴를 숨김
+    }, 600); // 200ms 후에 서브메뉴를 숨김
   };
 
   const handleMenuClick = async (menu) => {

@@ -33,7 +33,6 @@ export default function list() {
 
         try {
             const response = await axios.get(API_URL);
-            console.log(response.data.result);
             setList(response.data.result);
             setTotalItems(response.data.totalCount);
         } catch (error) {

@@ -25,6 +25,7 @@ import Footer from "./_components/Footer";
 import Result from "./job/test/result/Result";
 import Introduction from "./mypage/Introduction/page";
 import Calendar from "./mypage/Schedule/page";
+import Inquiryedit from "./mypage/Inquiry/Inquiryedit/page";
 
 function Home() {
   // useContext 훅으로 MobX Store 가져오기
@@ -89,6 +90,8 @@ function Home() {
         return <App />;
       case "inquirywrite":
         return <Inquirywrite />;
+      case "inquiryedit":
+        return <Inquiryedit />;
       case "option":
         return <OptionalInfo />;
       default:
