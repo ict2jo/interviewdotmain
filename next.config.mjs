@@ -40,7 +40,6 @@ const nextConfig = {
           source : "/interview/:path*",
           destination : "http://localhost:8080/interview/:path*"
       }
-      
     ];
   },
 };

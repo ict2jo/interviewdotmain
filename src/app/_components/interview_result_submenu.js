@@ -35,6 +35,14 @@ export default function Interview_result_submenu({handleMenuClick}) {
                     질문 저장소
                 </Typography>
             </li>
+            <li className="whitespace-nowrap">
+                <Typography
+                    className="block px-4 py-2 hover:bg-primary-100"
+                    onClick={() => handleMenuClick("toss")}
+                >
+                    결제
+                </Typography>
+            </li>
         </ul>
     );
 }

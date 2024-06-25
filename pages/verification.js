@@ -1,15 +1,16 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState } from 'react';
 import './verification.css'; // 필요한 CSS 파일 import
 
 export default function Verification() {
-  const [chatHistory, setChatHistory] = useState([]); // 채팅 기록을 저장할 상태 추가
   const [question, setQuestion] = useState('');
-  const [chatOpen, setChatOpen] = useState(false); // 채팅창 열림 여부를 관리하는 상태 추가
-  const [inputDisabled, setInputDisabled] = useState(false); // 인풋박스 비활성화 상태 추가
-  const chatHistoryRef = useRef(null); // chat-history 요소에 접근하기 위한 useRef
+  const [feedback, setFeedback] = useState('');
+  const [correctedEssay, setCorrectedEssay] = useState('');
+  const [inputDisabled, setInputDisabled] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [loading2, setLoading2] = useState(false);
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
+  const handleCorrection = async () => {
+    setLoading(true);
 
     try {
       const response = await fetch('/api/generate', {
@@ -17,7 +18,7 @@ export default function Verification() {
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ question }),
+        body: JSON.stringify({ question, type: 'correction' }),
       });
 
       const data = await response.json();
@@ -26,57 +27,127 @@ export default function Verification() {
         throw new Error(data.error || `Request failed with status ${response.status}`);
       }
 
-      const newChat = {
-        question,
-        answer: data.answer,
-      };
-
-      setChatHistory([...chatHistory, newChat]); // 새로운 채팅 기록 추가
-      setQuestion(''); // 질문 초기화
-      setInputDisabled(true); // 인풋박스 비활성화
-
-      // 스크롤을 최하단으로 이동
-      if (chatHistoryRef.current) {
-        chatHistoryRef.current.scrollTop = chatHistoryRef.current.scrollHeight;
-      }
+      setFeedback(data.answer);
     } catch (error) {
       console.error('Error:', error);
       alert(error.message);
+    } finally {
+      setLoading(false);
+      setInputDisabled(false);
     }
   };
 
-  useEffect(() => {
-    if (chatHistoryRef.current) {
-      chatHistoryRef.current.scrollTop = chatHistoryRef.current.scrollHeight;
+  const handleRewrite = async () => {
+    setLoading2(true);
+
+    try {
+      const response = await fetch('/api/generate', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ question, feedback, type: 'rewrite' }), // feedback도 함께 전송
+      });
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        throw new Error(data.error || `Request failed with status ${response.status}`);
+      }
+
+      setCorrectedEssay(data.answer);
+    } catch (error) {
+      console.error('Error:', error);
+      alert(error.message);
+    } finally {
+      setLoading2(false);
+      setInputDisabled(false);
     }
-  }, [chatHistory]);
+  };
+
+  const handleSave = async () => {
+    try {
+      const response = await fetch('/api/save', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ correctedEssay }),
+      });
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        throw new Error(data.error || `Request failed with status ${response.status}`);
+      }
+
+      alert('자기소개서가 성공적으로 저장되었습니다.');
+    } catch (error) {
+      console.error('Error:', error);
+      alert('자기소개서 저장 중 오류가 발생했습니다.');
+    }
+  };
 
   return (
     <div className="chat-container">
-      <div className="chat-history" ref={chatHistoryRef}>
-        {chatHistory.map((chat, index) => (
-          <div key={index} className="chat-item">
-            <div className="question-answer">
-              <div className="question">{chat.question}</div>
-              <div className="answer">
-                <img src="/chat.png" alt="Chat Icon" />
-                {chat.answer}
+      <div className="input-output-section">
+        <div className="top-section">
+          <div className="input-box">
+            <div className="header">사용자</div>
+            <form className="input-section" onSubmit={(e) => e.preventDefault()}>
+              <textarea
+                value={question}
+                onChange={(e) => setQuestion(e.target.value)}
+                placeholder="자기소개서 내용을 입력하세요."
+                disabled={inputDisabled || loading}
+                rows="15"
+                style={{ resize: 'none', margin: '0px' }}
+              />
+              <div className="button-wrapper">
+                <button type="button" onClick={handleCorrection} disabled={loading}>
+                  검증하기
+                </button>
+                <button type="button" onClick={handleRewrite} disabled={loading2}>
+                  예시보기
+                </button>
+              </div>
+            </form>
+          </div>
+          <div className="output-box">
+            <div className="header">예시 (자기소개서 수정)</div>
+            <div className="output-section">
+              {loading2 && <p>Loading...</p>}
+              <textarea
+                value={correctedEssay}
+                onChange={(e) => setCorrectedEssay(e.target.value)}
+                placeholder="자기소개서 예시가 여기에 표시됩니다."
+                disabled={loading2}
+                rows="15"
+                style={{ resize: 'none', margin: '0px' }}
+              />
+              <div className="button-wrapper">
+                <button type="button" onClick={handleSave} disabled={!correctedEssay}>
+                  저장하기
+                </button>
               </div>
             </div>
           </div>
-        ))}
+        </div>
+        <div className="feedback-box">
+          <div className="header">피드백</div>
+          <div className="feedback-section">
+            {loading && <p>Loading...</p>}
+            <textarea
+              value={feedback}
+              onChange={(e) => setFeedback(e.target.value)}
+              placeholder="피드백이 여기에 표시됩니다."
+              disabled={loading}
+              rows="10"
+              style={{ width: '100%', resize: 'none', margin: '0px' }}
+            />
+          </div>
+        </div>
       </div>
-
-      <form onSubmit={handleSubmit} className="input-section">
-        <input
-          type="text"
-          value={question}
-          onChange={(e) => setQuestion(e.target.value)}
-          placeholder="내용을 입력하세요."
-          disabled={inputDisabled}
-        />
-        <button type="submit">검증</button>
-      </form>
     </div>
   );
 }
