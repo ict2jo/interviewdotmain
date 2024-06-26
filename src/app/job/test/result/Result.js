@@ -1,11 +1,13 @@
 
 import React, { useEffect, useState } from 'react';
-import authStore from '@/stores/AuthStore';
+
 import ResultChart from '@/app/_components/ResultChart';
 import { JobTestProvider } from '@/app/_lib/hooks/JobTestContext';
+import userStore from '@/stores/UserStore';
+import Spinner from '@/app/_components/Spinner';
 
 function PageContent() {
-  const user = authStore.getUser() || authStore.UserInfo;
+
   const [answers, setAnswers] = useState([]);
   const [chartData, setChartData] = useState([]);
   const [score, setScore] = useState({ first: {}, second: {} });
@@ -82,7 +84,9 @@ function PageContent() {
     }
   }, []);
 
-
+  if (!userStore.name) {
+    return <Spinner />
+  }
   return (
     <div className='w-full bg-white py-10'>
       <div className='w-2/4 m-auto' >
@@ -97,19 +101,31 @@ function PageContent() {
             <p className='my-3 w-2/4 m-auto'>
 
               <div className='flex gap-3 text-xl tracking-wider whitespace-nowrap'>
-                {user.name}님은, <span className='bg-yellow-100'>{score.first.type}</span>와 <span className='bg-yellow-100'>{score.second.type}</span>
+                {userStore.name}님은, <span className='bg-yellow-100'>{score.first.type}</span>와 <span className='bg-yellow-100'>{score.second.type}</span>
                 에서 T점수가 높게 나왔습니다.
               </div>
             </p>
-            <div className='flex items-center ml-5 gap-3 mt-8'>
-              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" className="text-red-500 h-6 w-6">
-                <path stroke-linecap="round" stroke-linejoin="round" d="M9.879 7.519c1.171-1.025 3.071-1.025 4.242 0 1.172 1.025 1.172 2.687 0 3.712-.203.179-.43.326-.67.442-.745.361-1.45.999-1.45 1.827v.75M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Zm-9 5.25h.008v.008H12v-.008Z" />
-              </svg>
-              <p className='text-sm text-red-500'>
-                T점수 : T점수는 평균이 50, 표준편차가 10인 표준점수 체계로 또래 집단 내에서 피검자의 상대적인 위치를 알 수 있는 점수입니다.
-              </p>
-            </div>
+            <div>
 
+
+              <div className='flex items-center ml-5 gap-3 mt-8'>
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" className="text-red-500 h-6 w-6">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M9.879 7.519c1.171-1.025 3.071-1.025 4.242 0 1.172 1.025 1.172 2.687 0 3.712-.203.179-.43.326-.67.442-.745.361-1.45.999-1.45 1.827v.75M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Zm-9 5.25h.008v.008H12v-.008Z" />
+                </svg>
+                <p className='text-sm text-red-500'>
+                  T점수 : T점수는 평균이 50, 표준편차가 10인 표준점수 체계로 또래 집단 내에서 피검자의 상대적인 위치를 알 수 있는 점수입니다.
+                </p>
+              </div>
+              <div className='flex items-center ml-5 gap-3 mt-8'>
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="red" class="size-6">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="m9 12.75 3 3m0 0 3-3m-3 3v-7.5M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" />
+                </svg>
+
+                <p className='text-sm text-red-500'>
+                  파이 차트를 클릭하면 상세 내용을 확인할 수 있습니다:D
+                </p>
+              </div>
+            </div>
           </>
         ) : (
           <p>진행한 검사 결과가 없습니다.</p>

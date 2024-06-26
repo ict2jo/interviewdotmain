@@ -1,4 +1,5 @@
 "use client"
+import NoSsr from '@mui/material/NoSsr';
 
 import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
@@ -47,52 +48,56 @@ const SideNavigation = observer(() => {
     userStore.loadUserFromServer();
   }, []);
   return (
-    <nav className="z-10 text-xl">
-      <ul className="flex gap-3 items-center text-sm">
-        {userStore.name && (
-          <>
-            <Typography
-              onClick={() => handleMenuClick("profile")}
-              className="hover:text-accent-400 transition-colors flex items-center gap-4"
-              onMouseEnter={handleMouseEnter}
-              onMouseLeave={handleMouseLeave}
-            >
-              {/* <img
+    <NoSsr>
+      <nav className="z-10 text-xl">
+        <ul className="flex gap-3 items-center text-sm">
+          {userStore.name && (
+            <>
+
+              <Typography
+                onClick={() => handleMenuClick("profile")}
+                className="hover:text-accent-400 transition-colors flex items-center gap-4"
+                onMouseEnter={handleMouseEnter}
+                onMouseLeave={handleMouseLeave}
+              >
+                {/* <img
                 className="h-8 rounded-full"
                 src={userImg}
                 alt={userImg}
                 referrerPolicy="no-referrer"
               /> */}
 
-              <span>{userStore.name}</span>
-            </Typography>
-            {isSubmenuVisible && <MySubmenu handleMenuClick={handleMenuClick} />}
-            <li>
-              <button className="hover:bg-primary-100 transition-colors" onClick={handleLogout}>로그아웃</button>
-            </li>
-          </>
-        )} {!userStore.name && (
-          <>
-            <li>
-              <Link
-                href="/signin/login"
-                className="hover:bg-primary-100 transition-colors whitespace-nowrap"
-              >
-                로그인
-              </Link>
-            </li>
-            <li>
-              <Link
-                href="/signin/createUser"
-                className="hover:bg-primary-100 transition-colors whitespace-nowrap"
-              >
-                회원가입
-              </Link>
-            </li>
-          </>
-        )}
-      </ul>
-    </nav>
+                <span>{userStore.name}</span>
+              </Typography>
+
+              {isSubmenuVisible && <MySubmenu handleMenuClick={handleMenuClick} />}
+              <li>
+                <button className="hover:bg-primary-100 transition-colors" onClick={handleLogout}>로그아웃</button>
+              </li>
+            </>
+          )} {!userStore.name && (
+            <>
+              <li>
+                <Link
+                  href="/signin/login"
+                  className="hover:bg-primary-100 transition-colors whitespace-nowrap"
+                >
+                  로그인
+                </Link>
+              </li>
+              <li>
+                <Link
+                  href="/signin/createUser"
+                  className="hover:bg-primary-100 transition-colors whitespace-nowrap"
+                >
+                  회원가입
+                </Link>
+              </li>
+            </>
+          )}
+        </ul>
+      </nav>
+    </NoSsr>
   );
 })
 export default SideNavigation;
