@@ -1,4 +1,4 @@
-"use client"; // 클라이언트 컴포넌트로 지정
+"use client";
 import { useEffect } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import paymentStore from '@/stores/paymentStore'; 
@@ -34,10 +34,12 @@ export default function Payments() {
       }
 
       // 결제 성공 비즈니스 로직을 구현하세요.
+      console.log('Payment successfully processed:', json);
     }
     confirm();
   }, [searchParams]);
 
+  
   return (
     <div className="result wrapper">
       <div className="box_section">
