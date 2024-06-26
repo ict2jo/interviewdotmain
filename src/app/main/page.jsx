@@ -3,7 +3,6 @@ import Footer from "../_components/Footer";
 import Header from "../_components/Header";
 import Image from "next/image";
 import bg from "../../../public/images/bg.png"
-import Button from "../_components/Button";
 import menuStore from "@/stores/MenuStore";
 import { Typography } from "@mui/material";
 export default function Main() {
@@ -13,6 +12,7 @@ export default function Main() {
     };
     return (
         <>
+            <Header />
             <div className="w-full flex flex-col justify-center items-center mb-20">
 
                 {/* <Button variant="text">Text</Button>

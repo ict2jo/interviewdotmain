@@ -4,17 +4,30 @@ class AuthStore {
   user = null;
   token = null;
   isAuthenticated = false;
-
+  userInfo = {
+    id: '',
+    name: '',
+    email: '',
+    phonenumber: '',
+    provider: '',
+    kakao: '',
+    naver: '',
+    google: '',
+  }
   constructor() {
     makeAutoObservable(this);
+    this.loadToken();
   }
 
+  setAuthenticated(authenticated) {
+    this.isAuthenticated = authenticated;
+  }
   login(user, token) {
     this.user = user;
     this.token = token;
     localStorage.setItem("token", token);
     localStorage.setItem("user", JSON.stringify(user));
-    this.setAuthenticated(true);
+    this.isAuthenticated = true;
   }
 
   logout() {
@@ -22,8 +35,18 @@ class AuthStore {
     this.token = null;
     localStorage.removeItem("token");
     localStorage.removeItem("user");
+    this.isAuthenticated = false;
+    this.userInfo = {
+      id: '',
+      name: '',
+      email: '',
+      phonenumber: '',
+      provider: '',
+      kakao: '',
+      naver: '',
+      google: '',
+    };
   }
-
   setUser(user) {
     this.user = user;
     localStorage.setItem("user", JSON.stringify(user));
@@ -37,10 +60,16 @@ class AuthStore {
     return null;
   }
 
+  setUserInfo(userInfo) {
+    this.userInfo = { ...userInfo };
+  }
 
+  get UserInfo() {
+    return this.userInfo;
+  }
 
   setToken(token) {
-    this.token = token
+    this.token = token;
     if (token) {
       localStorage.setItem("token", token);
       this.setAuthenticated(true);
@@ -49,11 +78,20 @@ class AuthStore {
       this.setAuthenticated(false);
     }
   }
-  // 토큰 로드
+
   loadToken() {
-    const token = localStorage.getItem("token");
-    if (token) {
-      this.token = token;
+    if (typeof window !== "undefined") {
+      const token = localStorage.getItem('token');
+      if (token) {
+        this.token = token;
+        this.isAuthenticated = true;
+      } else {
+        this.token = null;
+        this.isAuthenticated = false;
+      }
+    } else {
+      this.token = null;
+      this.isAuthenticated = false;
     }
   }
 

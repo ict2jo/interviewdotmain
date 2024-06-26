@@ -1,25 +1,22 @@
 "use client"
 
-import { useSession } from "next-auth/react";
 import Link from "next/link";
-import { signOut } from "next-auth/react";
 import { useEffect, useRef, useState } from "react";
-import authStore from "@/stores/AuthStore";
 import SubMenu from "./SubMenu"
 import { useRouter } from "next/navigation";
 import MySubmenu from "./MySubMenu";
 import { Typography } from "@mui/material";
 import menuStore from "@/stores/MenuStore";
+import authStore from "@/stores/AuthStore";
 
 
 export default function SideNavigation() {
-  const { data: session, status } = useSession();
+
   const submenuTimeoutRef = useRef(null);
   const router = useRouter();
   const [userName, setUserName] = useState('');
   const [userImg, setUserImg] = useState('');
   const [isSubmenuVisible, setSubmenuVisible] = useState(false);
-  const submenuTimeoutRef = useRef(null);
   const handleMouseEnter = () => {
     if (submenuTimeoutRef.current) {
       clearTimeout(submenuTimeoutRef.current);
@@ -28,16 +25,14 @@ export default function SideNavigation() {
   };
 
   useEffect(() => {
-    const user = authStore.getUser();
+    const user = authStore.getUser() || authStore.userInfo;
     if (user) {
       setUserName(user.name)
       setUserImg(user.u_img)
+      console.log("username", user.name);
     }
-    if (session?.user) {
-      setUserName(session.user.name)
-      setUserImg(session.user.image)
-    }
-  }, []);
+
+  }, [authStore]);
 
   const handleMouseLeave = () => {
     submenuTimeoutRef.current = setTimeout(() => {
@@ -50,14 +45,9 @@ export default function SideNavigation() {
   }
 
   function handleLogout() {
-    if (session?.user) {
-      signOut();
-      console.log("SNS 로그아웃");
+    console.log("logout");
+    authStore.logout();
 
-    } else {
-      console.log("logout");
-      authStore.logout();
-    }
     router.push("/");
   };
   return (

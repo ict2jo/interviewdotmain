@@ -10,12 +10,12 @@ export default function ResultChart({ chartData, renderCustomizedLabel }) {
   const COLORS = ['#dbeafe', '#93c5fd', '#3b82f6', '#1d4ed8', '#1e40af', '#172554'];
 
   const onPieEnter = (data, index) => {
-    setActiveIndex(index);
+
     setHoveredData(resultData[data.name]);
   };
 
   const onPieLeave = () => {
-    setActiveIndex(-1);
+
     setHoveredData(null);
   };
 
@@ -35,8 +35,8 @@ export default function ResultChart({ chartData, renderCustomizedLabel }) {
             outerRadius={250}
             fill="#8884d8"
             dataKey="value"
-            onMouseEnter={onPieEnter}
-            onMouseLeave={onPieLeave}
+            onClick={onPieEnter}
+          //onMouseLeave={onPieLeave}
           >
             {chartData.map((entry, index) => (
               <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} opacity={activeIndex === index ? 1 : 0.6} />
@@ -52,15 +52,17 @@ export default function ResultChart({ chartData, renderCustomizedLabel }) {
             <div className="bg-primary-600 text-white rounded-full px-3 py-1 text-sm">{hoveredData.유형} {hoveredData.이름}</div>
           </Typography>
           <Typography variant="body1">
-            흥미특성: {hoveredData.흥미특성}<br />
-            자기평가: {hoveredData.자기평가}<br />
-            타인평가: {hoveredData.타인평가}<br />
-            선호활동: {hoveredData.선호활동}<br />
-            적성: {hoveredData.적성}<br />
-            성격: {hoveredData.성격}<br />
-            가치: {hoveredData.가치}<br />
-            회피활동: {hoveredData.회피활동}<br />
-            대표직업: {hoveredData.대표직업}
+
+            <div className='m-2'><div className='p-2 mt-5 border-b-2 border-dashed font-bold'> 흥미특성</div><p className='mt-3'> {hoveredData.흥미특성}</p></div>
+            <div className='m-2'><div className='p-2 mt-5 border-b-2 border-dashed font-bold'> 자기평가</div> <p className='mt-3'> {hoveredData.자기평가} </p> </div >
+            <div className='m-2'><div className='p-2 mt-5 border-b-2 border-dashed font-bold'> 타인평가</div> <p className='mt-3'> {hoveredData.타인평가} </p> </div >
+            <div className='m-2'><div className='p-2 mt-5 border-b-2 border-dashed font-bold'> 선호활동</div> <p className='mt-3'> {hoveredData.선호활동} </p> </div >
+            <div className='m-2'><div className='p-2 mt-5 border-b-2 border-dashed font-bold'> 적성</div> <p className='mt-3'> {hoveredData.적성} </p> </div >
+            <div className='m-2'><div className='p-2 mt-5 border-b-2 border-dashed font-bold'> 성격</div> <p className='mt-3'> {hoveredData.성격} </p> </div >
+            <div className='m-2'><div className='p-2 mt-5 border-b-2 border-dashed font-bold'> 가치</div> <p className='mt-3'> {hoveredData.가치} </p> </div >
+            <div className='m-2'><div className='p-2 mt-5 border-b-2 border-dashed font-bold'> 회피활동</div> <p className='mt-3'> {hoveredData.회피활동} </p> </div >
+            <div className='m-2'><div className='p-2 mt-5 border-b-2 border-dashed font-bold'> 대표직업</div> <p className='mt-3'> {hoveredData.대표직업} </p> </div >
+
           </Typography>
         </Paper>
       )}

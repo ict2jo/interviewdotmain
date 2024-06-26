@@ -2,10 +2,10 @@
 import React, { useEffect, useState } from 'react';
 import authStore from '@/stores/AuthStore';
 import ResultChart from '@/app/_components/ResultChart';
-import { JobTestProvider, useJobTest } from '@/app/_lib/hooks/JobTestContext';
+import { JobTestProvider } from '@/app/_lib/hooks/JobTestContext';
 
 function PageContent() {
-  const user = authStore.getUser();
+  const user = authStore.getUser() || authStore.UserInfo;
   const [answers, setAnswers] = useState([]);
   const [chartData, setChartData] = useState([]);
   const [score, setScore] = useState({ first: {}, second: {} });
@@ -75,7 +75,7 @@ function PageContent() {
 
       } catch (error) {
         console.error('Error parsing answers:', error);
-        setAnswers([]); // 에러 발생 시 기본값 설정
+        setAnswers([]);
       }
     } else {
       setAnswers([]);
@@ -96,7 +96,7 @@ function PageContent() {
             </div>
             <p className='my-3 w-2/4 m-auto'>
 
-              <div className='flex gap-3 text-xl tracking-wider'>
+              <div className='flex gap-3 text-xl tracking-wider whitespace-nowrap'>
                 {user.name}님은, <span className='bg-yellow-100'>{score.first.type}</span>와 <span className='bg-yellow-100'>{score.second.type}</span>
                 에서 T점수가 높게 나왔습니다.
               </div>

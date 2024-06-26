@@ -2,7 +2,6 @@
 import moment from "moment";
 import "react-datepicker/dist/react-datepicker.css";
 import ReactDatePicker from "react-datepicker";
-import { useSession } from "next-auth/react";
 import Form from "@/app/_components/Form";
 import Input from "@/app/_components/Input";
 import Terms from "@/app/_components/Terms";
@@ -12,7 +11,7 @@ import {
 } from "@/app/_lib/hooks/CreateUserContext";
 
 function PageContent() {
-  const { data: session, status } = useSession();
+
   const {
     dispatch,
     name,
@@ -45,7 +44,7 @@ function PageContent() {
         당신의 취업을 진심으로 응원해요.
       </p>
       <div className="flex flex-col items-center justify-center gap-5">
-        {session?.user ? (
+        {user ? (
           <>
             <input
               name="name"

@@ -1,5 +1,4 @@
 "use client";
-import { signIn, useSession } from "next-auth/react";
 import Link from "next/link";
 import Image from "next/image";
 import axios from "axios";
@@ -13,34 +12,40 @@ import { useEffect, useState } from "react";
 import authStore from "@/stores/AuthStore";
 import { URL } from "@/app/api/boot/route";
 import { useRouter } from "next/navigation";
+import { observer } from "mobx-react-lite";
+import menuStore from "@/stores/MenuStore";
 
-
-export default function Page() {
+const Login = observer(() => {
   const router = useRouter()
-  const { data: session, status } = useSession();
   const [user, setUser] = useState({
     id: "",
     pw: "",
   });
 
   useEffect(() => {
-    if (status === "authenticated" && session?.user) {
-      const { isNewUser } = session.user;
+    authStore.loadToken();
 
-      if (isNewUser) {
-        router.push("/signin/createUser");
-      } else {
-        router.push("/");
+    if (authStore.isAuthenticated) {
+      menuStore.setSelectedMenu('main')
+      router.push('/main');
+    } else {
+      const urlParams = new URLSearchParams(window.location.search)
+      const token = urlParams.get('token')
+      if (token) {
+        authStore.setToken(token);
+        axios.get(`${URL}userInfo`, { params: { token } })
+          .then(response => {
+            console.log(response.data);
+            authStore.setUserInfo(response.data);
+            menuStore.setSelectedMenu('main')
+            router.push('/main');
+          })
+          .catch(error => {
+            console.error("error")
+          });
       }
     }
-  }, [status, session, router]);
-
-  useEffect(() => {
-    authStore.loadToken();
-    if (authStore.isAuthenticated) {
-      router.push("/");
-    }
-  }, [authStore.isAuthenticated, router]);
+  }, [authStore, menuStore]);
 
   async function handleLogin(e) {
     e.preventDefault();
@@ -53,7 +58,7 @@ export default function Page() {
       if (response.data.token) {
 
         authStore.setToken(response.data.token);
-
+        authStore.setUserInfo(response.data.userDetails)
         const userLoggedIn = await axios.get(`${URL}user`, {
           params: {
             id: user.id
@@ -64,7 +69,8 @@ export default function Page() {
         });
 
         authStore.login(userLoggedIn.data, response.data.token);
-        router.push("/");
+        menuStore.setSelectedMenu('main')
+        router.push("/main");
       }
     } catch (error) {
       alert("로그인 실패")
@@ -151,5 +157,6 @@ export default function Page() {
         />
       </div>
     </Form>
-  );
-}
+  )
+});
+export default Login;
