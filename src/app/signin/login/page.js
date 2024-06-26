@@ -13,9 +13,10 @@ import { useEffect, useState } from "react";
 import authStore from "@/stores/AuthStore";
 import { URL } from "@/app/api/boot/route";
 import { useRouter } from "next/navigation";
-import menuStore from "@/stores/MenuStore";
+
 
 export default function Page() {
+  const router = useRouter()
   const { data: session, status } = useSession();
   const [user, setUser] = useState({
     id: "",
@@ -39,7 +40,7 @@ export default function Page() {
     if (authStore.isAuthenticated) {
       router.push("/");
     }
-  }, [authStore]);
+  }, [authStore.isAuthenticated, router]);
 
   async function handleLogin(e) {
     e.preventDefault();
@@ -63,7 +64,7 @@ export default function Page() {
         });
 
         authStore.login(userLoggedIn.data, response.data.token);
-        menuStore.setSelectedMenu('option');
+        router.push("/");
       }
     } catch (error) {
       alert("로그인 실패")
@@ -82,6 +83,15 @@ export default function Page() {
     });
   }
 
+  function handleKakaoLogin() {
+    window.location.href = "http://localhost:8080/oauth2/authorization/kakao"
+  }
+  function handleNaverLogin() {
+    window.location.href = "http://localhost:8080/oauth2/authorization/naver"
+  }
+  function handleGoogleLogin() {
+    window.location.href = "http://localhost:8080/oauth2/authorization/google"
+  }
   return (
     <Form width="w-1/3">
       <div className="flex flex-col gap-5 border-b-2 border-gray-500 pb-5">
@@ -125,19 +135,19 @@ export default function Page() {
           src={kakao}
           alt="kakao icon"
           className="w-[50px]"
-          onClick={() => signIn("kakao")}
+          onClick={handleKakaoLogin}
         />
         <Image
           src={naver}
           alt="naver icon"
           className="w-[50px]"
-          onClick={() => signIn("naver")}
+          onClick={handleNaverLogin}
         />
         <Image
           src={google}
           alt="google icon"
           className="w-[50px]"
-          onClick={() => signIn("google")}
+          onClick={handleGoogleLogin}
         />
       </div>
     </Form>
