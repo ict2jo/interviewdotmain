@@ -12,7 +12,6 @@ export default function Main() {
     };
     return (
         <>
-            <Header />
             <div className="w-full flex flex-col justify-center items-center mb-20">
 
                 {/* <Button variant="text">Text</Button>

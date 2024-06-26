@@ -28,7 +28,7 @@ const Login = observer(() => {
 
     if (authStore.isAuthenticated) {
       menuStore.setSelectedMenu('main')
-      router.push('/main');
+      router.push('/');
     } else {
       const urlParams = new URLSearchParams(window.location.search)
       const token = urlParams.get('token')
@@ -55,7 +55,7 @@ const Login = observer(() => {
       authStore.setToken(token);
       authStore.setAuthenticated(true);
       menuStore.setSelectedMenu('main');
-      router.push('/main');
+      router.push('/');
     } catch (error) {
       console.error("Failed to fetch user info", error);
     }
@@ -74,7 +74,7 @@ const Login = observer(() => {
         await fetchUserInfo(response.data.token);
 
         menuStore.setSelectedMenu('main')
-        router.push("/main");
+        router.push("/");
       }
     } catch (error) {
       alert("로그인 실패")
