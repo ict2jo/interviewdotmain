@@ -14,6 +14,7 @@ import { URL } from "@/app/api/boot/route";
 import { useRouter } from "next/navigation";
 import { observer } from "mobx-react-lite";
 import menuStore from "@/stores/MenuStore";
+import userStore from "@/stores/UserStore";
 
 const Login = observer(() => {
   const router = useRouter()
@@ -33,19 +34,32 @@ const Login = observer(() => {
       const token = urlParams.get('token')
       if (token) {
         authStore.setToken(token);
-        axios.get(`${URL}userInfo`, { params: { token } })
-          .then(response => {
-            console.log(response.data);
-            authStore.setUserInfo(response.data);
-            menuStore.setSelectedMenu('main')
-            router.push('/main');
-          })
-          .catch(error => {
-            console.error("error")
-          });
+        fetchUserInfo(token)
       }
     }
   }, [authStore, menuStore]);
+
+  async function fetchUserInfo(token) {
+    try {
+      const response = await axios.get(`${URL}userInfo`, {
+        params: { token },
+      });
+
+      authStore.setUserInfo(response.data);
+      userStore.setId(response.data.id);
+      userStore.setName(response.data.name);
+      userStore.setEmail(response.data.email);
+      userStore.setPhonenumber(response.data.phonenumber);
+
+      // 토큰 설정
+      authStore.setToken(token);
+      authStore.setAuthenticated(true);
+      menuStore.setSelectedMenu('main');
+      router.push('/main');
+    } catch (error) {
+      console.error("Failed to fetch user info", error);
+    }
+  }
 
   async function handleLogin(e) {
     e.preventDefault();
@@ -56,19 +70,9 @@ const Login = observer(() => {
         pw: user.pw,
       });
       if (response.data.token) {
-
         authStore.setToken(response.data.token);
-        authStore.setUserInfo(response.data.userDetails)
-        const userLoggedIn = await axios.get(`${URL}user`, {
-          params: {
-            id: user.id
-          },
-          headers: {
-            Authorization: `Bearer ${response.data.token}`
-          }
-        });
+        await fetchUserInfo(response.data.token);
 
-        authStore.login(userLoggedIn.data, response.data.token);
         menuStore.setSelectedMenu('main')
         router.push("/main");
       }

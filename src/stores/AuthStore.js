@@ -1,7 +1,6 @@
 import { makeAutoObservable } from "mobx";
-
+import userStore from "./UserStore";
 class AuthStore {
-  user = null;
   token = null;
   isAuthenticated = false;
   userInfo = {
@@ -22,21 +21,14 @@ class AuthStore {
   setAuthenticated(authenticated) {
     this.isAuthenticated = authenticated;
   }
-  login(user, token) {
-    this.user = user;
-    this.token = token;
-    localStorage.setItem("token", token);
-    localStorage.setItem("user", JSON.stringify(user));
-    this.isAuthenticated = true;
-  }
+
 
   logout() {
-    this.user = null;
     this.token = null;
-    localStorage.removeItem("token");
-    localStorage.removeItem("user");
     this.isAuthenticated = false;
-    this.userInfo = {
+    localStorage.removeItem("token");
+
+    this.setUserInfo({
       id: '',
       name: '',
       email: '',
@@ -45,27 +37,21 @@ class AuthStore {
       kakao: '',
       naver: '',
       google: '',
-    };
-  }
-  setUser(user) {
-    this.user = user;
-    localStorage.setItem("user", JSON.stringify(user));
+    });
+
+    console.log(this.isAuthenticated);
   }
 
-  getUser() {
-    const user = localStorage.getItem("user");
-    if (user) {
-      return JSON.parse(user);
-    }
-    return null;
+  setUser(user) {
+    this.user = user;
   }
 
   setUserInfo(userInfo) {
     this.userInfo = { ...userInfo };
-  }
-
-  get UserInfo() {
-    return this.userInfo;
+    userStore.setId(userInfo.id);
+    userStore.setName(userInfo.name);
+    userStore.setEmail(userInfo.email);
+    userStore.setPhonenumber(userInfo.phonenumber);
   }
 
   setToken(token) {
@@ -95,11 +81,10 @@ class AuthStore {
     }
   }
 
-  // 인증상태 변경 액션 
   setAuthenticated(authenticated) {
     this.isAuthenticated = authenticated;
   }
 
 }
-const authStore = new AuthStore(); // AuthStore 인스턴스 생성
+const authStore = new AuthStore();
 export default authStore;

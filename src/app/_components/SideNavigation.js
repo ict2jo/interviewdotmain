@@ -2,37 +2,29 @@
 
 import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
-import SubMenu from "./SubMenu"
 import { useRouter } from "next/navigation";
 import MySubmenu from "./MySubMenu";
 import { Typography } from "@mui/material";
 import menuStore from "@/stores/MenuStore";
 import authStore from "@/stores/AuthStore";
+import { observer } from "mobx-react-lite";
+import userStore from "@/stores/UserStore";
 
 
-export default function SideNavigation() {
+const SideNavigation = observer(() => {
 
   const submenuTimeoutRef = useRef(null);
   const router = useRouter();
-  const [userName, setUserName] = useState('');
-  const [userImg, setUserImg] = useState('');
+  const userName = userStore.name;
+
   const [isSubmenuVisible, setSubmenuVisible] = useState(false);
+
   const handleMouseEnter = () => {
     if (submenuTimeoutRef.current) {
       clearTimeout(submenuTimeoutRef.current);
     }
     setSubmenuVisible(true);
   };
-
-  useEffect(() => {
-    const user = authStore.getUser() || authStore.userInfo;
-    if (user) {
-      setUserName(user.name)
-      setUserImg(user.u_img)
-      console.log("username", user.name);
-    }
-
-  }, [authStore]);
 
   const handleMouseLeave = () => {
     submenuTimeoutRef.current = setTimeout(() => {
@@ -50,10 +42,14 @@ export default function SideNavigation() {
 
     router.push("/");
   };
+
+  useEffect(() => {
+    userStore.loadUserFromServer();
+  }, []);
   return (
     <nav className="z-10 text-xl">
       <ul className="flex gap-3 items-center text-sm">
-        {userName && (
+        {userStore.name && (
           <>
             <Typography
               onClick={() => handleMenuClick("profile")}
@@ -61,21 +57,21 @@ export default function SideNavigation() {
               onMouseEnter={handleMouseEnter}
               onMouseLeave={handleMouseLeave}
             >
-              <img
+              {/* <img
                 className="h-8 rounded-full"
                 src={userImg}
                 alt={userImg}
                 referrerPolicy="no-referrer"
-              />
-              {/* <span>{session.user.name}</span> */}
-              <span>{userName}</span>
+              /> */}
+
+              <span>{userStore.name}</span>
             </Typography>
             {isSubmenuVisible && <MySubmenu handleMenuClick={handleMenuClick} />}
             <li>
               <button className="hover:bg-primary-100 transition-colors" onClick={handleLogout}>로그아웃</button>
             </li>
           </>
-        )} {!userName && (
+        )} {!userStore.name && (
           <>
             <li>
               <Link
@@ -98,4 +94,5 @@ export default function SideNavigation() {
       </ul>
     </nav>
   );
-}
+})
+export default SideNavigation;
