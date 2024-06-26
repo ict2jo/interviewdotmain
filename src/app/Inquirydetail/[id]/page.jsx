@@ -9,6 +9,7 @@ import { observer } from 'mobx-react-lite';
 import Header from '@/app/_components/Header';
 import Footer from '@/app/_components/Footer';
 import { useRouter, useSearchParams } from 'next/navigation';
+import './inquirydetail.css';
 
 const Inquirydetail = observer(() => {
   const menuStore = useContext(MenuContext);
@@ -67,20 +68,31 @@ const Inquirydetail = observer(() => {
       return <CircularProgress />;
     }
     return (
-      <>
-        <FormControl>
-          <Typography variant="h6" gutterBottom>
+      <div className=''>
+        <FormControl className="inquirydetailcontainer">
+        <h1>1:1문의 내역</h1>
+        <div className='inquirydetailbox'>
+          <div className='inquirytitlebox'>
+          <div className='bluebox'></div>
+          <Typography variant="h6" sx={{lineHeight: 2, marginLeft: 2}} gutterBottom>
             {ivo.i_subject}
           </Typography>
-          <Typography variant="body1" gutterBottom>
+          </div>
+          <div className='inquirytextbox'>
+          <div className='bluebox'></div>
+          <Typography variant="body1" sx={{lineHeight: 2, marginTop:2,marginLeft: 2,whiteSpace: 'pre-line' }} gutterBottom>
             {ivo.i_content}
           </Typography>
+          </div>
+          <div className='inquirybut'>
           <Button variant='contained' onClick={handleEditClick}>수정하기</Button>
           <Button variant='outlined' onClick={deleteInquiry}>삭제하기</Button>
           <Button variant='outlined' onClick={() => {handleMenuClick("inquiry"); router.push("/");}}>목록으로</Button>
+          </div>
+        </div>
         </FormControl>
         <Footer />
-      </>
+      </div>
     );
   };
 

@@ -25,6 +25,7 @@ import Result from "./job/test/result/Result";
 import Introduction from "./mypage/Introduction/page";
 import Calendar from "./mypage/Schedule/page";
 import Inquiryedit from "./mypage/Inquiry/Inquiryedit/page";
+import Loading from "./loading/page";
 
 function Home() {
   // useContext 훅으로 MobX Store 가져오기
@@ -34,10 +35,7 @@ function Home() {
 
   // 로컬 스토리지에서 상태 불러오기
   useEffect(() => {
-    const savedMenu = localStorage.getItem("selectedMenu");
-    if (savedMenu) {
-      menuStore.setUvoList(savedMenu);
-    }
+    localStorage.getItem("selectedMenu");
   }, [menuStore]);
 
   // 선택된 메뉴가 변경될 때마다 로컬 스토리지에 저장
@@ -92,7 +90,7 @@ function Home() {
       case "option":
         return <OptionalInfo />;
       default:
-        return <Main />;
+        return <Loading />;
     }
   };
   return (
