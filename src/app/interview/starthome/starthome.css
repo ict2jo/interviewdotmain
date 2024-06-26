@@ -1,9 +1,84 @@
-.interview_start{
+.guide_container {
+    background-color: white;
+    border-radius: 20px;
+    padding: 50px;
+    width: 95%;
     margin: 0 auto;
+    height: 500px;
 }
-.interview_start button {
-    width: 150px;
-    background-color: blue;
+
+.guide_container h1 {
+    font-size: 30px;
+    font-weight: bold;
+    margin-bottom: 20px;
+}
+
+.nav {
+    list-style: none;
+    display: flex;
+    padding: 0;
+    margin-bottom: 50px;
+    border-bottom: 2px solid gray;
+}
+
+.nav li {
+    margin-right: 40px;
+    font-size: 25px;
+}
+
+.nav a.active {
+    padding-bottom: 4%;
+    border-bottom: 3px solid blue;
+}
+
+.tickets-container {
+    display: flex;
+    justify-content: space-between;
+}
+
+.ticket {
+    display: flex;
+    flex-direction: column;
+    background-color: #f9f9f9;
+    border: 1px solid #ccc;
+    border-radius: 10px;
+    width: 25%; /* Adjust width as needed */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.ticket-op {
+    background-color: yellow; /* Default background color */
+    border-top-left-radius: 10px;
+    border-top-right-radius: 10px;
+    padding: 10px;
+    text-align: center;
+    font-size: 25px;
+    font-weight: bold;
+}
+
+.ticket-inner {
+    flex-grow: 1;
+    padding: 20px;
+    text-align: center;
+    border-bottom-left-radius: 10px;
+    border-bottom-right-radius: 10px;
+}
+
+.ticket p {
+    margin: 5px 0;
+}
+
+.ticket button {
+    background-color: lightgray;
     color: white;
-    border-radius: 30px;
+    border: none;
+    border-radius: 5px;
+    padding: 10px 20px;
+    cursor: pointer;
+    font-size: 16px;
+    margin-top: 10px;
+}
+
+.ticket button:hover {
+    background-color: gray;
 }

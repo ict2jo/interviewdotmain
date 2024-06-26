@@ -85,6 +85,10 @@ export default function Page() {
 
   return (
     <div>
+      {/* 결제 UI, 이용약관 UI 영역 */}
+      <div id="payment-widget" />
+      <div id="agreement" />
+
       {/* 할인 쿠폰 */}
       <label htmlFor="coupon-box">
         <input
@@ -95,10 +99,8 @@ export default function Page() {
           }}
         />
         <span>5,000원 쿠폰 적용</span>
-      </label>
-      {/* 결제 UI, 이용약관 UI 영역 */}
-      <div id="payment-widget" />
-      <div id="agreement" />
+      </label> <br />
+      
       {/* 결제하기 버튼 */}
       <button onClick={handlePaymentRequest}>결제하기</button>
     </div>

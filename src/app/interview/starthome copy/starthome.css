@@ -1,0 +1,9 @@
+.interview_start{
+    margin: 0 auto;
+}
+.interview_start button {
+    width: 150px;
+    background-color: blue;
+    color: white;
+    border-radius: 30px;
+}
