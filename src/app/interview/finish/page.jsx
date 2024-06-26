@@ -2,6 +2,10 @@
 
 import React, { useEffect, useState } from 'react';
 import CircularProgress from '@mui/material/CircularProgress';
+import './finish.css';
+import {Button} from "@mui/material";
+
+
 
 const Finish = () => {
     const [results, setResults] = useState([]);
@@ -10,12 +14,11 @@ const Finish = () => {
     useEffect(() => {
         const fetchResults = async () => {
             try {
-                // 로컬 스토리지에서 결과 가져오기
                 const storedResults = JSON.parse(localStorage.getItem('interviewResults')) || [];
                 setResults(storedResults);
-                setLoading(false); // 결과가 로드되었음을 설정
+                setLoading(false);
             } catch (error) {
-                console.error('Error fetching results:', error);
+                console.error('결과를 못받아왔어용');
             }
         };
 
@@ -25,25 +28,56 @@ const Finish = () => {
     if (loading) {
         return (
             <div className="finish_container">
-                <CircularProgress /> {/* 로딩 표시 */}
-                <p>Loading...</p>
+                <CircularProgress />
             </div>
         );
     }
 
+    const handleQuit = () => {
+        try {
+            localStorage.removeItem('interviewResults');
+            console.log("삭제완료")
+            window.close();
+        } catch (error){
+            console.log(error)
+        }
+    }
+    const handleSave = async () => {
+        try {
+            const response = await fetch('/interview/finish', {
+                method: 'post',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(results)
+            });
+
+            if (response.ok) {
+                console.log("DB에 저장 완료.")
+            } else {
+                console.error('에러발생;;;;;')
+            }
+        } catch (error) {
+            console.log(error)
+        }
+    }
     return (
         <div className="finish_container">
-            <h1>인터뷰 결과</h1>
+            <h1>면접 결과 안내</h1>
             <ul>
-                {results.map((result, index) => (
-                    <li key={index}>
-                        <p>질문 {index + 1}</p>
+                {results.map((result, index_result) => (
+                    <li key={index_result}>
+                        <p>질문 {index_result + 1}</p>
                         <p>텍스트: {result.text}</p>
                         <p>포즈 결과: {result.pose_results}</p>
                         <p>감정 분석: {result.sentiment}</p>
                     </li>
                 ))}
             </ul>
+            <div>
+                <Button onClick={handleQuit} variant="outlined" className="quit_button">나가기</Button>
+                <Button onClick={handleSave} variant="contained" className="save_button">저장하기</Button>
+            </div>
         </div>
     );
 };
