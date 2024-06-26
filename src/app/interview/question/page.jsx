@@ -70,7 +70,7 @@ const Question = observer(() => {
                             className={`question_box ${questionStore.selectedQuestions.includes(question) ? 'selected' : ''}`}
                             onClick={() => handleClick(question)}
                         >
-                            {question.question}
+                            {startIndex + index + 1}. {question.question} {/* 인덱스를 1부터 시작하게 수정 */}
                         </div>
                     ))}
                 </div>

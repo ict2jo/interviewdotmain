@@ -1,70 +1,43 @@
 "use client";
-import React, { useEffect, useState, useRef } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import './start.css';
-import { Button, Grid } from "@mui/material";
-import { usePagination, PaginationItemType } from "@nextui-org/react";
-import Webcam from 'react-webcam';
-import { useRouter } from "next/navigation";
+import { useRouter } from 'next/navigation';
 import questionStore from '@/stores/questionStore';
+import CircularProgress from '@mui/material/CircularProgress';
+import { Button } from '@mui/material';
+import Webcam from 'react-webcam';
 
 const Start = () => {
     const router = useRouter();
     const [parsedQuestions, setParsedQuestions] = useState([]);
+    const [loading, setLoading] = useState(false);
+    const [time, setTime] = useState(60);
+    const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
+    const [isRecording, setIsRecording] = useState(false);
+    const [recordedChunks, setRecordedChunks] = useState([]);
+    const webcamRef = useRef(null);
+    const mediaRecorderRef = useRef(null);
 
     useEffect(() => {
-        setParsedQuestions(questionStore.selectedQuestions);
+        const questions = questionStore.selectedQuestions; // Assuming questionStore has the correct structure
+        setParsedQuestions(questions);
     }, []);
 
-    const [time, setTime] = useState(90);
-    const { activePage, range, setPage, onNext } = usePagination({
-        total: parsedQuestions.length,
-        showControls: true,
-        siblings: 1,
-        boundaries: 1,
-    });
-
-    // 웹캠 관련 상태
-    const webcamRef = useRef(null);
-    const [mediaRecorder, setMediaRecorder] = useState(null);
-    const [recordedChunks, setRecordedChunks] = useState([]);
-    const [isRecording, setIsRecording] = useState(false);
-
     useEffect(() => {
-        const timer = setInterval(() => {
-            setTime(prevTime => {
-                if (prevTime ===    0) {
-                    clearInterval(timer);
-                    nextPage();
-                }
-                return prevTime - 1;
-            });
-        }, 1000);
-
-        return () => clearInterval(timer);
-    }, [activePage]);
-
-    const minutes = Math.floor(time / 60);
-    const seconds = time % 60;
-
-    const handlePageChange = (page) => {
-        setPage(page);
-        setTime(90); // 타이머 재설정
-    };
-
-    const nextPage = () => {
-        if (activePage === parsedQuestions.length) {
-            router.push("/interview/finish");
-        } else {
-            onNext();
-            setTime(90); // 타이머 재설정
+        if (parsedQuestions.length > 0) {
+            const query = new URLSearchParams({
+                selectedQuestions: JSON.stringify(parsedQuestions),
+            }).toString();
+            router.replace(`/interview/start?${query}`);
+            console.log('parsedQuestions:', parsedQuestions);
         }
-    };
+    }, [parsedQuestions, router]);
 
-    const startRecording = () => {
-        if (webcamRef.current) {
-            const stream = webcamRef.current.video.srcObject;
+    const startRecording = async () => {
+        const stream = webcamRef.current.video.srcObject;
+        if (stream) {
             const recorder = new MediaRecorder(stream);
-            const chunks = [];
+            let chunks = [];
 
             recorder.ondataavailable = (e) => {
                 if (e.data.size > 0) {
@@ -74,82 +47,116 @@ const Start = () => {
 
             recorder.onstop = () => {
                 const blob = new Blob(chunks, { type: 'video/webm' });
-                setRecordedChunks(chunks);
-                const url = URL.createObjectURL(blob);
-                const a = document.createElement('a');
-                a.style.display = 'none';
-                a.href = url;
-                a.download = 'recorded-video.webm';
-                document.body.appendChild(a);
-                a.click();
-                window.URL.revokeObjectURL(url);
+                setRecordedChunks((prev) => [...prev, { question: parsedQuestions[currentQuestionIndex], blob }]);
+                setIsRecording(false);
+                setCurrentQuestionIndex((prev) => prev + 1);
             };
 
             recorder.start();
-            setMediaRecorder(recorder);
+            mediaRecorderRef.current = recorder;
             setIsRecording(true);
+        } else {
+            console.error('Stream is not available.');
         }
     };
 
     const stopRecording = () => {
-        if (mediaRecorder) {
-            mediaRecorder.stop();
-            setIsRecording(false);
+        if (mediaRecorderRef.current) {
+            mediaRecorderRef.current.stop();
+        }
+    };
+
+    const handleRecordButtonClick = async () => {
+        await startRecording();
+    };
+
+    const handleNextQuestionClick = async () => {
+        stopRecording();
+        if (currentQuestionIndex >= parsedQuestions.length - 1) {
+            await uploadVideos();
+            router.push('/interview/finish');
+        } else {
+            setTime(60);
+        }
+    };
+
+    const uploadVideos = async () => {
+        try {
+            setLoading(true);
+            const formDataArray = recordedChunks.map(({ blob }) => {
+                const formData = new FormData();
+                formData.append('file', blob, `recorded-video-${Date.now()}.webm`);
+                return formData;
+            });
+
+            const uploadPromises = formDataArray.map(async (formData) => {
+                const response = await fetch('http://localhost:8010/video/', {
+                    method: 'POST',
+                    body: formData,
+                });
+
+                if (!response.ok) {
+                    throw new Error('Failed to upload video');
+                }
+
+                const result = await response.json();
+                console.log('서버로부터 받은 결과:', result);
+
+                const storedResults = JSON.parse(localStorage.getItem('interviewResults')) || [];
+                storedResults.push(result);
+                localStorage.setItem('interviewResults', JSON.stringify(storedResults));
+            });
+
+            await Promise.all(uploadPromises);
+            setLoading(false);
+        } catch (error) {
+            console.error('Error uploading video:', error);
+            setLoading(false);
         }
     };
 
     useEffect(() => {
-        if (parsedQuestions.length > 0) {
-            const query = new URLSearchParams({
-                selectedQuestions: JSON.stringify(parsedQuestions)
-            }).toString();
-            router.replace(`/interview/start?${query}`);
-            console.log('parsedQuestions:', parsedQuestions);
+        let timer;
+        if (time > 0 && isRecording) {
+            timer = setTimeout(() => {
+                setTime((prevTime) => prevTime - 1);
+            }, 1000);
+        } else if (time === 0 && isRecording) {
+            clearTimeout(timer);
+            stopRecording();
         }
-    }, [parsedQuestions]);
+        return () => clearTimeout(timer);
+    }, [time, isRecording]);
 
+    const minutes = Math.floor(time / 60);
+    const seconds = time % 60;
 
     return (
         <div className="start_container">
             <div className="start_white_box">
-                <div className="timer">{`${minutes}:${seconds < 10 ? '0' : ''}${seconds}`}</div>
-                <div className="question">
-                    <p>{parsedQuestions.length > 0 ? (parsedQuestions[activePage - 1]?.question || '질문을 받아오지 못했습니다.') : '질문을 받아오지 못했습니다.'}</p>
-                </div>
-                        <Webcam
-                            audio={true}
-                            ref={webcamRef}
-                            screenshotFormat="image/jpeg"
-                            className="webcam_preview"
-                        />
-                <div className="paging_number">
-                    <ul className="flex gap-2 items-center pagination_container">
-                        {range.map((page, index) => {
-                            if (page === PaginationItemType.PREV || page === PaginationItemType.NEXT) {
-                                return null;
-                            }
-
-                            if (page === PaginationItemType.DOTS) {
-                                return (
-                                    <li key={`dots-${index}`} className="w-4 h-4">
-                                        ...
-                                    </li>
-                                );
-                            }
-
-                            return (
-                                <li key={`page-${index}`} aria-label={`page ${page}`} className="w-4 h-4">
-                                    <button
-                                        className={`pagination_button ${activePage === page ? "active" : ""}`}
-                                        onClick={() => handlePageChange(page)}
-                                    >
-                                        {page}
-                                    </button>
-                                </li>
-                            );
-                        })}
-                    </ul>
-                </div>
+                {loading ? (
+                    <div className="loading_spinner">
+                        <CircularProgress />
+                    </div>
+                ) : (
+                    <>
+                        <div className="timer">{`${minutes}:${seconds < 10 ? '0' : ''}${seconds}`}</div>
+                        <div className="question">
+                            <p>{parsedQuestions.length > 0 ? parsedQuestions[currentQuestionIndex]?.question || '질문을 받아오지 못했습니다.' : '질문을 받아오지 못했습니다.'}</p>
+                        </div>
+                        <div className="my_camera">
+                            <Webcam width={'100%'} audio={true} ref={webcamRef} screenshotFormat="image/jpeg" />
+                        </div>
+                        {!isRecording && (
+                            <Button onClick={handleRecordButtonClick} variant="outlined" className="record_button">
+                                녹화 시작
+                            </Button>
+                        )}
+                        <Button onClick={handleNextQuestionClick} variant="outlined" className="next_button">
+                            다음질문
+                        </Button>
+                    </>
+                )}
             </div>
         </div>
     );

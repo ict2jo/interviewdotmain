@@ -1,14 +1,15 @@
 .start_container {
-    width: 100%;
-    height: 100%;
-    margin: 0 auto;
-    padding: 30px;
+    width: 90%;
+    height: 90%;
+    margin: 2% auto;
 }
 
 .start_white_box {
-    padding: 25px 55px;
-    width: 100%;
-    height: 100%;
+    text-align: center;
+    padding: 20px;
+    background-color: #ffffff;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
 }
 .timer{
     width: 50px;
@@ -26,24 +27,13 @@
     margin-bottom: 30px;
     width: 100%;
 }
-.answer_form{
-    background-color: lightgray;
-    width: 70%;
-    height: 340px;
-    border-radius: 10px;
-}
 .my_camera{
-    background-color: lightgray;
-    border-radius: 10px;
+    margin-left: 20%;
 }
 .button_container{
     position: absolute;
     right: 440px;
     top: 490px;
-}
-.webcam_preview{
-    width: 70%;
-    padding: 50px;
 }
 .pagination_container {
     display: flex;
@@ -68,8 +58,5 @@
     color: white;
 }
 .paging_number{
-    position: absolute;
-    right: 43%;
-    bottom: 20%;
-    padding: 50px;
+
 }
