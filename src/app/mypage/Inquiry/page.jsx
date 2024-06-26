@@ -19,7 +19,7 @@ export default function Inquiry() {
   const menuStore = useContext(MenuContext);
   const user = authStore.getUser();
   const [page, setPage] = useState(1); // Current page state
-  const [rowsPerPage] = useState(5); // Rows per page (fixed)
+  const [rowsPerPage] = useState(7); // Rows per page (fixed)
   const [loading, setLoading] = useState(true); // Loading state
 
   useEffect(() => {
@@ -68,25 +68,36 @@ export default function Inquiry() {
   }
 
   return (
-    <TableContainer sx={{ width: 600 }} className='tablewrap'>
-      <Table sx={{ minWidth: 500 }}>
+    <TableContainer sx={{ width: 1000 }} className='tablewrap'>
+      <h1>1:1문의</h1>
+      <Table sx={{ minWidth: 600 }}>
         <TableHead sx={{ borderBottom: '3px solid blue' }}>
           <TableRow>
-            <TableCell>No</TableCell>
-            <TableCell>Subject</TableCell>
-            <TableCell>Content</TableCell>
-            <TableCell>User Index</TableCell>
+            <TableCell sx={{ width: '100px', textAlign:'center'}}>No</TableCell>
+            <TableCell sx={{ width: '200px', textAlign:'center' }}>Subject</TableCell>
+            <TableCell sx={{ width: '200px', textAlign:'center' }}>Content</TableCell>
+            <TableCell sx={{ width: '100px', textAlign:'center' }}>Active</TableCell>
           </TableRow>
         </TableHead>
         <TableBody>
           {/* Map displayed rows and render */}
           {displayedRows.map((row, index) => (
             <TableRow key={row.i_idx}>
-              <TableCell sx={{ width: '100px' }}>{calculateIndex(page, index)}</TableCell>
-              <TableCell sx={{ width: '100px' }}><Link href={`/Inquirydetail/${row.i_idx}?id=${row.i_idx}`}>{row.i_subject}</Link></TableCell>
-              <TableCell sx={{ width: '100px' }}>{row.i_content}</TableCell>
-              <TableCell sx={{ width: '100px' }}>{row.u_idx}</TableCell>
-            </TableRow>
+            <TableCell sx={{ width: '100px', textAlign:'center'}}>{calculateIndex(page, index)}</TableCell>
+            <TableCell sx={{ width: '200px', textAlign:'center' }}>
+              <Link href={`/Inquirydetail/${row.i_idx}?id=${row.i_idx}`}>
+                <p className="ellipsis-cell">{row.i_subject}</p>
+              </Link>
+            </TableCell>
+            <TableCell sx={{ width: '200px', textAlign:'center' }}>
+            <Link href={`/Inquirydetail/${row.i_idx}?id=${row.i_idx}`}>
+            <p className="ellipsis-cell">{row.i_content}</p>
+            </Link>
+            </TableCell>
+            <TableCell sx={{ width: '100px', textAlign:'center' }}>
+            {row.i_active === '0' ? '답변완료' : '답변대기중'}
+            </TableCell>
+          </TableRow>
           ))}
           {emptyRows > 0 && (
             <TableRow style={{ height: 53 * emptyRows }}>
