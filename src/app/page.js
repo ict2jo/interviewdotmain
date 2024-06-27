@@ -26,6 +26,8 @@ import Login from "./signin/login/page";
 import CreateUser from "./signin/createUser/page";
 import Inquiryedit from "./mypage/Inquiry/Inquiryedit/page";
 import Loading from "./loading/page";
+import Footer from "./_components/Footer";
+import FindIdPw from "./signin/findIdPw/page";
 
 function Home() {
   // useContext 훅으로 MobX Store 가져오기
@@ -93,6 +95,8 @@ function Home() {
         return <Login />;
       case "createUser":
         return <CreateUser />;
+      case "findIdPw":
+        return <FindIdPw />;
       default:
         return <Loading />;
     }

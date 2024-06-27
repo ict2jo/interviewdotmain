@@ -3,8 +3,7 @@ import React from "react";
 import Button from "@/app/_components/Button";
 import Form from "@/app/_components/Form";
 import Input from "@/app/_components/Input";
-import Header from "@/app/_components/Header";
-import Footer from "@/app/_components/Footer";
+
 
 import { ResetPwProvider, useResetPw } from "@/app/_lib/hooks/ResetPwContext";
 
@@ -13,7 +12,7 @@ function PageContent() {
 
   return (
     <>
-      <Header />
+
       <div className="my-12">
         {!verified ? <Form width="w-1/3">
           <p className="text-sm text-gray-800">
@@ -55,7 +54,7 @@ function PageContent() {
           <p className="text-sm text-gray-800">비밀번호를 변경해주세요.</p>
           <div className="w-full">
             <Input
-              // autocomplete="new-password"
+              autocomplete="new-password"
               name="pw"
               type="password"
               placeholder="비밀번호"
@@ -104,11 +103,11 @@ function PageContent() {
           </div>
         </Form>)}
       </div>
-      <Footer />
+
     </>
   );
 }
-export default function Page() {
+export default function FindPwContent() {
   return (
     <ResetPwProvider>
       <PageContent />
