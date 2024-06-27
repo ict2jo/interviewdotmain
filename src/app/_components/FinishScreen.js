@@ -1,6 +1,6 @@
 "use client";
 
-import { useSession } from "next-auth/react";
+
 import { useJobTest } from "../_lib/hooks/JobTestContext";
 import { API_KEY, Q_NUM } from "../api/data/jobData";
 import Button from "./Button";
@@ -9,9 +9,8 @@ import { useEffect } from "react";
 
 function FinishScreen() {
   const { gender, answers, dispatch } = useJobTest();
-  const { data: session, status } = useSession();
   const user = authStore.getUser()
-  const name = session?.user?.name || user.name;
+  //const name = session?.user?.name || user.name;
   const postDictionary = {
     apikey: API_KEY,
     qestrnSeq: Q_NUM,

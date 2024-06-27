@@ -1,7 +1,6 @@
 "use client";
 
 import { MenuContext } from "@/stores/StoreContext";
-import { Typography } from "@mui/material";
 import Link from "next/link";
 import { useContext } from "react";
 

@@ -1,5 +1,4 @@
 "use client";
-import { signIn, useSession } from "next-auth/react";
 import Link from "next/link";
 import Image from "next/image";
 import axios from "axios";
@@ -13,33 +12,54 @@ import { useEffect, useState } from "react";
 import authStore from "@/stores/AuthStore";
 import { URL } from "@/app/api/boot/route";
 import { useRouter } from "next/navigation";
+import { observer } from "mobx-react-lite";
 import menuStore from "@/stores/MenuStore";
+import userStore from "@/stores/UserStore";
 
-export default function Page() {
-  const { data: session, status } = useSession();
+const Login = observer(() => {
+  const router = useRouter()
   const [user, setUser] = useState({
     id: "",
     pw: "",
   });
 
   useEffect(() => {
-    if (status === "authenticated" && session?.user) {
-      const { isNewUser } = session.user;
+    authStore.loadToken();
 
-      if (isNewUser) {
-        router.push("/signin/createUser");
-      } else {
-        router.push("/");
+    if (authStore.isAuthenticated) {
+      menuStore.setSelectedMenu('main')
+      router.push('/');
+    } else {
+      const urlParams = new URLSearchParams(window.location.search)
+      const token = urlParams.get('token')
+      if (token) {
+        authStore.setToken(token);
+        fetchUserInfo(token)
       }
     }
-  }, [status, session, router]);
+  }, [authStore, menuStore]);
 
-  useEffect(() => {
-    authStore.loadToken();
-    if (authStore.isAuthenticated) {
-      router.push("/");
+  async function fetchUserInfo(token) {
+    try {
+      const response = await axios.get(`${URL}userInfo`, {
+        params: { token },
+      });
+
+      authStore.setUserInfo(response.data);
+      userStore.setId(response.data.id);
+      userStore.setName(response.data.name);
+      userStore.setEmail(response.data.email);
+      userStore.setPhonenumber(response.data.phonenumber);
+
+      // 토큰 설정
+      authStore.setToken(token);
+      authStore.setAuthenticated(true);
+      menuStore.setSelectedMenu('main');
+      router.push('/');
+    } catch (error) {
+      console.error("Failed to fetch user info", error);
     }
-  }, [authStore]);
+  }
 
   async function handleLogin(e) {
     e.preventDefault();
@@ -50,20 +70,10 @@ export default function Page() {
         pw: user.pw,
       });
       if (response.data.token) {
-
         authStore.setToken(response.data.token);
+        await fetchUserInfo(response.data.token);
 
-        const userLoggedIn = await axios.get(`${URL}user`, {
-          params: {
-            id: user.id
-          },
-          headers: {
-            Authorization: `Bearer ${response.data.token}`
-          }
-        });
-
-        authStore.login(userLoggedIn.data, response.data.token);
-        menuStore.setSelectedMenu('option');
+        router.push("/");
       }
     } catch (error) {
       alert("로그인 실패")
@@ -82,7 +92,18 @@ export default function Page() {
     });
   }
 
+  function handleKakaoLogin() {
+    window.location.href = "http://localhost:8080/oauth2/authorization/kakao"
+  }
+  function handleNaverLogin() {
+    window.location.href = "http://localhost:8080/oauth2/authorization/naver"
+  }
+  function handleGoogleLogin() {
+    window.location.href = "http://localhost:8080/oauth2/authorization/google"
+  }
   return (
+
+
     <Form width="w-1/3">
       <div className="flex flex-col gap-5 border-b-2 border-gray-500 pb-5">
         <h1 className="text-3xl font-bold text-center">인터뷰닷</h1>
@@ -94,6 +115,7 @@ export default function Page() {
         />
         <Input
           placeholder="비밀번호"
+          type="password"
           name="pw"
           value={user.pw}
           onChange={changeUserLoginInfo}
@@ -125,21 +147,23 @@ export default function Page() {
           src={kakao}
           alt="kakao icon"
           className="w-[50px]"
-          onClick={() => signIn("kakao")}
+          onClick={handleKakaoLogin}
         />
         <Image
           src={naver}
           alt="naver icon"
           className="w-[50px]"
-          onClick={() => signIn("naver")}
+          onClick={handleNaverLogin}
         />
         <Image
           src={google}
           alt="google icon"
           className="w-[50px]"
-          onClick={() => signIn("google")}
+          onClick={handleGoogleLogin}
         />
       </div>
     </Form>
-  );
-}
+
+  )
+});
+export default Login;

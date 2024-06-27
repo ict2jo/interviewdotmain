@@ -2,7 +2,7 @@ import { makeAutoObservable } from "mobx";
 import authStore from "./AuthStore";
 
 
-const user = authStore.getUser();
+//const user = authStore.getUser();
 
 class MenuStore {
     selectedMenu = "main";  // 선택된 메뉴
@@ -30,11 +30,11 @@ class MenuStore {
         this.selectedMenu = menu;
     }
 
-    setInquiryList(inquiryList){
+    setInquiryList(inquiryList) {
         this.inquiryList = inquiryList;
-        localStorage.setItem('inquiryList',inquiryList);
+        localStorage.setItem('inquiryList', inquiryList);
     }
-    setUvoList(uvolist){
+    setUvoList(uvolist) {
         this.uvolist = uvolist;
         localStorage.setItem("uvolist", uvolist);
     }

@@ -5,7 +5,6 @@ import { useRouter } from "next/navigation";
 import { useContext, useEffect } from "react";
 import { MenuContext } from "@/stores/StoreContext";
 import Header from "./_components/Header";
-
 import Main from "./main/page";
 import Job from "./job/page";
 import List from "./job/recruitment/list/page";
@@ -24,6 +23,8 @@ import Footer from "./_components/Footer";
 import Result from "./job/test/result/Result";
 import Introduction from "./mypage/Introduction/page";
 import Calendar from "./mypage/Schedule/page";
+import Login from "./signin/login/page";
+import CreateUser from "./signin/createUser/page";
 import Inquiryedit from "./mypage/Inquiry/Inquiryedit/page";
 import Loading from "./loading/page";
 import CheckoutPage from "./sandbox/checkout/page";
@@ -97,16 +98,20 @@ function Home() {
         return <Inquiryedit />;
       case "option":
         return <OptionalInfo />;
+      case "login":
+        return <Login />;
+      case "createUser":
+        return <CreateUser />;
       default:
         return <Loading />;
     }
   };
   return (
-    <div>
+    <>
       <Header />
       {renderContent()}
       <Footer />
-    </div>
+    </>
   );
 }
 

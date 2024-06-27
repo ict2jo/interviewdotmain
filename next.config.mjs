@@ -39,6 +39,10 @@ const nextConfig = {
       {
           source : "/interview/:path*",
           destination : "http://localhost:8080/interview/:path*"
+      },
+      {
+        source : "/interview/start",
+        destination : "http://127.0.0.1:8010/video/"
       }
     ];
   },

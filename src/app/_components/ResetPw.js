@@ -1,34 +1,12 @@
 "use client";
 
-
 import Form from "@/app/_components/Form";
 import Input from "@/app/_components/Input";
-import {
-  CreateUserProvider,
-  useCreateUser,
-} from "@/app/_lib/hooks/CreateUserContext";
-import { useRouter } from "next/navigation";
+import { ResetPwProvider, useResetPw } from "../_lib/hooks/ResetPwContext";
 
 
 function PageContent() {
-  const { dispatch, pw, checkPw, isMatched, validPw } = useCreateUser();
-  const rounter = useRouter();
-
-  async function handleReset(e) {
-    e.preventDefault();
-    try {
-      const res = await axios.post(`${URL}resetPw`, {
-        pw: pw
-      });
-
-      alert("비밀번호를 변경했습니다.")
-      rounter.push("/signin/login")
-
-    } catch (err) {
-      console.error("비밀번호 변경 오류:", err);
-    }
-  }
-
+  const { checkPw, isMatched, validPw, handleReset, dispatch } = useResetPw();
   return (
     <>
       <Form width="w-1/3">
@@ -89,8 +67,8 @@ function PageContent() {
 
 export default function Page() {
   return (
-    <CreateUserProvider>
+    <ResetPwProvider>
       <PageContent />
-    </CreateUserProvider>
+    </ResetPwProvider>
   );
 }

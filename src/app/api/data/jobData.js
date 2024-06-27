@@ -4,7 +4,7 @@ import axios from "axios";
 export const API_KEY = "631411887293319c018c3eeeb7413e40";
 export const Q_NUM = "19";
 export const Q_URL = "https://www.career.go.kr/inspct/openapi/test";
-//export const R_URL = "https://www.career.go.kr/inspct/openapi/test/report?";
+
 
 export const GetQuestionAPI = async () => {
   try {

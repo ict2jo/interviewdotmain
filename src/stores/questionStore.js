@@ -1,6 +1,7 @@
 import { makeAutoObservable } from 'mobx';
 
 class QuestionStore {
+    q_idx = "";
     questions = [];
     selectedQuestions = [];
     currentPage = 1;

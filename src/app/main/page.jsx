@@ -3,12 +3,11 @@ import Footer from "../_components/Footer";
 import Header from "../_components/Header";
 import Image from "next/image";
 import bg from "../../../public/images/bg.png"
-import Button from "../_components/Button";
 import menuStore from "@/stores/MenuStore";
 import { Typography } from "@mui/material";
 export default function Main() {
+
     const handleMenuClick = (menu) => {
-        setActiveMenu(menu);
         menuStore.setSelectedMenu(menu);
     };
     return (

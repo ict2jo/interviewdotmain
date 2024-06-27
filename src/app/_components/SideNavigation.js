@@ -1,24 +1,23 @@
 "use client"
+import NoSsr from '@mui/material/NoSsr';
 
-import { useSession } from "next-auth/react";
 import Link from "next/link";
-import { signOut } from "next-auth/react";
 import { useEffect, useRef, useState } from "react";
-import authStore from "@/stores/AuthStore";
-import SubMenu from "./SubMenu"
 import { useRouter } from "next/navigation";
 import MySubmenu from "./MySubMenu";
 import { Typography } from "@mui/material";
 import menuStore from "@/stores/MenuStore";
+import authStore from "@/stores/AuthStore";
+import { observer } from "mobx-react-lite";
+import userStore from "@/stores/UserStore";
 
 
-export default function SideNavigation() {
-  const { data: session, status } = useSession();
-  const router = useRouter();
-  const [userName, setUserName] = useState('');
-  const [userImg, setUserImg] = useState('');
-  const [isSubmenuVisible, setSubmenuVisible] = useState(false);
+const SideNavigation = observer(() => {
+
   const submenuTimeoutRef = useRef(null);
+  const router = useRouter();
+  const [isSubmenuVisible, setSubmenuVisible] = useState(false);
+
   const handleMouseEnter = () => {
     if (submenuTimeoutRef.current) {
       clearTimeout(submenuTimeoutRef.current);
@@ -26,97 +25,74 @@ export default function SideNavigation() {
     setSubmenuVisible(true);
   };
 
-  useEffect(() => {
-    const user = authStore.getUser();
-    if (user) {
-      setUserName(user.name)
-      setUserImg(user.u_img)
-    }
-    if (session?.user) {
-      setUserName(session.user.name)
-      setUserImg(session.user.image)
-    }
-  }, []);
-  useEffect(() => {
-    const savedMenu = localStorage.getItem("selectedMenu");
-    if (savedMenu) {
-      menuStore.setSelectedMenu(savedMenu);
-    }
-  }, [menuStore]);
-
-  // 선택된 메뉴가 변경될 때마다 로컬 스토리지에 저장
-  useEffect(() => {
-    localStorage.setItem("selectedMenu", menuStore.selectedMenu);
-  }, [menuStore.selectedMenu]);
-  
   const handleMouseLeave = () => {
     submenuTimeoutRef.current = setTimeout(() => {
       setSubmenuVisible(false);
-    }, 600); // 200ms 후에 서브메뉴를 숨김
+    }, 400); // 200ms 후에 서브메뉴를 숨김
   };
 
   const handleMenuClick = async (menu) => {
     menuStore.setSelectedMenu(menu)
-    localStorage.setItem("selectedMenu", menu);
   }
 
   function handleLogout() {
-    if (session?.user) {
-      signOut();
-      console.log("SNS 로그아웃");
-
-    } else {
-      console.log("logout");
-      authStore.logout();
-    }
+    authStore.logout();
     router.push("/");
   };
+
+  useEffect(() => {
+    userStore.loadUserFromServer();
+  }, []);
   return (
-    <nav className="z-10 text-xl">
-      <ul className="flex gap-3 items-center text-sm">
-        {userName && (
-          <>
-            <Typography
-              onClick={() => handleMenuClick("profile")}
-              className="hover:text-accent-400 transition-colors flex items-center gap-4"
-              onMouseEnter={handleMouseEnter}
-              onMouseLeave={handleMouseLeave}
-            >
-              <img
+    <NoSsr>
+      <nav className="z-10 text-xl">
+        <ul className="flex gap-3 items-center text-sm">
+          {userStore.name && (
+            <>
+
+              <Typography
+                onClick={() => handleMenuClick("profile")}
+                className="hover:text-accent-400 transition-colors flex items-center gap-4"
+                onMouseEnter={handleMouseEnter}
+                onMouseLeave={handleMouseLeave}
+              >
+                {/* <img
                 className="h-8 rounded-full"
                 src={userImg}
                 alt={userImg}
                 referrerPolicy="no-referrer"
-              />
-              {/* <span>{session.user.name}</span> */}
-              <span>{userName}</span>
-            </Typography>
-            {isSubmenuVisible && <MySubmenu handleMenuClick={handleMenuClick} />}
-            <li>
-              <button className="hover:bg-primary-100 transition-colors" onClick={handleLogout}>로그아웃</button>
-            </li>
-          </>
-        )} {!userName && (
-          <>
-            <li>
-              <Link
-                href="/signin/login"
+              /> */}
+
+                <span>{userStore.name}</span>
+              </Typography>
+
+              {isSubmenuVisible && <MySubmenu handleMenuClick={handleMenuClick} />}
+              <li>
+                <button className="hover:bg-primary-100 transition-colors" onClick={handleLogout}>로그아웃</button>
+              </li>
+            </>
+          )} {!userStore.name && (
+            <>
+
+              <Typography
+                onClick={() => handleMenuClick("login")}
                 className="hover:bg-primary-100 transition-colors whitespace-nowrap"
               >
                 로그인
-              </Link>
-            </li>
-            <li>
-              <Link
-                href="/signin/createUser"
+              </Typography>
+
+              <Typography
+                onClick={() => handleMenuClick("createUser")}
                 className="hover:bg-primary-100 transition-colors whitespace-nowrap"
               >
                 회원가입
-              </Link>
-            </li>
-          </>
-        )}
-      </ul>
-    </nav>
+              </Typography>
+
+            </>
+          )}
+        </ul>
+      </nav>
+    </NoSsr>
   );
-}
+})
+export default SideNavigation;
