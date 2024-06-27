@@ -3,6 +3,8 @@ import axios from 'axios';
 import { Button, FormControl, TextField } from '@mui/material';
 import { MenuContext } from '@/stores/StoreContext';
 import { observer } from 'mobx-react-lite';
+import './inquirywrite.css';
+import Footer from '@/app/_components/Footer';
 
 const Inquirywrite = observer(() => {
   const menuStore = useContext(MenuContext);
@@ -31,13 +33,28 @@ const Inquirywrite = observer(() => {
   }
 
   return (
-    <>
-      <FormControl>
-        <TextField type='text' label="Subject" name='i_subject' value={ivo.i_subject} onChange={changeIvo}></TextField>
-        <TextField type='text' label="Content" name='i_content' value={ivo.i_content} onChange={changeIvo}></TextField>
-        <Button variant='contained' onClick={write}>작성완료</Button>
-      </FormControl>
-    </>
+    <div className=''>
+    <FormControl className="inquirydetailcontainer">
+    <h1 className='inqwrite'>1:1문의 내역</h1>
+    <div className='inquirydetailbox'>
+      <p className='inqwrite'>제목</p>
+      <div className='inquirytitlebox'>
+      <div className='bluebox'></div>
+      <input className="inqwritefield" type='text' label="Subject" name='i_subject' value={ivo.i_subject} onChange={changeIvo}></input>
+        </div>
+          <p className='inqwrite'>내용</p>
+          <div className='inquirytextbox'>
+          <div className='bluebox'></div>
+        <textarea className="inqwritefield2" type='text' label="Content" name='i_content' value={ivo.i_content} onChange={changeIvo}></textarea>
+        </div>
+          <div className='inquirybut'>
+          <Button variant='contained' onClick={write}>작성완료</Button>
+          <Button variant='outlined' onClick={() => {handleMenuClick("inquiry"); router.push("/");}}>목록으로</Button>
+          </div>
+        </div>
+        </FormControl>
+        <Footer />
+      </div>
   );
 });
 

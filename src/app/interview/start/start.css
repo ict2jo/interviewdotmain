@@ -1,13 +1,15 @@
-.container {
-    width: 100%;
-    height: 100%;
-    margin: 0 auto;
+.start_container {
+    width: 90%;
+    height: 90%;
+    margin: 2% auto;
 }
 
-.white_box {
-    padding: 25px 55px;
-    width: 100%;
-    height: 100%;
+.start_white_box {
+    text-align: center;
+    padding: 20px;
+    background-color: #ffffff;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
 }
 .timer{
     width: 50px;
@@ -19,31 +21,19 @@
 .question{
     margin-top:10px;
     float: left;
-    text-align: center;
+    text-align: left;
     font-size: 30px;
     font-weight: bold;
     margin-bottom: 30px;
-}
-.answer_form{
-    background-color: lightgray;
-    width: 70%;
-    height: 340px;
-    border-radius: 10px;
+    width: 100%;
 }
 .my_camera{
-    background-color: lightgray;
-    border-radius: 10px;
-    margin-right: 50px;
+    margin-left: 20%;
 }
 .button_container{
     position: absolute;
     right: 440px;
     top: 490px;
-}
-.test_img{
-    object-fit: cover;
-    width: 100%;
-    height: 100%;
 }
 .pagination_container {
     display: flex;
@@ -68,8 +58,5 @@
     color: white;
 }
 .paging_number{
-    position: absolute;
-    right: 43%;
-    bottom: 20%;
-    padding: 50px;
+
 }

@@ -1,0 +1,43 @@
+
+.inquirydetailcontainer {
+    display: flex;
+    align-items: center;
+    height: 93vh;
+    width: 100%;
+    background-color: #f0f0f0; /* 배경 색상 추가, 필요에 따라 제거 가능 */
+  }
+  .inquirydetailbox{
+    width: 1000px;
+    height: 500px;
+    margin-top: 100px;
+}
+.inquirytitlebox{
+background-color: white;
+margin: 30px;
+height: 50px;
+}
+.inquirytextbox{
+background-color: white;
+margin: 30px;
+height: 300px;
+
+}
+
+.bluebox{
+    background-color: #1400FF;
+    width: 100%;
+    height: 10px;
+    margin: 0px auto;
+}
+.inquirybut{
+    display: flex;
+    justify-content: center;
+    gap: 10px; /* 버튼 사이의 간격 */
+    width: 100%;
+}
+.inquirydetailcontainer h1{
+    font-size: 30px;
+    font-weight: bold;
+    text-align: center;
+    margin-top: 60px;
+}

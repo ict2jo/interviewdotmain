@@ -1,4 +1,5 @@
-"use client";
+"use client"; // 클라이언트 컴포넌트로 설정
+
 import { useContext, useEffect, useState } from 'react';
 import axios from 'axios';
 import TableBody from '@mui/material/TableBody';
@@ -7,14 +8,18 @@ import TableContainer from '@mui/material/TableContainer';
 import TableFooter from '@mui/material/TableFooter';
 import TableRow from '@mui/material/TableRow';
 import Pagination from '@mui/material/Pagination';
-import { Button, CircularProgress, Table, TableHead } from '@mui/material'; // Import CircularProgress for loading indicator
+import { Button, CircularProgress, Table, TableHead } from '@mui/material';
 import './inquiry.css';
 import { MenuContext } from '@/stores/StoreContext';
+import { useRouter } from 'next/navigation'; // next/router 대신 next/navigation 사용
+import authStore from '@/stores/AuthStore';
+import Link from 'next/link';
 
 export default function Inquiry() {
   const menuStore = useContext(MenuContext);
+  const user = authStore.getUser();
   const [page, setPage] = useState(1); // Current page state
-  const [rowsPerPage] = useState(5); // Rows per page (fixed)
+  const [rowsPerPage] = useState(7); // Rows per page (fixed)
   const [loading, setLoading] = useState(true); // Loading state
 
   useEffect(() => {
@@ -23,7 +28,7 @@ export default function Inquiry() {
 
   const fetchData = async () => {
     try {
-      const response = await axios.get("/mypage/inquiry");
+      const response = await axios.get(`/mypage/inquiry?u_idx=${user.u_idx}`);
       menuStore.setInquiryList(response.data);
       console.log("menuStore.inquiryList:", menuStore.inquiryList);
       setLoading(false); // Set loading to false after data is fetched
@@ -45,6 +50,8 @@ export default function Inquiry() {
   const displayedRows = rows.slice((page - 1) * rowsPerPage, (page - 1) * rowsPerPage + rowsPerPage);
   const pageCount = Math.ceil(rows.length / rowsPerPage); // Total pages
 
+  const router = useRouter();
+
   // Handle page change
   const handleChangePage = (event, newPage) => {
     setPage(newPage);
@@ -61,27 +68,37 @@ export default function Inquiry() {
   }
 
   return (
-    <TableContainer sx={{ width: 600 }} className='tablewrap'>
-      <Table sx={{ minWidth: 500 }}>
+    <TableContainer sx={{ width: 1000 }} className='tablewrap'>
+      <h1>1:1문의</h1>
+      <Table sx={{ minWidth: 600 }}>
         <TableHead sx={{ borderBottom: '3px solid blue' }}>
           <TableRow>
-            <TableCell>No</TableCell>
-            <TableCell>Subject</TableCell>
-            <TableCell>Content</TableCell>
-            <TableCell>User Index</TableCell>
+            <TableCell sx={{ width: '100px', textAlign:'center'}}>No</TableCell>
+            <TableCell sx={{ width: '200px', textAlign:'center' }}>Subject</TableCell>
+            <TableCell sx={{ width: '200px', textAlign:'center' }}>Content</TableCell>
+            <TableCell sx={{ width: '100px', textAlign:'center' }}>Active</TableCell>
           </TableRow>
         </TableHead>
         <TableBody>
           {/* Map displayed rows and render */}
           {displayedRows.map((row, index) => (
             <TableRow key={row.i_idx}>
-              <TableCell sx={{ width: '100px' }}>{calculateIndex(page, index)}</TableCell>
-              <TableCell sx={{ width: '100px' }}>{row.i_subject}</TableCell>
-              <TableCell sx={{ width: '100px' }}>{row.i_content}</TableCell>
-              <TableCell sx={{ width: '100px' }}>{row.u_idx}</TableCell>
-            </TableRow>
+            <TableCell sx={{ width: '100px', textAlign:'center'}}>{calculateIndex(page, index)}</TableCell>
+            <TableCell sx={{ width: '200px', textAlign:'center' }}>
+              <Link href={`/Inquirydetail/${row.i_idx}?id=${row.i_idx}`}>
+                <p className="ellipsis-cell">{row.i_subject}</p>
+              </Link>
+            </TableCell>
+            <TableCell sx={{ width: '200px', textAlign:'center' }}>
+            <Link href={`/Inquirydetail/${row.i_idx}?id=${row.i_idx}`}>
+            <p className="ellipsis-cell">{row.i_content}</p>
+            </Link>
+            </TableCell>
+            <TableCell sx={{ width: '100px', textAlign:'center' }}>
+            {row.i_active === '0' ? '답변완료' : '답변대기중'}
+            </TableCell>
+          </TableRow>
           ))}
-          {/* Empty rows */}
           {emptyRows > 0 && (
             <TableRow style={{ height: 53 * emptyRows }}>
               <TableCell colSpan={4} />
@@ -91,7 +108,7 @@ export default function Inquiry() {
         {/* Pagination */}
         <TableFooter>
           <TableRow>
-            <TableCell colSpan={4} align="center"  sx={{ border: 0 }}>
+            <TableCell colSpan={4} align="center" sx={{ border: 0 }}>
               <Pagination
                 count={pageCount} // Total pages
                 page={page} // Current page index (1-based)
@@ -100,7 +117,6 @@ export default function Inquiry() {
                 size="large" // Pagination size
                 className='pagination'
               />
-              {/* Write button */}
               <Button variant='contained' onClick={() => handleMenuClick("inquirywrite")}>Write</Button>
             </TableCell>
           </TableRow>
