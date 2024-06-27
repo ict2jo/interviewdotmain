@@ -1,4 +1,4 @@
-"use client";
+"use client"
 import React, { useState, useEffect, useRef } from 'react';
 import './start.css';
 import { useRouter } from 'next/navigation';
@@ -15,6 +15,7 @@ const Start = () => {
     const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
     const [isRecording, setIsRecording] = useState(false);
     const [recordedChunks, setRecordedChunks] = useState([]);
+    const [uploadPromises, setUploadPromises] = useState([]);
     const webcamRef = useRef(null);
     const mediaRecorderRef = useRef(null);
 
@@ -26,12 +27,13 @@ const Start = () => {
     useEffect(() => {
         if (parsedQuestions.length > 0) {
             const query = new URLSearchParams({
+                q_idx: parsedQuestions[currentQuestionIndex]?.q_idx, // Include current question index
                 selectedQuestions: JSON.stringify(parsedQuestions),
             }).toString();
             router.replace(`/interview/start?${query}`);
             console.log('parsedQuestions:', parsedQuestions);
         }
-    }, [parsedQuestions, router]);
+    }, [parsedQuestions, currentQuestionIndex, router]);
 
     const startRecording = async () => {
         const stream = webcamRef.current.video.srcObject;
@@ -45,11 +47,22 @@ const Start = () => {
                 }
             };
 
-            recorder.onstop = () => {
+            recorder.onstop = async () => {
                 const blob = new Blob(chunks, { type: 'video/webm' });
                 setRecordedChunks((prev) => [...prev, { question: parsedQuestions[currentQuestionIndex], blob }]);
                 setIsRecording(false);
-                setCurrentQuestionIndex((prev) => prev + 1);
+
+                const uploadPromise = uploadVideo(blob, parsedQuestions[currentQuestionIndex]);
+                setUploadPromises((prev) => [...prev, uploadPromise]);
+
+                if (currentQuestionIndex >= parsedQuestions.length - 1) {
+                    setLoading(true); // 마지막 질문 후 로딩 표시
+                    await Promise.all(uploadPromises);
+                    router.push('/interview/finish');
+                } else {
+                    setCurrentQuestionIndex((prev) => prev + 1);
+                    setTime(60);
+                }
             };
 
             recorder.start();
@@ -70,48 +83,35 @@ const Start = () => {
         await startRecording();
     };
 
-    const handleNextQuestionClick = async () => {
+    const handleNextQuestionClick = () => {
         stopRecording();
-        if (currentQuestionIndex >= parsedQuestions.length - 1) {
-            await uploadVideos();
-            router.push('/interview/finish');
-        } else {
-            setTime(60);
-        }
     };
 
-    const uploadVideos = async () => {
+    const uploadVideo = async (blob, questionData) => {
         try {
-            setLoading(true);
-            const formDataArray = recordedChunks.map(({ blob }) => {
-                const formData = new FormData();
-                formData.append('file', blob, `recorded-video-${Date.now()}.webm`);
-                return formData;
+            const formData = new FormData();
+            formData.append('file', blob, `recorded-video-${Date.now()}.webm`);
+            formData.append('q_idx', questionData.q_idx);
+            formData.append('question', questionData.question);
+
+            const response = await fetch('http://localhost:8010/video/', {
+                method: 'POST',
+                body: formData,
             });
 
-            const uploadPromises = formDataArray.map(async (formData) => {
-                const response = await fetch('http://localhost:8010/video/', {
-                    method: 'POST',
-                    body: formData,
-                });
+            if (!response.ok) {
+                throw new Error('비디오 업로드 실패');
+            }
 
-                if (!response.ok) {
-                    throw new Error('Failed to upload video');
-                }
+            const result = await response.json();
+            console.log('서버로부터 받은 결과:', result);
 
-                const result = await response.json();
-                console.log('서버로부터 받은 결과:', result);
+            const storedResults = JSON.parse(localStorage.getItem('interviewResults')) || [];
+            storedResults.push(result);
+            localStorage.setItem('interviewResults', JSON.stringify(storedResults));
 
-                const storedResults = JSON.parse(localStorage.getItem('interviewResults')) || [];
-                storedResults.push(result);
-                localStorage.setItem('interviewResults', JSON.stringify(storedResults));
-            });
-
-            await Promise.all(uploadPromises);
-            setLoading(false);
-        } catch (error) {
-            console.error('Error uploading video:', error);
-            setLoading(false);
+        }catch (error){
+            console.log(error);
         }
     };
 
@@ -142,14 +142,18 @@ const Start = () => {
                     <>
                         <div className="timer">{`${minutes}:${seconds < 10 ? '0' : ''}${seconds}`}</div>
                         <div className="question">
-                            <p>{parsedQuestions.length > 0 ? parsedQuestions[currentQuestionIndex]?.question || '질문을 받아오지 못했습니다.' : '질문을 받아오지 못했습니다.'}</p>
+                            <p>
+                                {parsedQuestions.length > 0
+                                    ? `q_idx: ${parsedQuestions[currentQuestionIndex]?.q_idx}, ${parsedQuestions[currentQuestionIndex]?.question || '질문을 받아오지 못했습니다.'}`
+                                    : '질문을 받아오지 못했습니다.'}
+                            </p>
                         </div>
                         <div className="my_camera">
                             <Webcam width={'100%'} audio={true} ref={webcamRef} screenshotFormat="image/jpeg" />
                         </div>
                         {!isRecording && (
                             <Button onClick={handleRecordButtonClick} variant="outlined" className="record_button">
-                                녹화 시작
+                                시작
                             </Button>
                         )}
                         <Button onClick={handleNextQuestionClick} variant="outlined" className="next_button">

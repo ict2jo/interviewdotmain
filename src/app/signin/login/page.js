@@ -16,6 +16,7 @@ import { useRouter } from "next/navigation";
 import menuStore from "@/stores/MenuStore";
 
 export default function Page() {
+  const router = useRouter();
   const { data: session, status } = useSession();
   const [user, setUser] = useState({
     id: "",

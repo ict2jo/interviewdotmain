@@ -44,7 +44,7 @@ const Finish = () => {
     }
     const handleSave = async () => {
         try {
-            const response = await fetch('/interview/finish', {
+            const response = await fetch('http://localhost:8080/interview/finish', {
                 method: 'post',
                 headers: {
                     'Content-Type': 'application/json'
@@ -67,7 +67,7 @@ const Finish = () => {
             <ul>
                 {results.map((result, index_result) => (
                     <li key={index_result}>
-                        <p>질문 {index_result + 1}</p>
+                        <p>질문 :  {result.question}</p>
                         <p>텍스트: {result.text}</p>
                         <p>포즈 결과: {result.pose_results}</p>
                         <p>감정 분석: {result.sentiment}</p>
