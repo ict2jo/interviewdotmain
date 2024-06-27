@@ -20,13 +20,16 @@ import Inquiry from "./mypage/Inquiry/page";
 import Starthome from "./interview/starthome/page";
 import JobTest from "./job/test/JobTest";
 import Verification from "../../pages/verification";
-// import { App } from "./pages/toss/App";
 import Footer from "./_components/Footer";
 import Result from "./job/test/result/Result";
 import Introduction from "./mypage/Introduction/page";
 import Calendar from "./mypage/Schedule/page";
 import Inquiryedit from "./mypage/Inquiry/Inquiryedit/page";
 import Loading from "./loading/page";
+import CheckoutPage from "./sandbox/checkout/page";
+import Payments from "./interview/payments/page";
+
+
 
 function Home() {
   // useContext 훅으로 MobX Store 가져오기
@@ -50,6 +53,8 @@ function Home() {
         return <Main />;
       case "ai":
         return <Starthome />;
+      case "payments":
+        return <Payments />;  
       case "verification":
         return <Verification />;
       case "Airesult":
@@ -84,8 +89,8 @@ function Home() {
         return <Calendar />;
       case "inquiry":
         return <Inquiry />;
-      // case "toss":
-      //   return <App />;
+      case "toss":
+        return <CheckoutPage />;
       case "inquirywrite":
         return <Inquirywrite />;
       case "inquiryedit":
