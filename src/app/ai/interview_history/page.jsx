@@ -12,7 +12,6 @@ import Paper from '@mui/material/Paper';
 import Pagination from '@mui/material/Pagination';
 import Stack from '@mui/material/Stack';
 import {Checkbox} from "@mui/material";
-import Header from "@/app/_components/Header";
 
 
 export default function Interview_history(){

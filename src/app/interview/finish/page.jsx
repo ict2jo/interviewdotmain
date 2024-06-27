@@ -3,14 +3,14 @@
 import React, { useEffect, useState } from 'react';
 import CircularProgress from '@mui/material/CircularProgress';
 import './finish.css';
-import {Button} from "@mui/material";
+import { Button } from "@mui/material";
+import { observer } from "mobx-react-lite";
+import userStore from "@/stores/UserStore";
 
-
-
-const Finish = () => {
+const Finish = observer(() => {
     const [results, setResults] = useState([]);
     const [loading, setLoading] = useState(true);
-
+    console.log(userStore.id);
     useEffect(() => {
         const fetchResults = async () => {
             try {
@@ -36,31 +36,52 @@ const Finish = () => {
     const handleQuit = () => {
         try {
             localStorage.removeItem('interviewResults');
-            console.log("삭제완료")
+            console.log("삭제완료");
             window.close();
         } catch (error){
-            console.log(error)
+            console.log(error);
         }
-    }
+    };
+
+    console.log("result : " , results)
     const handleSave = async () => {
         try {
+            const token = localStorage.getItem('token');
+
+            const requestBody = {
+                id: userStore.id,
+                results: results.map(result => ({
+                    question: result.question,
+                    text: result.text,
+                    q_idx: result.q_idx,
+                    pose_results: result.pose_results.toString(),
+                    sentiment: result.sentiment.toString()
+                }))
+            };
+
             const response = await fetch('http://localhost:8080/interview/finish', {
-                method: 'post',
+                method: 'POST',
                 headers: {
+                    'Authorization': `Bearer ${token}`,
                     'Content-Type': 'application/json'
                 },
-                body: JSON.stringify(results)
+                body: JSON.stringify(requestBody)
             });
 
             if (response.ok) {
-                console.log("DB에 저장 완료.")
+                console.log("DB에 저장 완료.");
             } else {
-                console.error('에러발생;;;;;')
+                console.error('에러발생;;;;;');
             }
         } catch (error) {
-            console.log(error)
+            console.log(error);
         }
-    }
+    };
+
+
+
+
+
     return (
         <div className="finish_container">
             <h1>면접 결과 안내</h1>
@@ -80,6 +101,6 @@ const Finish = () => {
             </div>
         </div>
     );
-};
+});
 
 export default Finish;

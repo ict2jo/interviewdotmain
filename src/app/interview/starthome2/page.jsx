@@ -2,7 +2,7 @@
 
 import './starthome.css'
 
-export default function Starthome(params) {
+export default function Starthome2(params) {
     const openPopup = () => {
         const width = 1650;
         const height = 950;

@@ -6,6 +6,7 @@ import questionStore from '@/stores/questionStore';
 import CircularProgress from '@mui/material/CircularProgress';
 import { Button } from '@mui/material';
 import Webcam from 'react-webcam';
+import UserStore from "@/stores/UserStore";
 
 const Start = () => {
     const router = useRouter();

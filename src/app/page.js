@@ -26,6 +26,8 @@ import Login from "./signin/login/page";
 import CreateUser from "./signin/createUser/page";
 import Inquiryedit from "./mypage/Inquiry/Inquiryedit/page";
 import Loading from "./loading/page";
+import Footer from "@/app/_components/Footer";
+import Starthome2 from "@/app/interview/starthome2/page";
 
 function Home() {
   // useContext 훅으로 MobX Store 가져오기
@@ -48,7 +50,7 @@ function Home() {
       case "main":
         return <Main />;
       case "ai":
-        return <Starthome />;
+        return <Starthome2 />;
       case "verification":
         return <Verification />;
       case "Airesult":
