@@ -1,42 +1,9 @@
-"use client"
+import './payStatus.css'
 
-import { useState } from 'react';
-import './payments.css'
-
-export default function Payments() {
-    const [activeIndex, setActiveIndex] = useState(null);
-
-    const handleClick = (index) => {
-        setActiveIndex(index);
-    };
-
-    const handlePurchaseClick = (price) => {
-        const purchaseUrl = `toss/?price=${price}`;
-        const width = 600;
-        const height = 700;
-        const left = (window.innerWidth - width) / 2 + window.screenX;
-        const top = (window.innerHeight - height) / 2 + window.screenY;
-        window.open(purchaseUrl, 'popupWindow', `width=${width},height=${height},top=${top},left=${left}`);
-    };
-
-    return (
-        <>      
-        <div className='guide_container'>
-            <ul className="nav">
-                {['인터뷰닷 이용권', '내 이용현황', '결제내역'].map((item, index) => (
-                    <li key={index}>
-                        <a
-                            href="#"
-                            className={activeIndex === index ? 'active' : ''}
-                            onClick={() => handleClick(index)}
-                        >
-                            {item}
-                        </a>
-                    </li>
-                ))}
-            </ul>
-
-            <div className='tickets-container'>
+export default function PayStatus() {
+    return(
+        <>
+        <div className='tickets-container'>
                 <div className='ticket'>
                     <div className='ticket-op' style={{backgroundColor: "yellow"}}>3일 이용권</div>
                     <div className='ticket-inner'>
@@ -63,9 +30,7 @@ export default function Payments() {
                         <button onClick={() => handlePurchaseClick(39000)}>구매</button>
                     </div>
                 </div>
-            </div>
-        </div>
-
+            </div>    
         </>
-    );
+    )
 }

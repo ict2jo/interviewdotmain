@@ -1,16 +1,36 @@
 'use client';
 
-import { useEffect, useRef, useState } from 'react';
+import { useContext, useEffect, useRef, useState } from 'react';
 import { loadPaymentWidget, ANONYMOUS } from '@tosspayments/payment-widget-sdk';
 import { observer } from 'mobx-react-lite';
+import axios from 'axios';
 import '../style.css';
+import authStore from '@/stores/AuthStore';
+import { MenuContext } from '@/stores/StoreContext';
 const generateRandomString = () => window.btoa(Math.random()).slice(0, 20);
 
 const CheckoutPage = observer(() => {
+    
+    const user = authStore.userInfo;
+    const menuStore = useContext(MenuContext);
+    const [loading, setLoading] = useState(true);
+    const [uvo, setUvo] = useState({
+    u_idx: user.u_idx,
+    id: user.id,
+    name: user.name,
+    phonenumber: user.phonenumber,
+    email: user.email,
+    p_job: '',
+    p_class: '',
+    p_career: '',
+    p_location: ''
+});
+
+
     const paymentWidgetRef = useRef(null);
     const paymentMethodsWidgetRef = useRef(null);
     const agreementWidgetRef = useRef(null);
-    const [price, setPrice] = useState(null); // 초기값을 null로 설정
+    const [price, setPrice] = useState(null);
     const clientKey = process.env.NEXT_PUBLIC_TOSS_CLIENT_KEY;
 
     useEffect(() => {
@@ -35,7 +55,7 @@ const CheckoutPage = observer(() => {
                     if (paymentWidgetRef.current == null) {
                         paymentWidgetRef.current = paymentWidget;
                     }
-
+                    console.log("gkdlgkdl"+user.u_idx)
                     // 결제창 렌더링
                     const paymentMethodsWidget = paymentWidgetRef.current.renderPaymentMethods(
                         '#payment-method',
@@ -50,31 +70,48 @@ const CheckoutPage = observer(() => {
                     });
                 } catch (error) {
                     console.error('Failed to load payment widget:', error);
-                    // TODO: 에러 처리
                 }
             };
-
+            
             loadPayment();
         }
     }, [price]);
 
     const handlePaymentRequest = async () => {
+
+        
         const paymentWidget = paymentWidgetRef.current;
 
         try {
             // 결제 요청
+            const orderId = generateRandomString();
+            const orderName = '인터뷰닷 이용권';
+
             await paymentWidget?.requestPayment({
-                orderId: generateRandomString(),
-                orderName: '인터뷰닷 이용권',
-                customerName: '김토스',
-                customerEmail: 'customer123@gmail.com',
+                orderId,
+                orderName,
+                customerIdx: user.u_idx,
                 value: price, // 실제 결제할 금액을 설정해야 합니다.
                 successUrl: window.location.origin + '/sandbox/success' + window.location.search,
                 failUrl: window.location.origin + '/sandbox/fail' + window.location.search,
             });
+
+            
+
+            // 결제 성공 시 서버로 u_idx와 orderId 전송
+            await axios.post('/payments/confirm', {
+                orderId,
+                orderName,
+                customerIdx: user.u_idx,
+                price
+            },{
+                headers:{
+                    Authorization: `Bearer ${menuStore.token}`
+                }
+            });
+
         } catch (error) {
             console.error('Payment request failed:', error);
-            // TODO: 에러 처리
         }
     };
 
