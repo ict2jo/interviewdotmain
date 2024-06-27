@@ -22,13 +22,10 @@ import Verification from "../../pages/verification";
 import Result from "./job/test/result/Result";
 import Introduction from "./mypage/Introduction/page";
 import Calendar from "./mypage/Schedule/page";
-<<<<<<< HEAD
 import Login from "./signin/login/page";
 import CreateUser from "./signin/createUser/page";
-=======
 import Inquiryedit from "./mypage/Inquiry/Inquiryedit/page";
 import Loading from "./loading/page";
->>>>>>> b161333c73de333bdfed770ebee1cbb6c6813d69
 
 function Home() {
   // useContext 훅으로 MobX Store 가져오기
