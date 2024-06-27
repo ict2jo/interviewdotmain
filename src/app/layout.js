@@ -19,10 +19,6 @@ export default function RootLayout({ children }) {
           <CssBaseline />
 
           {children}
-          {/* <div className="flex-1 px-8 py-12 bg-gray-100">
-        </div> 
-          <main className="max-w-7xl mx-auto w-full"></main>
-        */}
 
         </ThemeProvider>
       </body>

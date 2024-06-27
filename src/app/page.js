@@ -88,16 +88,20 @@ function Home() {
         return <Inquirywrite />;
       case "option":
         return <OptionalInfo />;
+      case "login":
+        return <Login />;
+      case "createUser":
+        return <CreateUser />;
       default:
         return <Main />;
     }
   };
   return (
-    <div>
+    <>
       <Header />
       {renderContent()}
       <Footer />
-    </div>
+    </>
   );
 }
 

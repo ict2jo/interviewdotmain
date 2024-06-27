@@ -16,8 +16,6 @@ const SideNavigation = observer(() => {
 
   const submenuTimeoutRef = useRef(null);
   const router = useRouter();
-  const userName = userStore.name;
-
   const [isSubmenuVisible, setSubmenuVisible] = useState(false);
 
   const handleMouseEnter = () => {
@@ -38,9 +36,7 @@ const SideNavigation = observer(() => {
   }
 
   function handleLogout() {
-    console.log("logout");
     authStore.logout();
-
     router.push("/");
   };
 
@@ -77,22 +73,21 @@ const SideNavigation = observer(() => {
             </>
           )} {!userStore.name && (
             <>
-              <li>
-                <Link
-                  href="/signin/login"
-                  className="hover:bg-primary-100 transition-colors whitespace-nowrap"
-                >
-                  로그인
-                </Link>
-              </li>
-              <li>
-                <Link
-                  href="/signin/createUser"
-                  className="hover:bg-primary-100 transition-colors whitespace-nowrap"
-                >
-                  회원가입
-                </Link>
-              </li>
+
+              <Typography
+                onClick={() => handleMenuClick("login")}
+                className="hover:bg-primary-100 transition-colors whitespace-nowrap"
+              >
+                로그인
+              </Typography>
+
+              <Typography
+                onClick={() => handleMenuClick("createUser")}
+                className="hover:bg-primary-100 transition-colors whitespace-nowrap"
+              >
+                회원가입
+              </Typography>
+
             </>
           )}
         </ul>

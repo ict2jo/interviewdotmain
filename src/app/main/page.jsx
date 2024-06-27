@@ -6,8 +6,8 @@ import bg from "../../../public/images/bg.png"
 import menuStore from "@/stores/MenuStore";
 import { Typography } from "@mui/material";
 export default function Main() {
+
     const handleMenuClick = (menu) => {
-        setActiveMenu(menu);
         menuStore.setSelectedMenu(menu);
     };
     return (
