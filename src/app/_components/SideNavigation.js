@@ -37,15 +37,27 @@ export default function SideNavigation() {
       setUserImg(session.user.image)
     }
   }, []);
+  useEffect(() => {
+    const savedMenu = localStorage.getItem("selectedMenu");
+    if (savedMenu) {
+      menuStore.setSelectedMenu(savedMenu);
+    }
+  }, [menuStore]);
 
+  // 선택된 메뉴가 변경될 때마다 로컬 스토리지에 저장
+  useEffect(() => {
+    localStorage.setItem("selectedMenu", menuStore.selectedMenu);
+  }, [menuStore.selectedMenu]);
+  
   const handleMouseLeave = () => {
     submenuTimeoutRef.current = setTimeout(() => {
       setSubmenuVisible(false);
-    }, 400); // 200ms 후에 서브메뉴를 숨김
+    }, 600); // 200ms 후에 서브메뉴를 숨김
   };
 
   const handleMenuClick = async (menu) => {
     menuStore.setSelectedMenu(menu)
+    localStorage.setItem("selectedMenu", menu);
   }
 
   function handleLogout() {
