@@ -1,70 +1,45 @@
-"use client";
-import React, { useEffect, useState, useRef } from 'react';
+"use client"
+import React, { useState, useEffect, useRef } from 'react';
 import './start.css';
-import { Button, Grid } from "@mui/material";
-import { usePagination, PaginationItemType } from "@nextui-org/react";
-import Webcam from 'react-webcam';
-import { useRouter } from "next/navigation";
+import { useRouter } from 'next/navigation';
 import questionStore from '@/stores/questionStore';
+import CircularProgress from '@mui/material/CircularProgress';
+import { Button } from '@mui/material';
+import Webcam from 'react-webcam';
 
 const Start = () => {
     const router = useRouter();
     const [parsedQuestions, setParsedQuestions] = useState([]);
+    const [loading, setLoading] = useState(false);
+    const [time, setTime] = useState(60);
+    const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
+    const [isRecording, setIsRecording] = useState(false);
+    const [recordedChunks, setRecordedChunks] = useState([]);
+    const [uploadPromises, setUploadPromises] = useState([]);
+    const webcamRef = useRef(null);
+    const mediaRecorderRef = useRef(null);
 
     useEffect(() => {
-        setParsedQuestions(questionStore.selectedQuestions);
+        const questions = questionStore.selectedQuestions; // Assuming questionStore has the correct structure
+        setParsedQuestions(questions);
     }, []);
 
-    const [time, setTime] = useState(90);
-    const { activePage, range, setPage, onNext } = usePagination({
-        total: parsedQuestions.length,
-        showControls: true,
-        siblings: 1,
-        boundaries: 1,
-    });
-
-    // 웹캠 관련 상태
-    const webcamRef = useRef(null);
-    const [mediaRecorder, setMediaRecorder] = useState(null);
-    const [recordedChunks, setRecordedChunks] = useState([]);
-    const [isRecording, setIsRecording] = useState(false);
-
     useEffect(() => {
-        const timer = setInterval(() => {
-            setTime(prevTime => {
-                if (prevTime === 0) {
-                    clearInterval(timer);
-                    nextPage();
-                }
-                return prevTime - 1;
-            });
-        }, 1000);
-
-        return () => clearInterval(timer);
-    }, [activePage]);
-
-    const minutes = Math.floor(time / 60);
-    const seconds = time % 60;
-
-    const handlePageChange = (page) => {
-        setPage(page);
-        setTime(90); // 타이머 재설정
-    };
-
-    const nextPage = () => {
-        if (activePage === parsedQuestions.length) {
-            router.push("/interview/finish");
-        } else {
-            onNext();
-            setTime(90); // 타이머 재설정
+        if (parsedQuestions.length > 0) {
+            const query = new URLSearchParams({
+                q_idx: parsedQuestions[currentQuestionIndex]?.q_idx, // Include current question index
+                selectedQuestions: JSON.stringify(parsedQuestions),
+            }).toString();
+            router.replace(`/interview/start?${query}`);
+            console.log('parsedQuestions:', parsedQuestions);
         }
-    };
+    }, [parsedQuestions, currentQuestionIndex, router]);
 
-    const startRecording = () => {
-        if (webcamRef.current) {
-            const stream = webcamRef.current.video.srcObject;
+    const startRecording = async () => {
+        const stream = webcamRef.current.video.srcObject;
+        if (stream) {
             const recorder = new MediaRecorder(stream);
-            const chunks = [];
+            let chunks = [];
 
             recorder.ondataavailable = (e) => {
                 if (e.data.size > 0) {
@@ -72,98 +47,120 @@ const Start = () => {
                 }
             };
 
-            recorder.onstop = () => {
+            recorder.onstop = async () => {
                 const blob = new Blob(chunks, { type: 'video/webm' });
-                setRecordedChunks(chunks);
-                const url = URL.createObjectURL(blob);
-                const a = document.createElement('a');
-                a.style.display = 'none';
-                a.href = url;
-                a.download = 'recorded-video.webm';
-                document.body.appendChild(a);
-                a.click();
-                window.URL.revokeObjectURL(url);
+                setRecordedChunks((prev) => [...prev, { question: parsedQuestions[currentQuestionIndex], blob }]);
+                setIsRecording(false);
+
+                const uploadPromise = uploadVideo(blob, parsedQuestions[currentQuestionIndex]);
+                setUploadPromises((prev) => [...prev, uploadPromise]);
+
+                if (currentQuestionIndex >= parsedQuestions.length - 1) {
+                    setLoading(true); // 마지막 질문 후 로딩 표시
+                    await Promise.all(uploadPromises);
+                    router.push('/interview/finish');
+                } else {
+                    setCurrentQuestionIndex((prev) => prev + 1);
+                    setTime(60);
+                }
             };
 
             recorder.start();
-            setMediaRecorder(recorder);
+            mediaRecorderRef.current = recorder;
             setIsRecording(true);
+        } else {
+            console.error('Stream is not available.');
         }
     };
 
     const stopRecording = () => {
-        if (mediaRecorder) {
-            mediaRecorder.stop();
-            setIsRecording(false);
+        if (mediaRecorderRef.current) {
+            mediaRecorderRef.current.stop();
+        }
+    };
+
+    const handleRecordButtonClick = async () => {
+        await startRecording();
+    };
+
+    const handleNextQuestionClick = () => {
+        stopRecording();
+    };
+
+    const uploadVideo = async (blob, questionData) => {
+        try {
+            const formData = new FormData();
+            formData.append('file', blob, `recorded-video-${Date.now()}.webm`);
+            formData.append('q_idx', questionData.q_idx);
+            formData.append('question', questionData.question);
+
+            const response = await fetch('http://localhost:8010/video/', {
+                method: 'POST',
+                body: formData,
+            });
+
+            if (!response.ok) {
+                throw new Error('비디오 업로드 실패');
+            }
+
+            const result = await response.json();
+            console.log('서버로부터 받은 결과:', result);
+
+            const storedResults = JSON.parse(localStorage.getItem('interviewResults')) || [];
+            storedResults.push(result);
+            localStorage.setItem('interviewResults', JSON.stringify(storedResults));
+
+        }catch (error){
+            console.log(error);
         }
     };
 
     useEffect(() => {
-        if (parsedQuestions.length > 0) {
-            const query = new URLSearchParams({
-                selectedQuestions: JSON.stringify(parsedQuestions)
-            }).toString();
-            router.replace(`/interview/start?${query}`);
+        let timer;
+        if (time > 0 && isRecording) {
+            timer = setTimeout(() => {
+                setTime((prevTime) => prevTime - 1);
+            }, 1000);
+        } else if (time === 0 && isRecording) {
+            clearTimeout(timer);
+            stopRecording();
         }
-    }, [parsedQuestions]);
+        return () => clearTimeout(timer);
+    }, [time, isRecording]);
 
-    console.log('parsedQuestions:', parsedQuestions);
+    const minutes = Math.floor(time / 60);
+    const seconds = time % 60;
 
     return (
-        <div className="container">
-            <div className="white_box">
-                <div className="timer">{`${minutes}:${seconds < 10 ? '0' : ''}${seconds}`}</div>
-                <div className="question">
-                    <p>{parsedQuestions.length > 0 ? (parsedQuestions[activePage - 1]?.question || 'No question selected.') : 'No question selected.'}</p>
-                </div>
-                <Grid container spacing={0} className="content">
-                    <Grid item xs={6} className="my_camera">
-                        <Webcam
-                            audio={true}
-                            ref={webcamRef}
-                            screenshotFormat="image/jpeg"
-                            className="webcam_preview"
-                        />
-                        <div className="button_container">
-                            {!isRecording ? (
-                                <Button variant="outlined" onClick={startRecording}>녹화 시작</Button>
-                            ) : (
-                                <Button variant="contained" onClick={stopRecording}>녹화 중지</Button>
-                            )}
+        <div className="start_container">
+            <div className="start_white_box">
+                {loading ? (
+                    <div className="loading_spinner">
+                        <CircularProgress />
+                    </div>
+                ) : (
+                    <>
+                        <div className="timer">{`${minutes}:${seconds < 10 ? '0' : ''}${seconds}`}</div>
+                        <div className="question">
+                            <p>
+                                {parsedQuestions.length > 0
+                                    ? `q_idx: ${parsedQuestions[currentQuestionIndex]?.q_idx}, ${parsedQuestions[currentQuestionIndex]?.question || '질문을 받아오지 못했습니다.'}`
+                                    : '질문을 받아오지 못했습니다.'}
+                            </p>
                         </div>
-                    </Grid>
-                    <Grid item xs={5} className="answer_form">
-                        음성 답변 실시간 출력
-                    </Grid>
-                </Grid>
-                <div className="paging_number">
-                    <ul className="flex gap-2 items-center pagination_container">
-                        {range.map((page, index) => {
-                            if (page === PaginationItemType.PREV || page === PaginationItemType.NEXT) {
-                                return null;
-                            }
-
-                            if (page === PaginationItemType.DOTS) {
-                                return (
-                                    <li key={`dots-${index}`} className="w-4 h-4">
-                                        ...
-                                    </li>
-                                );
-                            }
-
-                            return (
-                                <li key={`page-${index}`} aria-label={`page ${page}`} className="w-4 h-4">
-                                    <button
-                                        className={`pagination_button ${activePage === page ? "active" : ""}`}
-                                        onClick={() => handlePageChange(page)}
-                                    >
-                                        {page}
-                                    </button>
-                                </li>
-                            );
-                        })}
-                    </ul>
-                </div>
+                        <div className="my_camera">
+                            <Webcam width={'100%'} audio={true} ref={webcamRef} screenshotFormat="image/jpeg" />
+                        </div>
+                        {!isRecording && (
+                            <Button onClick={handleRecordButtonClick} variant="outlined" className="record_button">
+                                시작
+                            </Button>
+                        )}
+                        <Button onClick={handleNextQuestionClick} variant="outlined" className="next_button">
+                            다음질문
+                        </Button>
+                    </>
+                )}
             </div>
         </div>
     );

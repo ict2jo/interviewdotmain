@@ -52,7 +52,7 @@ export default function Select() {
                         <tr><th colspan="2">맞춤형</th></tr>
                         <tr><td style={{paddingBottom: "25px"}} colspan="2">원하는 질문을 선택하여 <br /> 진행합니다.</td></tr>
                         <tr style={{borderTop: "1px solid gray"}}>
-                            <td style={{borderRight: "1px solid gray"}}>답변방식 <br /> 말하기/타이핑</td><td>답변시간 <br /> 3분</td></tr>
+                            <td style={{borderRight: "1px solid gray"}}>답변방식 <br /> 말하기/타이핑</td><td>답변시간 <br />1분 30초</td></tr>
                     </tbody>
                 </table>
             </div>
@@ -64,7 +64,7 @@ export default function Select() {
                         <tr><th colspan="2">실전형</th></tr>
                         <tr><td style={{paddingBottom: "25px"}} colspan="2">빈출 질문을 랜덤으로 <br /> 진행합니다.</td></tr>
                         <tr style={{borderTop: "1px solid gray"}}>
-                            <td style={{borderRight: "1px solid gray"}}>답변방식 <br /> 말하기</td><td>답변시간 <br /> 1분</td></tr>
+                            <td style={{borderRight: "1px solid gray"}}>답변방식 <br /> 말하기</td><td>답변시간 <br />1분 30초</td></tr>
                     </tbody>
                 </table>
             </div>
