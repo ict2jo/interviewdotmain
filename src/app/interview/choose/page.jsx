@@ -16,13 +16,13 @@ export default function Choose(){
         <div className="container">
             <h1>직업군을 선택해주세요.</h1>
             <div className="button_container">
-                <Button variant="outlined" className="choose_button" onClick={() => handleClick('Management')}>Management</Button>
-                <Button variant="outlined" className="choose_button" onClick={() => handleClick('SalesMarketing')}>SalesMarketing</Button>
-                <Button variant="outlined" className="choose_button" onClick={() => handleClick('PublicService')}>PublicService</Button>
-                <Button variant="outlined" className="choose_button" onClick={() => handleClick('RND')}>RND</Button>
-                <Button variant="outlined" className="choose_button" onClick={() => handleClick('Design')}>Design</Button>
-                <Button variant="outlined" className="choose_button" onClick={() => handleClick('ICT')}>ICT</Button>
-                <Button variant="outlined" className="choose_button" onClick={() => handleClick('ProductionManufacturing')}>ProductionManufacturing</Button>
+                <Button variant="outlined" className="choose_button" onClick={() => handleClick('MM')}>경영사무</Button>
+                <Button variant="outlined" className="choose_button" onClick={() => handleClick('SM')}>영업마케팅</Button>
+                <Button variant="outlined" className="choose_button" onClick={() => handleClick('PS')}>공공서비스</Button>
+                <Button variant="outlined" className="choose_button" onClick={() => handleClick('RND')}>연구개발 </Button>
+                <Button variant="outlined" className="choose_button" onClick={() => handleClick('ARD')}>디자인</Button>
+                <Button variant="outlined" className="choose_button" onClick={() => handleClick('ICT')}>정보통신</Button>
+                <Button variant="outlined" className="choose_button" onClick={() => handleClick('BM')}>생산관리</Button>
         </div>
         </div>
     )

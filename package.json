@@ -20,6 +20,7 @@
     "@mui/icons-material": "^5.15.20",
     "@mui/lab": "^5.0.0-alpha.170",
     "@mui/material": "^5.15.20",
+    "@mui/system": "^5.15.20",
     "@nextui-org/pagination": "^2.0.32",
     "@nextui-org/react": "^2.4.1",
     "@tosspayments/payment-sdk": "^1.7.1",
