@@ -1,7 +1,7 @@
 import "./_style/globals.css";
 import { CssBaseline, ThemeProvider } from '@mui/material';
 import theme from './_components/defaultTheme.js';
-import { SessionProvider } from "next-auth/react";
+
 
 export const metadata = {
   title: {
@@ -17,13 +17,9 @@ export default function RootLayout({ children }) {
       <body>
         <ThemeProvider theme={theme}>
           <CssBaseline />
-          <SessionProvider>
-            {children}
-            {/* <div className="flex-1 px-8 py-12 bg-gray-100">
-        </div> 
-          <main className="max-w-7xl mx-auto w-full"></main>
-        */}
-          </SessionProvider>
+
+          {children}
+
         </ThemeProvider>
       </body>
     </html>

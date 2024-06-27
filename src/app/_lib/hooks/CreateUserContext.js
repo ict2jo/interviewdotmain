@@ -1,7 +1,6 @@
 "use client";
 import moment from "moment";
 import { useReducer } from "react";
-import { useSession } from "next-auth/react";
 import axios from "axios";
 import { useRouter } from "next/navigation";
 import { URL } from "@/app/api/boot/route";
@@ -61,11 +60,11 @@ function reducer(state, action) {
 }
 
 function CreateUserProvider({ children }) {
-  const { data: session } = useSession();
+
   const router = useRouter();
   const initialState = {
-    name: session?.user?.name || "",
-    email: session?.user?.email || "",
+    name: "",
+    email: "",
     birth: "",
     id: "",
     pw: "",
@@ -121,7 +120,7 @@ function CreateUserProvider({ children }) {
       const response = await axios.get(`${URL}idCheck`, {
         params: { id },
       });
-      if (response.data.exists) {
+      if (response.data) {
         alert("아이디가 이미 사용 중입니다. 다른 아이디를 사용해주세요.");
         return false;
       } else {
@@ -165,18 +164,6 @@ function CreateUserProvider({ children }) {
   }
 
   function validateForm() {
-    console.log(isMatched, "ismatched");
-    console.log(isChecked, "isChecked");
-    console.log(requiredTermsChecked, "requiredTermsChecked");
-    console.log(id, "id");
-    console.log(name, "name");
-    console.log(email, "email");
-    console.log(pw, "pw");
-    console.log(birth, "birth");
-    console.log(phone1, "phone1");
-    console.log(phone2, "phone2");
-    console.log(phone3, "phone3");
-    console.log(phonenumber, "phonenumber");
 
     if (!isMatched) {
       alert("비밀번호가 일치하지 않습니다.");
