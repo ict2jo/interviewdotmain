@@ -120,6 +120,7 @@ function CreateUserProvider({ children }) {
       const response = await axios.get(`${URL}idCheck`, {
         params: { id },
       });
+      console.log("Response data:", response.data);
       if (response.data) {
         alert("아이디가 이미 사용 중입니다. 다른 아이디를 사용해주세요.");
         return false;
@@ -204,7 +205,7 @@ function CreateUserProvider({ children }) {
         phonenumber,
       });
       console.log("User created:", response.data);
-      router.push("/signin/optionalInfo");
+      router.push("/signin/login");
     } catch (error) {
       console.error("Error creating user:", error);
     }

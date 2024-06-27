@@ -9,8 +9,7 @@ import {
   CreateUserProvider,
   useCreateUser,
 } from "@/app/_lib/hooks/CreateUserContext";
-import Footer from "@/app/_components/Footer";
-import Header from "@/app/_components/Header";
+
 
 function PageContent() {
 
@@ -41,7 +40,6 @@ function PageContent() {
 
   return (
     <>
-      <Header />
       <Form width="w-2/4">
         <p className="font-semibold">환영합니다.</p>
         <p className="font-semibold border-b-2 border-primary-950 pb-5 mb-8">
@@ -225,7 +223,6 @@ function PageContent() {
           </button>
         </div>
       </Form>
-      <Footer />
     </>
   );
 }

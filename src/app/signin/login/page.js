@@ -73,7 +73,6 @@ const Login = observer(() => {
         authStore.setToken(response.data.token);
         await fetchUserInfo(response.data.token);
 
-        menuStore.setSelectedMenu('main')
         router.push("/");
       }
     } catch (error) {
@@ -103,6 +102,8 @@ const Login = observer(() => {
     window.location.href = "http://localhost:8080/oauth2/authorization/google"
   }
   return (
+
+
     <Form width="w-1/3">
       <div className="flex flex-col gap-5 border-b-2 border-gray-500 pb-5">
         <h1 className="text-3xl font-bold text-center">인터뷰닷</h1>
@@ -114,6 +115,7 @@ const Login = observer(() => {
         />
         <Input
           placeholder="비밀번호"
+          type="password"
           name="pw"
           value={user.pw}
           onChange={changeUserLoginInfo}
@@ -161,6 +163,7 @@ const Login = observer(() => {
         />
       </div>
     </Form>
+
   )
 });
 export default Login;
