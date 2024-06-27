@@ -1,6 +1,8 @@
 'use client'
 import Button from "@/app/_components/Button";
+import Footer from "@/app/_components/Footer";
 import Form from "@/app/_components/Form";
+import Header from "@/app/_components/Header";
 import Input from "@/app/_components/Input";
 import { useState } from "react";
 

@@ -1,9 +1,13 @@
 import Link from "next/link";
 import Button from "@/app/_components/Button";
+import Header from "@/app/_components/Header";
+import Footer from "@/app/_components/Footer";
 
 export default function page() {
   return (
-    <div className="m-auto w-[420px]">
+    <>
+    <Header />
+    <div className="m-auto w-[420px] mt-10">
       <h1 className="border-b border-gray-700 py-5 font-extrabold text-3xl">
         아이디/ 비밀번호 찾기
       </h1>
@@ -18,5 +22,7 @@ export default function page() {
         </Button>
       </div>
     </div>
+    <Footer />
+    </>
   );
 }

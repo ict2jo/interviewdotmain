@@ -17,9 +17,11 @@ export default function Page() {
   async function handleGetCode(e) {
     e.preventDefault();
     try {
-      const res = await axios.get(`${URL}findPw`, {
-        params: { id, email, name },
-      });
+      const res = await axios.post(`${URL}findPw`, {
+        id: id,
+        email: email,
+        name: name
+    });
 
       console.log("서버에서 받은 데이터:", res.data);
 
