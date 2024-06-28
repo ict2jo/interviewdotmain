@@ -75,14 +75,14 @@ const SideNavigation = observer(() => {
 
               <Typography
                 onClick={() => handleMenuClick("login")}
-                className="hover:bg-primary-100 transition-colors whitespace-nowrap"
+                className="hover:bg-primary-100 transition-colors whitespace-nowrap cursor-pointer"
               >
                 로그인
               </Typography>
 
               <Typography
                 onClick={() => handleMenuClick("createUser")}
-                className="hover:bg-primary-100 transition-colors whitespace-nowrap"
+                className="hover:bg-primary-100 transition-colors whitespace-nowrap cursor-pointer"
               >
                 회원가입
               </Typography>
