@@ -2,10 +2,11 @@
 
 import { useState } from 'react';
 import './payments.css'
+import userStore from '@/stores/UserStore';
 
 export default function Payments() {
     const [activeIndex, setActiveIndex] = useState(null);
-
+    console.log("ppppppppid"+userStore.id);
     const handleClick = (index) => {
         setActiveIndex(index);
     };
@@ -21,7 +22,7 @@ export default function Payments() {
 
     return (
         <>      
-        <div className='guide_container'>
+        <div className='pay_container'>
             <ul className="nav">
                 {['인터뷰닷 이용권', '내 이용현황', '결제내역'].map((item, index) => (
                     <li key={index}>
