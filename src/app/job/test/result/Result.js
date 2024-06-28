@@ -1,13 +1,13 @@
+'use client'
 import React, { useEffect, useState } from 'react';
-
 import { JobTestProvider } from '@/app/_lib/hooks/JobTestContext';
 import userStore from '@/stores/UserStore';
 import Spinner from '@/app/_components/Spinner';
 import { PieChart, Pie, Cell, Tooltip, Legend } from 'recharts';
 import { Paper, Typography } from '@mui/material';
-
 import resultData from "@/app/api/result/result.json"
 import ResultDetails from '@/app/_components/ResultDetails';
+
 function PageContent() {
   const [answers, setAnswers] = useState([]);
   const [chartData, setChartData] = useState([]);
@@ -99,7 +99,7 @@ function PageContent() {
         {score.first && score.second ? (
           <>
             <div className="flex justify-center gap-3">
-              <div>
+              <div className='h-[90vh]'>
                 <Paper elevation={3} style={{ padding: 16 }}>
                   <Typography variant="h6" gutterBottom className="arrow flex items-center justify-center">
                     <span className="text-lg text-white leading-2">직업흥미유형 탐색결과 (T점수)</span>
@@ -145,7 +145,7 @@ function PageContent() {
               </div>
               <div>
                 <Paper elevation={3} style={{ padding: 16 }}>
-                  <div className='mx-5 my-5 text-3xl tracking-wider'>
+                  <div className='mx-5 my-5 text-3xl tracking-wider h-[90vh]'>
                     <div className='my-10 border-b-2 border-dashed'>
                       {userStore.name}님은, <p className='my-3 text-sm'><span className='underline decoration-solid leading-2'>{score.first.type}</span>와 <span className='underline decoration-solid'>{score.second.type}</span>에서
                         T점수가 높게 나왔습니다. </p>
@@ -166,10 +166,6 @@ function PageContent() {
                             <ResultDetails title="가치">{hoveredData.가치}</ResultDetails>
                             <ResultDetails title="회피활동">{hoveredData.회피활동}</ResultDetails>
                             <ResultDetails title="대표직업">{hoveredData.대표직업}</ResultDetails>
-
-
-
-
                           </div>
                         </Typography>
                       </div>
