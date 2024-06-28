@@ -9,6 +9,7 @@ import menuStore from "@/stores/MenuStore";
 import authStore from "@/stores/AuthStore";
 import { observer } from "mobx-react-lite";
 import userStore from "@/stores/UserStore";
+import Spinner from './Spinner';
 
 
 const SideNavigation = observer(() => {
@@ -16,7 +17,7 @@ const SideNavigation = observer(() => {
   const submenuTimeoutRef = useRef(null);
   const router = useRouter();
   const [isSubmenuVisible, setSubmenuVisible] = useState(false);
-
+  const [isLoggingOut, setIsLoggingOut] = useState(false);
   const handleMouseEnter = () => {
     if (submenuTimeoutRef.current) {
       clearTimeout(submenuTimeoutRef.current);
@@ -34,11 +35,14 @@ const SideNavigation = observer(() => {
     menuStore.setSelectedMenu(menu)
   }
 
-  function handleLogout() {
+  const handleLogout = () => {
+    setIsLoggingOut(true);
     authStore.logout();
-    router.push("/");
+    setTimeout(() => {
+      router.push("/");
+      setIsLoggingOut(false);
+    }, 2000);
   };
-
   useEffect(() => {
     userStore.loadUserFromServer();
   }, []);
@@ -68,7 +72,11 @@ const SideNavigation = observer(() => {
 
               {isSubmenuVisible && <MySubmenu handleMenuClick={handleMenuClick} />}
               <li>
-                <button className="hover:bg-primary-100 transition-colors" onClick={handleLogout}>로그아웃</button>
+                {isLoggingOut ? (
+                  <Spinner type="spinner-mini" />
+                ) : (
+                  <button className="hover:bg-primary-100 transition-colors" onClick={handleLogout}>로그아웃</button>
+                )}
               </li>
             </>
           )} {!userStore.name && (
