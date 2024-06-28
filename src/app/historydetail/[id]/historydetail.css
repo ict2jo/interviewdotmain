@@ -1,0 +1,21 @@
+.history_container h1{
+    font-size: 24px;
+    text-align: center;
+    margin-top: 40px;
+}
+.history_container{
+    background-color: lightgray;
+}
+.history_box{
+    margin: 40px auto;
+    display: flex;
+    flex-direction: column;
+}
+
+.history_box h1{
+    font-size: 10px;
+}
+
+.question_boxs{
+
+}

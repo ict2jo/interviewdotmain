@@ -28,6 +28,7 @@ import Inquiryedit from "./mypage/Inquiry/Inquiryedit/page";
 import Loading from "./loading/page";
 import Footer from "@/app/_components/Footer";
 import Starthome2 from "@/app/interview/starthome2/page";
+import Historydetail from "@/app/historydetail/[id]/page";
 
 function Home() {
   // useContext 훅으로 MobX Store 가져오기
@@ -57,6 +58,8 @@ function Home() {
         return <Airesult />;
       case "airesult_history":
         return <Interview_history />; //면접 기록
+      case "historydetail":
+        return <Historydetail/>
       case "airesult_feedback":
         return <Interview_feedback />; //AI 피드백
       case "airesult_guide":
