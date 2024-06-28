@@ -1,13 +1,13 @@
-.review_container {
-    text-align: center;
-    width: 1210px;
+.reviewwrap {
     margin: 0 auto;
+    height: 95vh;
     
 }
-.review_container h1 {
-    font-size: 30px;
+.reviewwrap h1 {
+    font-size: 20px;
+    font-weight: bold;
     text-align: center;
-    margin-top: 10px;
+    margin: 20px;
 }
 
 
