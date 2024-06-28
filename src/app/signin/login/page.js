@@ -136,8 +136,8 @@ const Login = observer(() => {
         <Button type="longBlue" onClick={handleLogin}>
           로그인
         </Button>
-        <Button type="longWhite">
-          <Link href="/signin/createUser"> 회원가입 </Link>
+        <Button type="longWhite" onClick={() => menuStore.setSelectedMenu("createUser")}>
+          회원가입
         </Button>
       </div>
       <p className="text-xs text-center text-gray-600 bg-white pt-3">

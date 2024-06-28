@@ -11,7 +11,7 @@ function StartScreen() {
       </svg>
 
       <h2 className="font-extrabold text-lg">직업적성테스트</h2>
-      <div className="my-10 w-3/4 ">
+      <div className="my-10 w-3/4">
         <p className="my-2"> 총 <span className="font-extrabold">{numQuestions}</span> 문제입니다. </p>
         <p> 나의 진로선택을 위한 과정중 하나로 자기 자신에 대한 정확한 이해를 위한 테스트입니다.
           내가 어떤활동을 좋아하는지, 어떤 분야에 관심이 있는지 객관적으로 알아볼 수 있도록 도와줍니다.

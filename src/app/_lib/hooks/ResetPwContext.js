@@ -45,7 +45,7 @@ function ResetPwProvider({ children }) {
   }
 
   const [{ id, name, email, pw, checkPw, authCode, verified, isMatched, validPw }, dispatch] = useReducer(reducer, initialState)
-  const rounter = useRouter();
+
 
   const handleFieldChange = (field) => (e) => {
     dispatch({ type: "updateField", field, payload: e.target.value });
@@ -53,18 +53,19 @@ function ResetPwProvider({ children }) {
 
   async function handleGetCode(e) {
     e.preventDefault();
-    console.log("click");
     try {
       const res = await axios.post(`${URL}findPw`, {
         id: id,
         email: email,
         name: name,
       });
-
       alert("인증번호를 이메일로 보냈습니다.")
-
     } catch (err) {
-      console.error("인증번호 오류:", err);
+      if (err.response && err.response.status === 404) {
+        alert("회원님의 정보를 찾을 수 없습니다.");
+      } else {
+        console.error("인증번호 오류:", err);
+      }
     }
   }
 

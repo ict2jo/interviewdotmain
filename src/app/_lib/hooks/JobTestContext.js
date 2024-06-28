@@ -6,7 +6,6 @@ const JobTestContext = createContext();
 
 const initialState = {
   questions: [],
-  //  // 'loading', 'error', 'ready', 'active', 'finished'
   status: "loading",
   index: 0,
   page: 0,

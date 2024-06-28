@@ -2,8 +2,8 @@
 import moment from "moment";
 import { useReducer } from "react";
 import axios from "axios";
-import { useRouter } from "next/navigation";
 import { URL } from "@/app/api/boot/route";
+import menuStore from "@/stores/MenuStore";
 const { createContext, useContext } = require("react");
 const CreateUserContext = createContext();
 
@@ -11,6 +11,10 @@ function reducer(state, action) {
   switch (action.type) {
     case "displayDate":
       return { ...state, displayDate: action.payload };
+    case "loading":
+      return { ...state, isLoading: true };
+    case "notLoading":
+      return { ...state, isLoading: false };
     case "updateField":
       return { ...state, [action.field]: action.payload };
     case "birth":
@@ -61,7 +65,6 @@ function reducer(state, action) {
 
 function CreateUserProvider({ children }) {
 
-  const router = useRouter();
   const initialState = {
     name: "",
     email: "",
@@ -81,6 +84,7 @@ function CreateUserProvider({ children }) {
     requiredTermsChecked: false,
     isMatched: false,
     validPw: false,
+    isLoading: false
   };
   const [
     {
@@ -102,6 +106,7 @@ function CreateUserProvider({ children }) {
       requiredTermsChecked,
       validPw,
       isMatched,
+      isLoading
     },
     dispatch,
   ] = useReducer(reducer, initialState);
@@ -195,20 +200,27 @@ function CreateUserProvider({ children }) {
     e.preventDefault();
 
     if (!validateForm()) return;
-    try {
-      const response = await axios.post(`${URL}create`, {
-        id,
-        name,
-        email,
-        pw,
-        birth,
-        phonenumber,
-      });
-      console.log("User created:", response.data);
-      router.push("/signin/login");
-    } catch (error) {
-      console.error("Error creating user:", error);
-    }
+
+
+    dispatch({ type: "loading" })
+    setTimeout(async () => {
+      try {
+        const response = await axios.post(`${URL}create`, {
+          id,
+          name,
+          email,
+          pw,
+          birth,
+          phonenumber,
+        });
+        console.log("User created:", response.data);
+        menuStore.setSelectedMenu("login");
+      } catch (error) {
+        console.error("Error creating user:", error);
+      } finally {
+        dispatch({ type: "notLoading" });
+      }
+    }, 2000);
   }
 
   return (
@@ -233,6 +245,7 @@ function CreateUserProvider({ children }) {
         isCustomDomain,
         requiredTermsChecked,
         validPw,
+        isLoading,
         handleFieldChange,
         handleIdValidation,
         handleDateChange,

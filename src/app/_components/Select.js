@@ -1,6 +1,5 @@
 "use client";
 import React from "react";
-import { useOptions } from "../_lib/hooks/OptionContext";
 
 export default function Select({
   name,
@@ -10,7 +9,6 @@ export default function Select({
   onChange,
   height = "h-10",
 }) {
-  const { handleFieldChange } = useOptions();
 
   return (
     <select
