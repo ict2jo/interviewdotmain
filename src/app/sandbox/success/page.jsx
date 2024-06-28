@@ -5,25 +5,9 @@ import { useContext, useState } from 'react';
 import { useSearchParams } from 'next/navigation';
 import axios from 'axios';
 import '../style.css';
-import authStore from '@/stores/AuthStore';
-import { MenuContext } from '@/stores/StoreContext';
+import userStore from '@/stores/UserStore';
 
 const SuccessPage = observer(() => {
-    const user = authStore.userInfo;
-    const menuStore = useContext(MenuContext);
-    const [loading, setLoading] = useState(true);
-    const [uvo, setUvo] = useState({
-    u_idx: user.u_idx,
-    id: user.id,
-    name: user.name,
-    phonenumber: user.phonenumber,
-    email: user.email,
-    p_job: '',
-    p_class: '',
-    p_career: '',
-    p_location: ''
-});
-
     const [isConfirmed, setIsConfirmed] = useState(false);
     const searchParams = useSearchParams();
     const paymentKey = searchParams.get('paymentKey');
@@ -33,9 +17,12 @@ const SuccessPage = observer(() => {
     const encodedKey = btoa(secretKey + ':');
 
     const confirmPayment = async () => {
+
         const token = localStorage.getItem('token');
         console.log("token"+token);
-        console.log("user.u_idx",user.u_idx);
+
+        console.log("SSSSSid"+userStore.id);
+
         try {
             const response = await axios.post(
                 'http://localhost:8080/payments/confirm',
@@ -43,12 +30,12 @@ const SuccessPage = observer(() => {
                     paymentKey,
                     orderId,
                     amount,
+                    id: userStore.id
                 },
                 {
                     headers: {
                         'Content-Type': 'application/json',
-                        Authorization: `Basic ${encodedKey}`,
-                        Authorization: `Bearer ${token}`
+                        Authorization: `Basic ${encodedKey}`
                     },
                 }
             );

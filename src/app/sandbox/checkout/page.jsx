@@ -7,31 +7,17 @@ import axios from 'axios';
 import '../style.css';
 import authStore from '@/stores/AuthStore';
 import { MenuContext } from '@/stores/StoreContext';
+import userStore from '@/stores/UserStore';
 const generateRandomString = () => window.btoa(Math.random()).slice(0, 20);
 
 const CheckoutPage = observer(() => {
-    
-    const user = authStore.userInfo;
-    const menuStore = useContext(MenuContext);
-    const [loading, setLoading] = useState(true);
-    const [uvo, setUvo] = useState({
-    u_idx: user.u_idx,
-    id: user.id,
-    name: user.name,
-    phonenumber: user.phonenumber,
-    email: user.email,
-    p_job: '',
-    p_class: '',
-    p_career: '',
-    p_location: ''
-});
-
-
     const paymentWidgetRef = useRef(null);
     const paymentMethodsWidgetRef = useRef(null);
     const agreementWidgetRef = useRef(null);
     const [price, setPrice] = useState(null);
     const clientKey = process.env.NEXT_PUBLIC_TOSS_CLIENT_KEY;
+
+    console.log("CCCCCCid"+userStore.id);
 
     useEffect(() => {
         // URL에서 query parameter를 추출하여 price 상태 업데이트
@@ -41,8 +27,11 @@ const CheckoutPage = observer(() => {
             return priceParam ? parseInt(priceParam, 10) : null; // null로 초기화
         };
 
+        
+
         // 페이지 로드 시 price 상태 업데이트
         setPrice(getPriceFromUrl());
+
     }, []);
 
     useEffect(() => {
@@ -55,7 +44,6 @@ const CheckoutPage = observer(() => {
                     if (paymentWidgetRef.current == null) {
                         paymentWidgetRef.current = paymentWidget;
                     }
-                    console.log("gkdlgkdl"+user.u_idx)
                     // 결제창 렌더링
                     const paymentMethodsWidget = paymentWidgetRef.current.renderPaymentMethods(
                         '#payment-method',
@@ -78,10 +66,10 @@ const CheckoutPage = observer(() => {
     }, [price]);
 
     const handlePaymentRequest = async () => {
-
-        
         const paymentWidget = paymentWidgetRef.current;
 
+        console.log("id11111 "+userStore.id);
+        const id = userStore.id
         try {
             // 결제 요청
             const orderId = generateRandomString();
@@ -90,24 +78,18 @@ const CheckoutPage = observer(() => {
             await paymentWidget?.requestPayment({
                 orderId,
                 orderName,
-                customerIdx: user.u_idx,
                 value: price, // 실제 결제할 금액을 설정해야 합니다.
                 successUrl: window.location.origin + '/sandbox/success' + window.location.search,
                 failUrl: window.location.origin + '/sandbox/fail' + window.location.search,
             });
 
-            
-
+            console.log(u_idx);
             // 결제 성공 시 서버로 u_idx와 orderId 전송
             await axios.post('/payments/confirm', {
                 orderId,
                 orderName,
-                customerIdx: user.u_idx,
-                price
-            },{
-                headers:{
-                    Authorization: `Bearer ${menuStore.token}`
-                }
+                price,
+                id: userStore.id
             });
 
         } catch (error) {

@@ -1,5 +1,4 @@
-.guide_container {
-    background-color: white;
+.pay_container {
     border-radius: 20px;
     padding: 50px;
     width: 80%;
@@ -8,7 +7,7 @@
     height: auto; 
 }
 
-.guide_container h1 {
+.pay_container h1 {
     font-size: 30px;
     font-weight: bold;
     margin-bottom: 20px;

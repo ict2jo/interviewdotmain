@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import './verification.css'; // 필요한 CSS 파일 import
+import './verification.css'; 
 
 export default function Verification() {
   const [question, setQuestion] = useState('');
