@@ -6,8 +6,9 @@ import Interview_result_submenu from "./interview_result_submenu";
 import { MenuContext } from "@/stores/StoreContext";
 import { Typography } from "@mui/material";
 import Resume_submenu from "./Resume_submenu";
+import { observer } from "mobx-react-lite";
 
-export default function Navigation() {
+const Navigation = observer(() => {
   const [activeMenu, setActiveMenu] = useState(null);
   const submenuTimeoutRef = useRef(null);
   const menuStore = useContext(MenuContext);
@@ -119,4 +120,6 @@ export default function Navigation() {
       </ul>
     </nav>
   );
-}
+})
+
+export default Navigation;

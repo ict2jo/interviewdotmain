@@ -43,6 +43,7 @@ class UserStore {
         this.setEmail(userData.email);
         this.setPhonenumber(userData.phonenumber);
         console.log("Loaded user data:", userData);
+
       } catch (error) {
         console.error("Error loading user data", error);
       }

@@ -11,16 +11,10 @@ const initialState = {
   index: 0,
   page: 0,
   answers: [],
-  gender: null,
 };
 
 function reducer(state, action) {
   switch (action.type) {
-    case "setGender":
-      return {
-        ...state,
-        gender: action.payload,
-      };
     case "dataReceived":
       return {
         ...state,
@@ -74,7 +68,7 @@ function reducer(state, action) {
 
 function JobTestProvider({ children }) {
   const [
-    { gender, questions, status, index, answers, page, points },
+    { questions, status, index, answers, page, points },
     dispatch,
   ] = useReducer(reducer, initialState);
   const numQuestions = questions.length;
@@ -102,7 +96,6 @@ function JobTestProvider({ children }) {
         page,
         numQuestions,
         dispatch,
-        gender,
       }}
     >
       {children}

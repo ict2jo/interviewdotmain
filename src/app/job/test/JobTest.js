@@ -25,7 +25,6 @@ function PageContent() {
           {status === "result" && <Result />}
         </Form>
       </div>
-      <Footer />
     </>
   );
 }

@@ -38,8 +38,6 @@ class AuthStore {
       naver: '',
       google: '',
     });
-
-    console.log(this.isAuthenticated);
   }
 
   setUser(user) {

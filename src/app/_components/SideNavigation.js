@@ -42,6 +42,7 @@ const SideNavigation = observer(() => {
   useEffect(() => {
     userStore.loadUserFromServer();
   }, []);
+
   return (
     <NoSsr>
       <nav className="z-10 text-xl">

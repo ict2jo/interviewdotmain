@@ -16,7 +16,7 @@ function PageContent() {
 
   return (
     <>
-      <div className="my-12">
+      <div className="my-12 h-[70vh]">
         {!verified ? <Form width="w-1/3">
           <p className="text-sm text-gray-800">
             회원님의 등록된 정보로 비밀번호를 찾을 수 있습니다.
