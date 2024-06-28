@@ -1,5 +1,6 @@
 "use client";
 import { URL } from "@/app/api/boot/route";
+import menuStore from "@/stores/MenuStore";
 import axios from "axios";
 import { useRouter } from "next/navigation";
 import React, { createContext, useReducer, useContext } from "react";
@@ -11,7 +12,8 @@ function reducer(state, action) {
       return { ...state, [action.field]: action.payload };
     case "verified":
       return { ...state, verified: true };
-
+    case "init":
+      return { ...state, pw: "" };
     case "validatePw":
       const pwRegex =
         /^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,16}$/;
@@ -74,12 +76,15 @@ function ResetPwProvider({ children }) {
         authCode: authCode,
       });
       if (res.status === 200) {
-        dispatch({ type: "verified" })
-      } else {
-        alert("인증번호가 틀렸습니다")
+        dispatch({ type: "verified" });
       }
     } catch (err) {
-      console.error("Auth code verification request error:", err);
+      if (err.response && err.response.status === 401) {
+        alert("인증번호가 틀렸습니다");
+      } else {
+        console.error("Auth code verification request error:", err);
+        alert("An unexpected error occurred. Please try again later.");
+      }
     }
   }
 
@@ -92,7 +97,7 @@ function ResetPwProvider({ children }) {
       });
       if (res.status === 200) {
         alert("비밀번호를 변경했습니다.")
-        rounter.push("/signin/login")
+        menuStore.setSelectedMenu("login")
       }
     } catch (err) {
       console.error("비밀번호 변경 오류:", err);

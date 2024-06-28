@@ -2,9 +2,7 @@
 import Link from "next/link";
 import Button from "@/app/_components/Button";
 import { useState } from "react";
-import FindIdContent from "../findId/page";
-import FindPwContent from "../findPw/page";
-
+import menuStore from "@/stores/MenuStore";
 export default function FindIdPw() {
   const [contentToShow, setContentToShow] = useState(null);
 
@@ -32,8 +30,8 @@ export default function FindIdPw() {
           </Button>
         </div>
       </div>
-      {contentToShow === 'findId' && <FindIdContent />}
-      {contentToShow === 'findPw' && <FindPwContent />}
+      {contentToShow === 'findId' && menuStore.setSelectedMenu("findId")}
+      {contentToShow === 'findPw' && menuStore.setSelectedMenu('findPw')}
     </>
   );
 }

@@ -1,5 +1,5 @@
 'use client'
-import React from "react";
+import React, { useEffect } from "react";
 import Button from "@/app/_components/Button";
 import Form from "@/app/_components/Form";
 import Input from "@/app/_components/Input";
@@ -10,9 +10,12 @@ import { ResetPwProvider, useResetPw } from "@/app/_lib/hooks/ResetPwContext";
 function PageContent() {
   const { id, name, email, authCode, verified, handleFindPwSubmit, handleGetCode, handleFieldChange, checkPw, isMatched, validPw, handleReset, dispatch } = useResetPw()
 
+  useEffect(() => {
+    dispatch({ type: "init" });
+  }, [dispatch]);
+
   return (
     <>
-
       <div className="my-12">
         {!verified ? <Form width="w-1/3">
           <p className="text-sm text-gray-800">
@@ -54,14 +57,13 @@ function PageContent() {
           <p className="text-sm text-gray-800">비밀번호를 변경해주세요.</p>
           <div className="w-full">
             <Input
-              autocomplete="new-password"
               name="pw"
+              autoFocus
               type="password"
               placeholder="비밀번호"
               onChange={(e) =>
                 dispatch({ type: "validatePw", payload: e.target.value })
               }
-            // value={pw}
             />
             {!validPw ? (
               <p className="text-[11px] px-5 pt-2">
