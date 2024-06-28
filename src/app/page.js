@@ -91,8 +91,6 @@ function Home() {
         return <Inquirywrite />;
       case "inquiryedit":
         return <Inquiryedit />;
-      case "option":
-        return <OptionalInfo />;
       case "login":
         return <Login />;
       case "createUser":
