@@ -29,6 +29,9 @@ import Inquiryedit from "./mypage/Inquiry/Inquiryedit/page";
 import Loading from "./loading/page";
 import CheckoutPage from "./sandbox/checkout/page";
 import Payments from "./interview/payments/page";
+import PayDetail from "./interview/payDetail/page";
+import PayStatus from "./interview/payStatus/page";
+
 
 
 function Home() {
@@ -55,6 +58,10 @@ function Home() {
         return <Starthome />;
       case "payments":
         return <Payments />;  
+      case "payDetail":
+        return <PayDetail />;  
+      case "payStatus":
+        return <PayStatus />;  
       case "verification":
         return <Verification />;
       case "Airesult":

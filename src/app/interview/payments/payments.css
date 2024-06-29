@@ -83,6 +83,27 @@
     background-color: gray;
 }
 
+.ticket-input {
+    display: flex;
+    align-items: center;
+    justify-content: center; /* 수평 가운데 정렬을 위한 추가 설정 */
+    text-align: center;
+}
+
+.ticket-input input {
+    width: 50px; 
+    margin-right: 10px;
+    border: 1px solid lightgray;
+    text-align: center;
+}
+
+.ticket-input p {
+    margin: 0;
+    font-size: 20px;
+    font-weight: bold;
+    text-align: center;
+}
+
 @media (max-width: 820px) {
     .guide_container {
         padding: 30px;

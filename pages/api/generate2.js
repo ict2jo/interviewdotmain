@@ -7,6 +7,18 @@ const openai = new OpenAI({
   apiKey: process.env.OPENAI_API_KEY,
 });
 
+// 특수문자 제거 및 문단 나누기 함수
+function formatResponse(text) {
+  // 특수문자 제거
+  let cleanedText = text.replace(/[""*]/g, '');
+
+  // 문단 나누기
+  cleanedText = cleanedText.replace(/(?:\r\n|\r|\n){2,}/g, '<br><br>');
+
+  return cleanedText;
+}
+
+
 export default async function handler(req, res) {
   if (req.method !== 'POST') {
     return res.status(405).json({ error: 'Method Not Allowed' });
@@ -47,7 +59,10 @@ export default async function handler(req, res) {
     const message = await waitForCompletionAndGetMessage(openai, thread.id, run.id);
     const contents = message.body.data[0].content[0].text.value;
 
-    res.status(200).json({ answer: contents });
+    // 응답 텍스트 포맷팅
+    const formattedContents = formatResponse(contents);
+
+    res.status(200).json({ answer: formattedContents });
   } catch (error) {
     console.error('Error:', error);
     res.status(500).json({ error: 'An error occurred' });
