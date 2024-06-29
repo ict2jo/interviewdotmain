@@ -9,10 +9,8 @@ body{
 }
 
 .white_box {
-    margin-top: 50px;
     background-color: #fff;
     border-radius: 20px;
-    padding: 20px;
     width: 100%;
     height: 105vh;
     text-align: center;

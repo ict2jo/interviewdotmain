@@ -31,7 +31,6 @@ import CheckoutPage from "./sandbox/checkout/page";
 import Payments from "./interview/payments/page";
 
 
-
 function Home() {
   // useContext 훅으로 MobX Store 가져오기
   const menuStore = useContext(MenuContext);
@@ -62,6 +61,8 @@ function Home() {
         return <Airesult />;
       case "airesult_history":
         return <Interview_history />; //면접 기록
+      case "historydetail":
+        return <Historydetail/>
       case "airesult_feedback":
         return <Interview_feedback />; //AI 피드백
       case "airesult_guide":

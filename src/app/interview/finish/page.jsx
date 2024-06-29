@@ -93,30 +93,45 @@ const Finish = () => {
     const handleQuit = () => {
         try {
             localStorage.removeItem('interviewResults');
-            console.log("삭제완료")
+            console.log("삭제완료");
             window.close();
         } catch (error) {
             console.log(error)
         }
     };
 
+
     const handleSave = async () => {
         try {
+            const token = localStorage.getItem('token');
+
+            const requestBody = {
+                id: userStore.id,
+                results: results.map(result => ({
+                    question: result.question,
+                    text: result.text,
+                    q_idx: result.q_idx,
+                    pose_results: result.pose_results.toString(),
+                    sentiment: result.sentiment.toString()
+                }))
+            };
+
             const response = await fetch('http://localhost:8080/interview/finish', {
-                method: 'post',
+                method: 'POST',
                 headers: {
+                    'Authorization': `Bearer ${token}`,
                     'Content-Type': 'application/json'
                 },
-                body: JSON.stringify(results)
+                body: JSON.stringify(requestBody)
             });
 
             if (response.ok) {
-                console.log("DB에 저장 완료.")
+                console.log("DB에 저장 완료.");
             } else {
-                console.error('에러발생;;;;;')
+                console.error('에러발생;;;;;');
             }
         } catch (error) {
-            console.log(error)
+            console.log(error);
         }
     };
 
@@ -159,6 +174,6 @@ const Finish = () => {
             </div>
         </div>
     );
-};
+});
 
 export default Finish;
