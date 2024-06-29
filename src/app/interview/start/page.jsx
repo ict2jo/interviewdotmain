@@ -95,7 +95,7 @@ const Start = () => {
             formData.append('q_idx', questionData.q_idx);
             formData.append('question', questionData.question);
 
-            const response = await fetch('http://192.168.0.22:8010/video/', {
+            const response = await fetch('http://localhost:8010/video/', {
                 method: 'POST',
                 body: formData,
             });
@@ -150,7 +150,7 @@ const Start = () => {
                             </p>
                         </div>
                         <div className="my_camera">
-                            <Webcam width={'100%'} audio={true} ref={webcamRef} screenshotFormat="image/jpeg" />
+                            <Webcam width={'900vh'} audio={true} ref={webcamRef} screenshotFormat="image/jpeg" />
                         </div>
                         {!isRecording && (
                             <Button onClick={handleRecordButtonClick} variant="outlined" className="record_button">

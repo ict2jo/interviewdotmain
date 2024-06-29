@@ -63,9 +63,9 @@ const Question = observer(() => {
     const paginatedQuestions = questions.slice(startIndex, endIndex);
 
     return (
-        <div className="container">
-            <div className="white_box">
-                <div className="title">
+        <div className="q_container">
+            <div className="q_white_box">
+                <div className="q_title">
                     <h1>질문 리스트</h1>
                     <span>최대 10개의 질문을 선택 하실 수 있습니다.</span>
                 </div>
@@ -77,7 +77,7 @@ const Question = observer(() => {
                             className={`question_box ${questionStore.selectedQuestions.includes(question) ? 'selected' : ''}`}
                             onClick={() => handleClick(question)}
                         >
-                            {question.q_idx} {question.question}
+                            {question.question}
                         </div>
                     ))}
                 </div>
