@@ -85,20 +85,7 @@ const SuccessPage = observer(() => {
                         </div>
                     </div>
 
-                    <div className="w-100 button-group">
-                        <div className="flex" style={{ gap: '16px' }}>
-                            <a className="btn w-100" href="https://developers.tosspayments.com/sandbox">
-                                다시 테스트하기
-                            </a>
-                            <a
-                                className="btn w-100"
-                                href="https://docs.tosspayments.com/guides/payment-widget/integration"
-                                target="_blank"
-                                rel="noopner noreferer">
-                                결제 연동 문서가기
-                            </a>
-                        </div>
-                    </div>
+                    
                 </div>
             ) : (
                 <div className="flex-column align-center confirm-loading w-100 max-w-540">

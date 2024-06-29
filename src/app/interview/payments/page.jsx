@@ -5,15 +5,10 @@ import './payments.css'
 import userStore from '@/stores/UserStore';
 
 export default function Payments() {
-    const [activeIndex, setActiveIndex] = useState(null);
     const [count, setCount] = useState(1);
     const basePrice = 0;
 
     console.log("ppppppppid"+userStore.id);
-    
-    const handleClick = (index) => {
-        setActiveIndex(index);
-    };
 
     const handlePurchaseClick = (price) => {
         const purchaseUrl = `toss/?price=${price}`;

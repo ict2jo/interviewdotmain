@@ -43,7 +43,7 @@ export default function PayStatus() {
                 {loading ? ( // 데이터 로딩 중일 때
                     <p>로딩중...</p>
                 ) : payments.length === 0 ? ( // 결제 내역이 없을 때
-                    <p>구매 이력이 없습니다.</p>
+                    <p>이용권 구매 이력이 없습니다.</p>
                 ) : (
                     payments.map((payment, index) => (
                         <div className='payStatus_t' key={index}>
