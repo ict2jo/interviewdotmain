@@ -1,17 +1,15 @@
-'use client';
-
-import { useEffect, useState } from 'react';
+"use client";
+import {useEffect, useState} from 'react';
 import {useParams, useRouter} from 'next/navigation';
 import userStore from "@/stores/UserStore";
 import Header from "@/app/_components/Header";
 import Footer from "@/app/_components/Footer";
 import "./historydetail.css";
-import { styled } from '@mui/material/styles';
+import {styled} from '@mui/material/styles';
 import Box from '@mui/material/Box';
 import Paper from '@mui/material/Paper';
 import Grid from '@mui/material/Grid';
 import menuStore from "@/stores/MenuStore";
-
 
 export default function Historydetail() {
     const params = useParams();
@@ -20,19 +18,14 @@ export default function Historydetail() {
     const [detail, setDetail] = useState([]);
     const [loading, setLoading] = useState(true);
 
-
-    const Item = styled(Paper)(({ theme }) => ({
+    const Item = styled(Paper)(({theme}) => ({
         backgroundColor: theme.palette.mode === 'dark' ? '#1A2027' : '#ffffff',
         ...theme.typography.body2,
         padding: theme.spacing(2),
         color: theme.palette.text.secondary,
-        height: '100%',
+        marginBottom: theme.spacing(2),
     }));
 
-    const handleMenuClick = (menu) => {
-        menuStore.setSelectedMenu(menu);
-        router.push("/");
-    };
 
     useEffect(() => {
         if (id) {
@@ -52,44 +45,63 @@ export default function Historydetail() {
         }
     };
 
-
     return (
-        <div className="history_container">
-            <Header handleMenuClick = {handleMenuClick}/>
-            <h1>면접 상세 정보</h1>
-            {loading ? (
-                <p>로딩중...</p>
-            ) : detail.length > 0 ? (
-                detail.map((item, history_value) => (
-                    <div className="history_box" key={history_value}>
-                        <Box sx={{flexGrow: 1}}>
-                            <Grid container spacing={0.5}>
-                                <Grid item xs={10}>
-                                    <Item>질문: {item.question}</Item>
-                                </Grid>
-                                <Grid item xs={1}>
-                                    <Item>감정: {item.sentiment}</Item>
-                                </Grid>
-                                <Grid item xs={1}>
-                                    <Item>감정: {item.sentiment}</Item>
-                                </Grid>
-                                <Grid item xs={6}>
-                                    <Item>답변: {item.text}</Item>
-                                </Grid>
-                                <Grid item xs={6}>
-                                    <Item>AI답변 들어갈곳</Item>
-                                </Grid>
-                                <Grid item xs={12}>
-                                    <Item>동영상 가지고 와볼까</Item>
-                                </Grid>
-                            </Grid>
-                        </Box>
-                    </div>
-                ))
-            ) : (
-                <p>ERROR</p>
-            )}
+        <>
+            <Header/>
+            <div className="history_container">
+                <h1>면접 상세 정보</h1>
+                {loading ? (
+                    <p>로딩중...</p>
+                ) : detail.length > 0 ? (
+                    detail.map((item, index) => (
+                        <div className="history_box" key={index}>
+                            <Box sx={{marginBottom: 2}}>
+                                <Item>
+                                    <Grid container spacing={2}>
+                                        <Grid item xs={12} sm={12}>
+                                            <div className="item-label">질문</div>
+                                            <div className="item-content">{item.question}</div>
+                                        </Grid>
+                                        <Grid item xs={12} sm={6}>
+                                            <div className="item-label">자세</div>
+                                            <div className="item-content">{item.pose_results}</div>
+                                            <div className="item-label">감정</div>
+                                            <div className="item-content">{item.sentiment}</div>
+                                        </Grid>
+                                        <Grid item xs={12} sm={6}>
+                                            <div className="item-label">답변</div>
+                                            <div className="item-content">{item.text}</div>
+                                            <div className="item-label">AI 답변</div>
+                                            <div className="item-content">{item.campus}</div>
+                                        </Grid>
+                                        <Grid item xs={12} sm={6}>
+                                            <div className="item-label">질문 의도</div>
+                                            <div className="item-content">{item.intention}</div>
+                                        </Grid>
+                                        <Grid item xs={12} sm={6}>
+                                            <div className="item-label">AI 피드백</div>
+                                            <div className="item-content">{item.feedback}</div>
+                                        </Grid>
+                                        <Grid item xs={12} sm={6}>
+                                            <div className="item-label">영상</div>
+                                            <div className="item-content">
+                                                <video width="100%" controls>
+                                                    <source src={`http://localhost:8010/video_get/${item.video_uuid}`}
+                                                            type="video/mp4"/>
+                                                </video>
+                                            </div>
+                                        </Grid>
+                                    </Grid>
+                                </Item>
+                            </Box>
+                        </div>
+                    ))
+                ) : (
+                    <p>ERROR</p>
+                )}
+            </div>
             <Footer/>
-        </div>
+        </>
+
     );
 }
