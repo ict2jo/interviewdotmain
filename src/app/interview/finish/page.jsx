@@ -4,46 +4,103 @@ import React, { useEffect, useState } from 'react';
 import CircularProgress from '@mui/material/CircularProgress';
 import './finish.css';
 import { Button } from "@mui/material";
-import { observer } from "mobx-react-lite";
-import userStore from "@/stores/UserStore";
 
-const Finish = observer(() => {
+const Finish = () => {
     const [results, setResults] = useState([]);
     const [loading, setLoading] = useState(true);
-    console.log(userStore.id);
+    const [responses, setResponses] = useState({}); // responses 상태 추가
+
     useEffect(() => {
-        const fetchResults = async () => {
+        const fetchAssistantResponses = async () => {
+            setLoading(true);
+
             try {
                 const storedResults = JSON.parse(localStorage.getItem('interviewResults')) || [];
-                setResults(storedResults);
-                setLoading(false);
+                setResults(storedResults); 
+
+                // 모든 면접 결과에 대해 API 호출 및 응답 받기
+                const allResponses = await Promise.all(storedResults.map(async (result, index) => {
+                    const { question, text } = result;
+
+                    // 질문 의도 분석
+                    const intentionResponse = await fetch('/api/generate2', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify({ question, type: 'Intention' }),
+                    });
+
+                    const intentionData = await intentionResponse.json();
+                    if (!intentionResponse.ok) {
+                        throw new Error(intentionData.error || `Request failed with status ${intentionResponse.status}`);
+                    }
+
+                    // 답변 피드백
+                    const feedbackResponse = await fetch('/api/generate2', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify({ text, question, type: 'feedback' }),
+                    });
+
+                    const feedbackData = await feedbackResponse.json();
+                    if (!feedbackResponse.ok) {
+                        throw new Error(feedbackData.error || `Request failed with status ${feedbackResponse.status}`);
+                    }
+
+                    // 맞춤법 교정
+                    const campusResponse = await fetch('/api/generate2', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify({ text, type: 'campus' }),
+                    });
+
+                    const campuskData = await campusResponse.json();
+                    if (!campusResponse.ok) {
+                        throw new Error(campuskData.error || `Request failed with status ${campusResponse.status}`);
+                    }
+
+                    return { index, intention: intentionData.answer, feedback: feedbackData.answer, campus: campuskData.answer };
+                }));
+
+                // API 응답을 상태로 설정
+                const newResponses = {};
+                allResponses.forEach(response => {
+                    newResponses[response.index] = {
+                        intention: response.intention,
+                        feedback: response.feedback,
+                        campus: response.campus,
+                    };
+                });
+
+                setResponses(newResponses); 
             } catch (error) {
-                console.error('결과를 못받아왔어용');
+                console.error('Error:', error);
+                alert(error.message);
+            } finally {
+                setLoading(false); // 로딩 완료
             }
         };
 
-        fetchResults();
-    }, []);
+        fetchAssistantResponses(); 
 
-    if (loading) {
-        return (
-            <div className="finish_container">
-                <CircularProgress />
-            </div>
-        );
-    }
+    }, []);
 
     const handleQuit = () => {
         try {
             localStorage.removeItem('interviewResults');
             console.log("삭제완료");
             window.close();
-        } catch (error){
-            console.log(error);
+        } catch (error) {
+            console.log(error)
         }
     };
 
-    console.log("result : " , results)
+
     const handleSave = async () => {
         try {
             const token = localStorage.getItem('token');
@@ -78,24 +135,40 @@ const Finish = observer(() => {
         }
     };
 
-
-
-
+    if (loading) {
+        return (
+            <div className="finish_container">
+                <CircularProgress />
+            </div>
+        );
+    }
 
     return (
         <div className="finish_container">
-            <h1>면접 결과 안내</h1>
-            <ul>
+            <ul className="results_list">
+                <h1 style={{ textAlign: "center" }}>면접 결과</h1>
                 {results.map((result, index_result) => (
-                    <li key={index_result}>
-                        <p>질문 :  {result.question}</p>
-                        <p>텍스트: {result.text}</p>
-                        <p>포즈 결과: {result.pose_results}</p>
-                        <p>감정 분석: {result.sentiment}</p>
+                    <li key={index_result} className="result_item">
+                        <div className='result_content'>
+                            <div className='left_content'>
+                                <h3>연습 {index_result + 1}</h3>
+                                <span>질문</span> <p>{result.question}</p>
+                                <span>나의 답변</span> <p>{result.text}</p>
+                                <span>나의 답변 교정</span> <p>{responses[index_result] && responses[index_result].campus}</p>
+                            </div>
+                            <div className='right_content'>
+                                <h3>AI 분석 레포트</h3>
+                                <span>포즈 결과</span> <p>{result.pose_results}</p>
+                                <span>감정 분석</span> <p>{result.sentiment}</p>
+                                <span>질문 의도 분석</span> <p>{responses[index_result] && responses[index_result].intention}</p>
+                                <span>답변 피드백</span> <p>{responses[index_result] && responses[index_result].feedback}</p>
+                            </div>
+                        </div>
                     </li>
                 ))}
             </ul>
-            <div>
+
+            <div className="buttons_container">
                 <Button onClick={handleQuit} variant="outlined" className="quit_button">나가기</Button>
                 <Button onClick={handleSave} variant="contained" className="save_button">저장하기</Button>
             </div>

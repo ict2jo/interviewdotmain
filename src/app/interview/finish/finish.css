@@ -1,21 +1,84 @@
-.finish_container{
+.finish_container {
     display: flex;
     flex-direction: column;
     align-items: center;
-    margin: 50px auto 0 auto; /* 상, 좌우, 하 */
 }
 
-.finish_container h1{
+.results_list {
+    width: 80%;
+    list-style-type: none;
+    padding: 0;
+}
+
+.result_item {
+    margin: 50px 0;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 10px;
+}
+
+.result_content {
+    display: flex;
+    justify-content: space-between;
+}
+
+.left_content, .right_content {
+    flex: 1;
+    padding: 10px;
+}
+
+.left_content {
+    background-color: lightgray;
+    border-radius: 10px;
+    margin-right: 10px;
+}
+
+.right_content {
+    background-color: lightgray;
+    border-radius: 10px;
+    padding-left: 20px;
+}
+
+.left_content h3, .right_content h3{
+    font-size: 25px;
+    margin-bottom: 20px;
+    border-bottom: 1px solid gray;
+}
+
+.finish_container h1 {
     font-size: 32px;
 }
 
-.finish_container ul{
-    text-align: center;
+.finish_container ul {
+    text-align: left;
     width: 80%;
-    max-width: 1200px;
-    margin: 0 auto;
+    margin: 20px auto;
     padding: 20px;
     background-color: #ffffff;
     border-radius: 10px;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+.finish_container span {
+    padding: 5px;
+    color: blue;
+    border-radius: 10px;
+    font-weight: bold;
+}
+
+.finish_container p {
+    background-color: white;
+    border: 1px solid gray;
+    border-radius: 10px;
+    padding: 10px;
+    margin: 5px 0 15px 0;
+}
+
+.buttons_container {
+    margin-top: 20px;
+    text-align: center;
+}
+
+.buttons_container button {
+    margin: 5px;
 }

@@ -6,6 +6,7 @@ import Interview_result_submenu from "./interview_result_submenu";
 import { MenuContext } from "@/stores/StoreContext";
 import { Typography } from "@mui/material";
 import Resume_submenu from "./Resume_submenu";
+import AI_submenu from "./AI_submenu";
 
 export default function Navigation() {
   const [activeMenu, setActiveMenu] = useState(null);
@@ -34,15 +35,21 @@ export default function Navigation() {
   return (
     <nav className="z-10 text-xl">
       <ul className="flex gap-16 items-center">
-        <li className="whitespace-nowrap">
-          <Typography
-            className="hover:bg-primary-100 transition-colors cursor-pointer"
-            onClick={() => handleMenuClick("ai")}
-            onMouseEnter={() => handleMouseEnter("ai")}
-            onMouseLeave={() => handleMouseLeave()}
-          >
+        <li className="relative whitespace-nowrap cursor-pointer">
+          <div
+              onMouseEnter={() => handleMouseEnter("ai")}
+              onMouseLeave={() => handleMouseLeave()}
+            >
+            <Typography
+              className="block"
+              onClick={() => handleMenuClick("ai")}
+            >
             AI면접
-          </Typography>
+            </Typography>
+            {activeMenu === "ai" && (
+              <AI_submenu handleMenuClick={handleMenuClick} />
+            )}
+            </div>
         </li>
 
         <li className="relative whitespace-nowrap cursor-pointer">

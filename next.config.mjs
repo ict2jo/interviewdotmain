@@ -43,6 +43,14 @@ const nextConfig = {
       {
         source : "/interview/start",
         destination : "http://127.0.0.1:8010/video/"
+      },
+      {
+          source : "/review/reviewlist",
+          destination : "http://localhost:8080/review/reviewlist"
+      },
+      {
+        source : "/success/successlist",
+        destination : "http://localhost:8080/success/successlist"
       }
     ];
   },

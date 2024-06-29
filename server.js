@@ -1,10 +1,10 @@
-const express = require("express");
-const got = require("got");
+import express, { json as _json, urlencoded } from "express";
+import { post } from "got";
 
 const app = express();
 
-app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
+app.use(_json());
+app.use(urlencoded({ extended: true }));
 
 // TODO: 개발자센터에 로그인해서 내 결제위젯 연동 키 > 시크릿 키를 입력하세요. 시크릿 키는 외부에 공개되면 안돼요.
 // @docs https://docs.tosspayments.com/reference/using-api/api-keys
@@ -22,8 +22,7 @@ app.post("/confirm", function (req, res) {
   // 결제 승인 API를 호출하세요.
   // 결제를 승인하면 결제수단에서 금액이 차감돼요.
   // @docs https://docs.tosspayments.com/guides/payment-widget/integration#3-결제-승인하기
-  got
-    .post("https://api.tosspayments.com/v1/payments/confirm", {
+  post("https://api.tosspayments.com/v1/payments/confirm", {
       headers: {
         Authorization: "test_sk_6bJXmgo28ewgnlNybNGMVLAnGKWx",
         "Content-Type": "application/json",

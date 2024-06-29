@@ -13,10 +13,10 @@ export default function Review_Community() {
     
     
     const handleReviewList = () => {
-        router.push("review/review_list")
+        router.push("review/reviewList")
     };
     const handleSuccess = () => {
-        router.push("review/review_success")
+        router.push("review/successList")
     };
 
 
