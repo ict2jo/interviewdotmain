@@ -1,24 +1,14 @@
 import { makeAutoObservable } from "mobx";
 import authStore from "./AuthStore";
 
-
-//const user = authStore.getUser();
+import userStore from "@/stores/UserStore";
 
 class MenuStore {
-    selectedMenu = "main";  // 선택된 메뉴
+    selectedMenu = 
+    localStorage.getItem("selectedMenu") || "main"
+    ;  // 선택된 메뉴
     isAuthenticated = false;     // 사용자 인증상태
     token = null;
-    uvolist = {
-        id: 'user.id',
-        name: 'user.name',
-        phonenumber: 'user.phonenumber',
-        email: 'user.email',
-        p_job: '',
-        p_class: '',
-        p_career: '',
-        p_location: '',
-        Field: ''
-    };
     constructor() {
         // MobX 스토어를 자동으로 관찰 가능하게 설정
         makeAutoObservable(this);
@@ -33,10 +23,6 @@ class MenuStore {
     setInquiryList(inquiryList) {
         this.inquiryList = inquiryList;
         localStorage.setItem('inquiryList', inquiryList);
-    }
-    setUvoList(uvolist) {
-        this.uvolist = uvolist;
-        localStorage.setItem("uvolist", uvolist);
     }
 }
 
