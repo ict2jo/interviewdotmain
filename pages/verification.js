@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import './verification.css'; 
+import userStore from '@/stores/UserStore';
 
 export default function Verification() {
   const [question, setQuestion] = useState('');
@@ -96,7 +97,7 @@ export default function Verification() {
             <div className="header">사용자</div>
             <form className="input-section" onSubmit={(e) => e.preventDefault()}>
               <textarea
-                value={question}
+                value={userStore.field}
                 onChange={(e) => setQuestion(e.target.value)}
                 placeholder="자기소개서 내용을 입력하세요."
                 disabled={inputDisabled || loading}

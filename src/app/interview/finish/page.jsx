@@ -9,7 +9,7 @@ import userStore from "@/stores/UserStore";
 const Finish = () => {
     const [results, setResults] = useState([]);
     const [loading, setLoading] = useState(true);
-    const [responses, setResponses] = useState({}); // responses 상태 추가
+    const [responses, setResponses] = useState({}); 
 
     useEffect(() => {
         const fetchAssistantResponses = async () => {
@@ -17,7 +17,7 @@ const Finish = () => {
 
             try {
                 const storedResults = JSON.parse(localStorage.getItem('interviewResults')) || [];
-                setResults(storedResults); 
+                setResults(storedResults);
 
                 // 모든 면접 결과에 대해 API 호출 및 응답 받기
                 const allResponses = await Promise.all(storedResults.map(async (result, index) => {
@@ -78,7 +78,7 @@ const Finish = () => {
                     };
                 });
 
-                setResponses(newResponses); 
+                setResponses(newResponses);
             } catch (error) {
                 console.error('Error:', error);
                 alert(error.message);
@@ -87,9 +87,10 @@ const Finish = () => {
             }
         };
 
-        fetchAssistantResponses(); 
+        fetchAssistantResponses();
 
     }, []);
+    
 
     const handleQuit = () => {
         try {
@@ -159,14 +160,14 @@ const Finish = () => {
                                 <h3>질문 {index_result + 1}</h3>
                                 <span>질문</span> <p>{result.question}</p>
                                 <span>나의 답변</span> <p>{result.text}</p>
-                                <span>나의 답변 교정</span> <p>{responses[index_result] && responses[index_result].campus}</p>
+                                <span>나의 답변 교정</span> <p dangerouslySetInnerHTML={{ __html: responses[index_result] && responses[index_result].campus }} />
                             </div>
                             <div className='right_content'>
                                 <h3>AI 분석 레포트</h3>
                                 <span>포즈 결과</span> <p>{result.pose_results}</p>
                                 <span>감정 분석</span> <p>{result.sentiment}</p>
-                                <span>질문 의도 분석</span> <p>{responses[index_result] && responses[index_result].intention}</p>
-                                <span>답변 피드백</span> <p>{responses[index_result] && responses[index_result].feedback}</p>
+                                <span>질문 의도 분석</span> <p dangerouslySetInnerHTML={{ __html: responses[index_result] && responses[index_result].intention }} />
+                                <span>답변 피드백</span> <p dangerouslySetInnerHTML={{ __html: responses[index_result] && responses[index_result].feedback }} />
                             </div>
                         </div>
                     </li>
@@ -179,6 +180,6 @@ const Finish = () => {
             </div>
         </div>
     );
-}
+};
 
 export default Finish;

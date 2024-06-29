@@ -27,8 +27,6 @@ const CheckoutPage = observer(() => {
             return priceParam ? parseInt(priceParam, 10) : null; // null로 초기화
         };
 
-        
-
         // 페이지 로드 시 price 상태 업데이트
         setPrice(getPriceFromUrl());
 
@@ -78,12 +76,11 @@ const CheckoutPage = observer(() => {
             await paymentWidget?.requestPayment({
                 orderId,
                 orderName,
-                value: price, // 실제 결제할 금액을 설정해야 합니다.
+                value: price,
                 successUrl: window.location.origin + '/sandbox/success' + window.location.search,
                 failUrl: window.location.origin + '/sandbox/fail' + window.location.search,
             });
 
-            console.log(u_idx);
             // 결제 성공 시 서버로 u_idx와 orderId 전송
             await axios.post('/payments/confirm', {
                 orderId,
