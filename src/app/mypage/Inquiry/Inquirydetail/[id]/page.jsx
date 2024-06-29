@@ -6,28 +6,24 @@ import axios from 'axios';
 import { Button, FormControl, Typography, CircularProgress } from '@mui/material';
 import { MenuContext } from '@/stores/StoreContext';
 import { observer } from 'mobx-react-lite';
-import Header from '@/app/_components/Header';
 import Footer from '@/app/_components/Footer';
-import { useRouter, useSearchParams } from 'next/navigation';
 import './inquirydetail.css';
+import userStore from "@/stores/UserStore";
 
-const Inquirydetail = observer(() => {
+const Inquirydetail= observer(({i_idx}) => {
   const menuStore = useContext(MenuContext);
-  const router = useRouter();
-  const searchParams = useSearchParams();
-  const id = searchParams.get('id');
   const [loading, setLoading] = useState(true);
   const [ivo, setIvo] = useState({
     i_subject: '',
     i_content: '',
-    i_idx: id // id를 초기값으로 설정합니다.
+    id: userStore.id,
+    i_idx : i_idx
   });
   
-  const API_URL = `/mypage/inquirydetail?i_idx=${id}`;
+  const API_URL = `/mypage/inquirydetail?i_idx=${i_idx}`;
   
   const fetchData = () => {
       axios.get(API_URL).then((data)=>{
-        console.log(data.data)
         setIvo(data.data[0]);
         setLoading(false);
       })
@@ -41,14 +37,13 @@ const Inquirydetail = observer(() => {
   useEffect(() => {
     fetchData();
     console.log(ivo)
-  }, [id]); // id가 변경될 때마다 데이터를 다시 가져옵니다.
+  }, [i_idx]); // id가 변경될 때마다 데이터를 다시 가져옵니다.
 
   const deleteInquiry = async () => {
     try {
       await axios.post(`/mypage/inquirydelete?i_idx=${ivo.i_idx}`);
       alert("문의가 삭제되었습니다.");
       menuStore.setSelectedMenu('inquiry');
-      router.push("/");
     } catch (error) {
       alert("문의 삭제에 실패했습니다.");
       console.error("문의 삭제 중 오류가 발생했습니다:", error);
@@ -59,10 +54,6 @@ const Inquirydetail = observer(() => {
     menuStore.setSelectedMenu(menu);
   };
   
-  const handleEditClick = () => {
-    router.push(`/mypage/Inquiry/Inquiryedit?id=${ivo.i_idx}`);
-  };
-
   const renderContent = () => {
     if (loading) {
       return <CircularProgress />;
@@ -85,9 +76,9 @@ const Inquirydetail = observer(() => {
           </Typography>
           </div>
           <div className='inquirybut'>
-          <Button variant='contained' onClick={handleEditClick}>수정하기</Button>
+          <Button variant='contained' onClick={() => {handleMenuClick(`inquiryedit/${ivo.i_idx}`);}}>수정하기</Button>
           <Button variant='outlined' onClick={deleteInquiry}>삭제하기</Button>
-          <Button variant='outlined' onClick={() => {handleMenuClick("inquiry"); router.push("/");}}>목록으로</Button>
+          <Button variant='outlined' onClick={() => {handleMenuClick("inquiry");}}>목록으로</Button>
           </div>
         </div>
         </FormControl>
@@ -98,7 +89,6 @@ const Inquirydetail = observer(() => {
 
   return (
     <>
-      <Header />
       {renderContent()}
     </>
   );

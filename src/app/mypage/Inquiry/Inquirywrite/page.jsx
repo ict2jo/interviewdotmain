@@ -5,6 +5,7 @@ import { MenuContext } from '@/stores/StoreContext';
 import { observer } from 'mobx-react-lite';
 import './inquirywrite.css';
 import Footer from '@/app/_components/Footer';
+import userStore from '@/stores/UserStore';
 
 const Inquirywrite = observer(() => {
   const menuStore = useContext(MenuContext);
@@ -12,6 +13,7 @@ const Inquirywrite = observer(() => {
   const [ivo, setIvo] = useState({
     i_subject: '',
     i_content: '',
+    id: userStore.id
   });
 
   async function write() {
@@ -49,7 +51,7 @@ const Inquirywrite = observer(() => {
         </div>
           <div className='inquirybut'>
           <Button variant='contained' onClick={write}>작성완료</Button>
-          <Button variant='outlined' onClick={() => {handleMenuClick("inquiry"); router.push("/");}}>목록으로</Button>
+          <Button variant='outlined' onClick={() => {handleMenuClick("inquiry");}}>목록으로</Button>
           </div>
         </div>
         </FormControl>

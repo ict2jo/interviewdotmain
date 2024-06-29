@@ -31,7 +31,9 @@ import CheckoutPage from "./sandbox/checkout/page";
 import Payments from "./interview/payments/page";
 import PayDetail from "./interview/payDetail/page";
 import PayStatus from "./interview/payStatus/page";
-
+import Recruitmentdetail from "./job/recruitment/detail/[id]/page";
+import Inquirydetail from "./mypage/Inquiry/Inquirydetail/[id]/page";
+import Myrecruitment from "./mypage/Myrecruitment/page";
 
 
 function Home() {
@@ -51,6 +53,18 @@ function Home() {
   }, []);
 
   const renderContent = () => {
+    if (menuStore.selectedMenu.startsWith('detail/')) {
+      const recrutPblntSn = menuStore.selectedMenu.split('/')[1];
+      return <Recruitmentdetail recrutPblntSn={recrutPblntSn} />;
+    }
+    if (menuStore.selectedMenu.startsWith('inquirydetail/')) {
+      const i_idx = menuStore.selectedMenu.split('/')[1];
+      return <Inquirydetail i_idx={i_idx} />;
+    }
+    if (menuStore.selectedMenu.startsWith('inquiryedit/')) {
+      const i_idx = menuStore.selectedMenu.split('/')[1];
+      return <Inquiryedit i_idx={i_idx} />;
+    }
     switch (menuStore.selectedMenu) {
       case "main":
         return <Main />;
@@ -110,6 +124,8 @@ function Home() {
         return <Login />;
       case "createUser":
         return <CreateUser />;
+      case "myrecruitment":
+        return <Myrecruitment />;
       default:
         return <Loading />;
     }

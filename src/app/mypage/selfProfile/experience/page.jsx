@@ -4,6 +4,7 @@ import MenuItem from '@mui/material/MenuItem';
 import FormControl from '@mui/material/FormControl';
 import Select from '@mui/material/Select';
 import InputLabel from '@mui/material/InputLabel';
+import { Typography } from '@mui/material';
 
 const ITEM_HEIGHT = 28;
 const ITEM_PADDING_TOP = 2;
@@ -24,21 +25,29 @@ const experience = [
 ];
 
 export default function Experience({ uvo, handleCareerlistChange }) {
-  const [p_career, setP_career] = React.useState(uvo.p_career || ''); // 기존 값 유지
+  const [p_career, setP_career] = React.useState([]);
+  React.useEffect(() => {
+    if (uvo.p_career) {
+      setP_career(uvo.p_career.split(','));
+    } else {
+      setP_career([]);
+    }
+  }, [uvo.p_class]);
 
   const handleChange = (event) => {
     const { value } = event.target;
     setP_career(value);
-    handleCareerlistChange(value);
+    handleCareerlistChange(value.join(',').replace(/^,/, '')); // 선택된 값 변경 시 부모 컴포넌트에 전달
   };
 
   return (
     <FormControl sx={{ m: 0, width: 683.5 }}>
-      <InputLabel id="demo-multiple-name-label">경력을 선택하세요</InputLabel>
+      <InputLabel id="experience-label">경력을 선택하세요</InputLabel>
       <Select
-        labelId="demo-multiple-name-label"
-        id="demo-multiple-name"
+        labelId="experience-label"
+        id="experience-select"
         value={p_career}
+        multiple
         onChange={handleChange}
         input={<OutlinedInput label="p_career" />}
         MenuProps={MenuProps}
@@ -49,6 +58,9 @@ export default function Experience({ uvo, handleCareerlistChange }) {
           </MenuItem>
         ))}
       </Select>
+      <Typography variant="body2" color="textSecondary">
+        선택된 경력: {p_career}
+      </Typography>
     </FormControl>
   );
 }
