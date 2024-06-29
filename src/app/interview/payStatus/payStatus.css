@@ -1,0 +1,99 @@
+.pay_container {
+    border-radius: 20px;
+    padding: 50px;
+    width: 80%;
+    margin: 0 auto;
+    max-width: 1200px; 
+    height: auto; 
+}
+
+.pay_container h1 {
+    font-size: 25px;
+    font-weight: bold;
+    margin-bottom: 30px;
+    border-bottom: 1px solid lightgray;
+    padding-bottom: 10px;
+}
+
+.payStatus {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+}
+
+.payStatus_t {
+    flex: 0 1 calc(30% - 20px); 
+    margin-bottom: 20px; 
+    background-color: #f9f9f9;
+    border: 1px solid #ccc;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.yellow-background {
+    background-color: yellow;
+    border-top-left-radius: 10px;
+    border-top-right-radius: 10px;
+    padding: 20px;
+    text-align: center;
+    font-size: 25px; 
+    font-weight: bold;
+    color: white;
+}
+
+.blue-background {
+    background-color: lightblue;
+    border-top-left-radius: 10px;
+    border-top-right-radius: 10px;
+    padding: 20px;
+    text-align: center;
+    font-size: 25px; 
+    font-weight: bold;
+    color: white;
+}
+.pink-background {
+    background-color: lightpink;
+    border-top-left-radius: 10px;
+    border-top-right-radius: 10px;
+    padding: 20px;
+    text-align: center;
+    font-size: 25px; 
+    font-weight: bold;
+    color: white;
+}
+
+
+.payStatus_inner {
+    padding: 20px;
+    text-align: center;
+    border-bottom-left-radius: 10px;
+    border-bottom-right-radius: 10px;
+}
+
+.payStatus p {
+    margin: 55px 0;
+}
+
+.payStatus button {
+    background-color: lightgray;
+    color: black;
+    border: none;
+    border-radius: 30px;
+    padding: 10px 20px; 
+    cursor: default; 
+    font-size: 16px; 
+    width: 70%;
+    margin: 10px auto; 
+}
+
+@media (max-width: 992px) {
+    .payStatus_t {
+        flex-basis: calc(50% - 20px);
+    }
+}
+
+@media (max-width: 768px) {
+    .payStatus_t {
+        flex-basis: calc(100% - 20px);
+    }
+}

@@ -29,6 +29,8 @@ import Inquiryedit from "./mypage/Inquiry/Inquiryedit/page";
 import Loading from "./loading/page";
 import CheckoutPage from "./sandbox/checkout/page";
 import Payments from "./interview/payments/page";
+import PayDetail from "./interview/payDetail/page";
+import PayStatus from "./interview/payStatus/page";
 import Recruitmentdetail from "./job/recruitment/detail/[id]/page";
 import Inquirydetail from "./mypage/Inquiry/Inquirydetail/[id]/page";
 import Myrecruitment from "./mypage/Myrecruitment/page";
@@ -70,6 +72,10 @@ function Home() {
         return <Starthome />;
       case "payments":
         return <Payments />;  
+      case "payDetail":
+        return <PayDetail />;  
+      case "payStatus":
+        return <PayStatus />;  
       case "verification":
         return <Verification />;
       case "Airesult":

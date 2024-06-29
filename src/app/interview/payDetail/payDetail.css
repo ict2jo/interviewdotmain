@@ -1,0 +1,36 @@
+.detail {
+    width: 80%;
+    max-width: 1200px;
+    margin: 20px auto;
+    text-align: left;
+    height: 500px;
+}
+
+.detail h1 {
+    font-size: 25px;
+    font-weight: bold;
+    margin-bottom: 10px;
+}
+
+.detail_t {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.detail_t table {
+    width: 100%;
+    border-top: 1px solid lightgray;
+    border-collapse: collapse;
+    margin: 0 auto;
+}
+
+.detail_t table tr {
+    border-top: 1px solid lightgray;
+    border-bottom: 1px solid lightgray;
+}
+
+.detail_t table th, .detail_t table td {
+    padding: 15px;
+    text-align: center;
+}
