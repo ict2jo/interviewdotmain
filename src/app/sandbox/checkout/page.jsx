@@ -5,9 +5,8 @@ import { loadPaymentWidget, ANONYMOUS } from '@tosspayments/payment-widget-sdk';
 import { observer } from 'mobx-react-lite';
 import axios from 'axios';
 import '../style.css';
-import authStore from '@/stores/AuthStore';
-import { MenuContext } from '@/stores/StoreContext';
 import userStore from '@/stores/UserStore';
+
 const generateRandomString = () => window.btoa(Math.random()).slice(0, 20);
 
 const CheckoutPage = observer(() => {
@@ -17,8 +16,7 @@ const CheckoutPage = observer(() => {
     const [price, setPrice] = useState(null);
     const clientKey = process.env.NEXT_PUBLIC_TOSS_CLIENT_KEY;
 
-    console.log("CCCCCCid"+userStore.id);
-
+    
     useEffect(() => {
         // URL에서 query parameter를 추출하여 price 상태 업데이트
         const getPriceFromUrl = () => {
@@ -26,13 +24,14 @@ const CheckoutPage = observer(() => {
             const priceParam = params.get('price');
             return priceParam ? parseInt(priceParam, 10) : null; // null로 초기화
         };
-
+        
         // 페이지 로드 시 price 상태 업데이트
         setPrice(getPriceFromUrl());
-
+        
     }, []);
-
+    
     useEffect(() => {
+        console.log("CCCCCCid"+userStore.id);
         if (price !== null) {
             // Toss Payments SDK 로드 및 초기화
             const loadPayment = async () => {
@@ -63,6 +62,8 @@ const CheckoutPage = observer(() => {
         }
     }, [price]);
 
+
+    // 구매하기
     const handlePaymentRequest = async () => {
         const paymentWidget = paymentWidgetRef.current;
 

@@ -5,8 +5,7 @@ import userStore from "@/stores/UserStore";
 
 class MenuStore {
     selectedMenu = 
-    localStorage.getItem("selectedMenu") || "main"
-    ;  // 선택된 메뉴
+    localStorage.getItem("selectedMenu") || "main";  // 선택된 메뉴
     isAuthenticated = false;     // 사용자 인증상태
     token = null;
     constructor() {
