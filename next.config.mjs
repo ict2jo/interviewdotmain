@@ -51,7 +51,11 @@ const nextConfig = {
       {
         source : "/success/successlist",
         destination : "http://localhost:8080/success/successlist"
-      }
+      },
+      {
+        source : "/comments/comment",
+        destination : "http://localhost:8080/comments/comment"
+      },
     ];
   },
 };
