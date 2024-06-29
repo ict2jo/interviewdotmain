@@ -4,6 +4,7 @@ import React, { useEffect, useState } from 'react';
 import CircularProgress from '@mui/material/CircularProgress';
 import './finish.css';
 import { Button } from "@mui/material";
+import userStore from "@/stores/UserStore";
 
 const Finish = () => {
     const [results, setResults] = useState([]);
@@ -108,12 +109,16 @@ const Finish = () => {
 
             const requestBody = {
                 id: userStore.id,
-                results: results.map(result => ({
+                results: results.map((result,index) => ({
                     question: result.question,
                     text: result.text,
                     q_idx: result.q_idx,
                     pose_results: result.pose_results.toString(),
-                    sentiment: result.sentiment.toString()
+                    sentiment: result.sentiment.toString(),
+                    video_uuid:result.uuid_filename,
+                    intention: responses[index] ? responses[index].intention : '',
+                    feedback: responses[index] ? responses[index].feedback : '',
+                    campus: responses[index] ? responses[index].campus : ''
                 }))
             };
 
@@ -152,7 +157,7 @@ const Finish = () => {
                     <li key={index_result} className="result_item">
                         <div className='result_content'>
                             <div className='left_content'>
-                                <h3>연습 {index_result + 1}</h3>
+                                <h3>질문 {index_result + 1}</h3>
                                 <span>질문</span> <p>{result.question}</p>
                                 <span>나의 답변</span> <p>{result.text}</p>
                                 <span>나의 답변 교정</span> <p dangerouslySetInnerHTML={{ __html: responses[index_result] && responses[index_result].campus }} />

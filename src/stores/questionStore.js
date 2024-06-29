@@ -19,10 +19,10 @@ class QuestionStore {
         if (this.selectedQuestions.includes(question)) {
             this.selectedQuestions = this.selectedQuestions.filter(q => q !== question);
         } else {
-            if (this.selectedQuestions.length < 10) {
+            if (this.selectedQuestions.length < 3) {
                 this.selectedQuestions.push(question);
             } else {
-                alert("10개 이상 선택할 수 없습니다.");
+                alert("3개 이상 선택할 수 없습니다.");
             }
         }
     }

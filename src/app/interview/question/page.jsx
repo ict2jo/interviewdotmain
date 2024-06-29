@@ -49,7 +49,7 @@ const Question = observer(() => {
                 questionStore.setPage(nextPage); // 페이지를 변경해주어야 함
                 router.push(`/interview/start?category=${category}&q_idx=${q_idx}`);
             } else {
-                alert("선택하신 문항이 없습니다. 최소 1개 이상 선택해 주세요.");
+                alert("선택하신 문항이 없습니다. 3개 선택해 주세요.");
             }
         }
     };
@@ -63,11 +63,11 @@ const Question = observer(() => {
     const paginatedQuestions = questions.slice(startIndex, endIndex);
 
     return (
-        <div className="container">
-            <div className="white_box">
-                <div className="title">
+        <div className="q_container">
+            <div className="q_white_box">
+                <div className="q_title">
                     <h1>질문 리스트</h1>
-                    <span>최대 10개의 질문을 선택 하실 수 있습니다.</span>
+                    <span>최대 3개의 질문을 선택 하실 수 있습니다.</span>
                 </div>
                 <div className="count">{questionStore.selectedCount} / 10</div>
                 <div className="questions">
@@ -77,7 +77,7 @@ const Question = observer(() => {
                             className={`question_box ${questionStore.selectedQuestions.includes(question) ? 'selected' : ''}`}
                             onClick={() => handleClick(question)}
                         >
-                            {question.q_idx} {question.question}
+                            {question.question}
                         </div>
                     ))}
                 </div>
