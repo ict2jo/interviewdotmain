@@ -20,27 +20,34 @@ import {
     DialogContent,
     DialogActions,
     Button,
-    TextField
+    TextField,
+    Pagination
 } from "@mui/material";
+import userStore from "@/stores/UserStore";
+import { Box } from "@mui/system";
 
 export default function ReviewList() {
     const [reviewList, setReviewList] = useState([]);
-    const [selectedReview, setSelectedReview] = useState("");
+    const [selectedReview, setSelectedReview] = useState([]);
     const [openDialog, setOpenDialog] = useState(false);
     const [editingContent, setEditingContent] = useState(""); // 수정할 내용 상태 추가
-    const [commentList, setCommetList] = useState([]);
-    const [commentContent, setCommentContent] = useState(""); // 댓글 내용 상태 추가
     const [comments, setComments] = useState([]);
+    const [commentContent, setCommentContent] = useState(""); // 댓글 내용 상태 추가
+    const [page, setPage] = useState(1); // 현재 페이지 상태 추가
+    const [totalPages, setTotalPages] = useState(); // 전체 페이지 수 상태 추가
+    const reviewsPerPage = 9; // 한 페이지당 보일 리뷰 개수
 
 
     useEffect(() => {
-        fetchReviewList(); // 초기 데이터 불러오기
-    }, []);
+        fetchReviewList(page); // 초기 데이터 불러오기
+    }, [page]);
 
-    const fetchReviewList = async () => {
+    const fetchReviewList = async (page) => {
         try {
-            const response = await axios.get("/review/reviewlist");
+            console.log("id" + userStore.id);
+            const response = await axios.get(`/review/reviewlist?page=${page}&limit=${reviewsPerPage}`);
             setReviewList(response.data); // 서버에서 받은 데이터를 상태에 저장
+            setTotalPages(response.data.totalPages);
         } catch (error) {
             console.error("Error fetching review data:", error);
         }
@@ -59,7 +66,7 @@ export default function ReviewList() {
         fetchReviewList(); // async 함수 호출
     }, []);
 
-   
+
 
     const handleReviewClick = (review) => {
         setSelectedReview(review);
@@ -68,38 +75,42 @@ export default function ReviewList() {
         setOpenDialog(true);
     };
 
-    
-
-    
-
-
     useEffect(() => {
         console.log("selectedReview", selectedReview);
     }, [selectedReview])
 
+    useEffect(() => {
+        console.log("comments", comments);
+    }, [commentContent])
+
+
+    const fetchComments = async (r_idx) => {
+        try {
+            const response = await axios.get(`http://localhost:8080/comments/comment?r_idx=${r_idx}`);
+            setComments(response.data);
+            console.log("댓글 : ", response.data);
+            /* setCommentContent(response.data); */
+        } catch (error) {
+            console.error("Error fetching comments:", error);
+            setComments([]);
+        }
+    };
+
     const handlePostComment = async () => {
         try {
-            const response = await axios.post("http://localhost:8080/review/postcomment", {
+            const response = await axios.post("http://localhost:8080/comments/postcomment", {
                 r_idx: selectedReview.r_idx,
+                id: userStore.id,
                 re_content: commentContent
             });
-            console.log("Comment posted:", response.data);
-
-            const newComment = response.data;
-            console.log("새로운 댓글 들어가?" + response.data);
-
-            setComments([...comments, newComment]); // 댓글 목록에 새로운 댓글 추가
-            setCommentContent(""); // 댓글 입력 필드 초기화
-
+            console.log("Review updated:", response.data);
 
             // 댓글 작성 후 댓글 목록 다시 불러오기
-            fetchComments(selectedReview.r_idx);
-            console.log("댓글 목록 다시 불러와? " + selectedReview.r_idx);
+            // const updatedComments = await fetchComments(selectedReview.r_idx);
+            // setComments(updatedComments); // 댓글 목록에 새로운 댓글 추가
+            await fetchComments(selectedReview.r_idx);
 
-            const commentList = await fetchComments();
-
-            setCommetList(commentList);
-
+            setCommentContent(""); // 댓글 입력 필드 초기화  //
             handleCloseDialog(); // 팝업 창 닫기
 
 
@@ -107,6 +118,8 @@ export default function ReviewList() {
             console.error("Error posting comment:", error);
         }
     };
+
+
 
     const handleUpdate = async () => {
         try {
@@ -119,7 +132,6 @@ export default function ReviewList() {
 
             // 수정 후 리뷰 목록 다시 불러오기
             const updatedList = await fetchReviewListFromServer(); // 서버에서 업데이트된 목록을 다시 가져오기
-           
             setReviewList(updatedList); // 업데이트된 목록을 상태에 반영
             handleCloseDialog(); // 팝업 창 닫기
 
@@ -139,16 +151,7 @@ export default function ReviewList() {
         }
     };
 
-    const fetchComments = async (r_idx) => {
-        try {
-            const response = await axios.get(`http://localhost:8080/review/comments?r_idx=${r_idx}`);
-            return response.data;
-            /* setComments(response.data); */
-        } catch (error) {
-            console.error("Error fetching comments:", error);
-            return [];
-        }
-    };
+
 
     const handleDelete = async () => {
         try {
@@ -189,7 +192,7 @@ export default function ReviewList() {
 
     const handleWriteReview = () => {
         handleCloseDialog();
-        window.location.href = `/review/review_list_write?r_id=${selectedReview.r_id}`;
+        window.location.href = `/review/review_list_write?r_idx=${selectedReview.r_idx}`;
     }
 
     return (
@@ -228,9 +231,30 @@ export default function ReviewList() {
                             ))}
                         </TableBody>
                     </Table>
+                    <Box sx={{ display: 'flex', justifyContent: 'flex-end'}}>
                     <Button onClick={handleWriteReview} color="primary" style={{ textAlign: "center" }}>
                         작성하기
                     </Button>
+                    </Box>
+                    {/* 페이지네이션 */}
+                    <div style={{ display: 'flex', justifyContent: 'center', margin: '10px 0 25px 0' }}>
+                        <Box sx={{ display: 'flex', justifyContent: 'center', marginBottom: '20px' }}>
+                            <Pagination
+                                count={totalPages}
+                                page={page}
+                                onChange={(event, value) => setPage(value)}
+                                color="primary"
+                            />
+                        </Box>
+                    </div>
+                    {/* <Box sx={{display: "flex", justifyContent: "center", margin: '20px 0 20px 0'}}>
+                    <Pagination
+                        count={totalPages}
+                        page={page}
+                        onChange={(event, value) => setPage(value)}
+                        
+                    />
+                    </Box> */}
                 </Paper>
             </Container>
 
@@ -278,11 +302,12 @@ export default function ReviewList() {
                             ) : (
                                 <Table>
                                     <TableBody>
-                                        {comments.map((comment) => (
-                                            <TableRow key={comment.re_idx}>
-                                                <TableCell>{comment.re_idx}</TableCell>
-                                                <TableCell>{comment.re_content}</TableCell>
-                                                <TableCell>{comment.re_regdate}</TableCell>
+                                        {comments.map((comments) => (
+                                            <TableRow key={comments.re_idx}>
+                                                <TableCell>{comments.re_idx}</TableCell>
+                                                <TableCell>{comments.id}</TableCell>
+                                                <TableCell>{comments.re_content}</TableCell>
+                                                <TableCell>{comments.re_regdate}</TableCell>
                                             </TableRow>
                                         ))}
                                     </TableBody>
