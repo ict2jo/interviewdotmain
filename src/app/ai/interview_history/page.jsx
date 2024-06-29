@@ -90,7 +90,7 @@ export default function InterviewHistory() {
                     headers: {
                         'Content-Type': 'application/json',
                     },
-                    body: JSON.stringify({ r_idx: selectedIds }),
+                    body: JSON.stringify({ r_idx: selectedIds }), // JSON 데이터로 변경
                 });
 
                 if (response.ok) {
@@ -107,6 +107,8 @@ export default function InterviewHistory() {
             console.warn('선택된 항목이 없습니다.');
         }
     };
+
+
 
 
 
