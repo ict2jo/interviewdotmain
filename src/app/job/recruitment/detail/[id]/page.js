@@ -2,9 +2,9 @@
 import axios from 'axios';
 import { useEffect, useState } from 'react';
 
-export default function View(props) {
+export default function Recruitmentdetail({recrutPblntSn} ) {
     const [item, setItem] = useState({});
-    const id = props.params.id;
+    const id = recrutPblntSn ;
     //http://makeup-api.herokuapp.com/api/v1/products/488.json
     // 스트링이랑 객체값 같이 불러오고싶을때는 삐침(`) 사용하기
     const API_URL = `/recruitment/detail?serviceKey=B6imLe%2BFf%2B3fVWotgO%2BhgAihHyVI%2F7tlmTiqrvZifWgzl94sf9U4VL3GuwTIkEkjW3MsF%2BtQ3OnUHkqwMRmuMA%3D%3D&sn=${id}`;

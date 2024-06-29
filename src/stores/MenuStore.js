@@ -20,7 +20,6 @@ class MenuStore {
         Field: ''
     };
     constructor() {
-
         // MobX 스토어를 자동으로 관찰 가능하게 설정
         makeAutoObservable(this);
     }
@@ -28,6 +27,7 @@ class MenuStore {
     // 메뉴 변경 
     setSelectedMenu(menu) {
         this.selectedMenu = menu;
+        localStorage.setItem("selectedMenu", menu);
     }
 
     setInquiryList(inquiryList) {

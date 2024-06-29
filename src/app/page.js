@@ -29,6 +29,7 @@ import Inquiryedit from "./mypage/Inquiry/Inquiryedit/page";
 import Loading from "./loading/page";
 import CheckoutPage from "./sandbox/checkout/page";
 import Payments from "./interview/payments/page";
+import Recruitmentdetail from "./job/recruitment/detail/[id]/page";
 
 
 function Home() {
@@ -48,6 +49,10 @@ function Home() {
   }, []);
 
   const renderContent = () => {
+    if (menuStore.selectedMenu.startsWith('detail/')) {
+      const recrutPblntSn = menuStore.selectedMenu.split('/')[1];
+      return <Recruitmentdetail recrutPblntSn={recrutPblntSn} />;
+    }
     switch (menuStore.selectedMenu) {
       case "main":
         return <Main />;
