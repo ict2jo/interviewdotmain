@@ -1,0 +1,16 @@
+.tablewrap{
+    margin: 0 auto;
+    height: 95vh;
+}
+.pagenation{
+    display: flex;
+    justify-content: center;
+    margin-top: 20px;
+    border: none;
+}
+.tablewrap h1{
+    font-size: 30px;
+    font-weight: bold;
+    text-align: center;
+    margin: 60px;
+}

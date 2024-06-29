@@ -50,26 +50,19 @@ const SideNavigation = observer(() => {
           {userStore.name && (
             <>
 
-              <Typography
-                onClick={() => handleMenuClick("profile")}
+              <div
+                
                 className="hover:text-accent-400 transition-colors flex items-center gap-4"
                 onMouseEnter={handleMouseEnter}
                 onMouseLeave={handleMouseLeave}
               >
-                {/* <img
-                className="h-8 rounded-full"
-                src={userImg}
-                alt={userImg}
-                referrerPolicy="no-referrer"
-              /> */}
+                <span onClick={() => handleMenuClick("profile")}>{userStore.name}</span>
 
-                <span>{userStore.name}</span>
-              </Typography>
-
-              {isSubmenuVisible && <MySubmenu handleMenuClick={handleMenuClick} />}
               <li>
+              {isSubmenuVisible && <MySubmenu handleMenuClick={handleMenuClick} />}
                 <button className="hover:bg-primary-100 transition-colors" onClick={handleLogout}>로그아웃</button>
               </li>
+              </div>
             </>
           )} {!userStore.name && (
             <>

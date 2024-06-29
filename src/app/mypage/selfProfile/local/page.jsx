@@ -4,6 +4,7 @@ import MenuItem from '@mui/material/MenuItem';
 import FormControl from '@mui/material/FormControl';
 import Select from '@mui/material/Select';
 import InputLabel from '@mui/material/InputLabel';
+import { Typography } from '@mui/material';
 
 const ITEM_HEIGHT = 28;
 const ITEM_PADDING_TOP = 2;
@@ -17,28 +18,27 @@ const MenuProps = {
 };
 
 const local = [
-  '서울', '인천', '대전', '대구', '부산', '광주', '울산',
+  '서울', '인천', '대전',
+  '대구', '부산', '광주', '울산',
   '경기', '강원', '충남', '충북', '경북', '경남', '전남',
   '전북', '제주', '세종', '해외',
 ];
 
-export default function Local({ uvo, handleLocationlistChange }) {
+export default function Local({handleLocationlistChange, uvo }) {
   const [p_location, setP_location] = React.useState([]);
-
+  
   React.useEffect(() => {
-    // 초기값을 올바르게 설정
     if (uvo.p_location) {
-      const locations = uvo.p_location.split(',').map(location => location.trim());
-      setP_location(locations.filter((item, index) => locations.indexOf(item) === index));
+      setP_location(uvo.p_location.split(','));
     } else {
       setP_location([]);
     }
   }, [uvo.p_location]);
-  
+
   const handleChange = (event) => {
     const { value } = event.target;
     setP_location(value);
-    handleLocationlistChange(value.join(','));
+    handleLocationlistChange(value.join(',').replace(/^,/, ''));
   };
 
   return (
@@ -46,7 +46,7 @@ export default function Local({ uvo, handleLocationlistChange }) {
       <InputLabel id="demo-multiple-name-label">지역을 선택하세요</InputLabel>
       <Select
         labelId="demo-multiple-name-label"
-        id="demo-multiple-name"
+        id="local-select"
         multiple
         value={p_location}
         onChange={handleChange}
@@ -59,6 +59,9 @@ export default function Local({ uvo, handleLocationlistChange }) {
           </MenuItem>
         ))}
       </Select>
+      <Typography variant="body2" color="textSecondary">
+        선택된 경력: {p_location}
+      </Typography>
     </FormControl>
   );
 }
