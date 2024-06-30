@@ -37,12 +37,7 @@ export default function Payments() {
     return (
         <>      
         <div className='pay_container'>
-            <ul className="nav">
-                <li><a href="#">인터뷰닷 이용권</a></li>
-                <li><a href="/interview/payStatus">내 이용현황</a></li>
-                <li><a href="../payDetail">결제내역</a></li>
-            </ul>
-
+            <h1>인터뷰닷 이용권</h1>
             <div className='tickets-container'>
                 <div className='ticket'>
                     <div className='ticket-op' style={{backgroundColor: "yellow"}}>1회 이용권</div>
@@ -52,7 +47,7 @@ export default function Payments() {
                         <button onClick={() => handlePurchaseClick(1000)}>구매</button>
                     </div>
                 </div>
-
+                
                 <div className='ticket'>
                     <div className='ticket-op' style={{backgroundColor: "lightblue"}}>10회 이용권</div>
                     <div className='ticket-inner'>
@@ -61,7 +56,7 @@ export default function Payments() {
                         <button onClick={() => handlePurchaseClick(10000)}>구매</button>
                     </div>
                 </div>
-
+                
                 <div className='ticket'>
                     <div className='ticket-op' style={{backgroundColor: "lightpink"}}>내맘대로 이용권</div>
                     <div className='ticket-inner'>
@@ -82,7 +77,6 @@ export default function Payments() {
                 </div>
             </div>
         </div>
-
         </>
     );
 }
