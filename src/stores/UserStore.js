@@ -31,10 +31,6 @@ class UserStore {
   setName(name) {
     this.name = name;
   }
-  setPhonenumber(phonenumber) {
-    this.phonenumber = phonenumber;
-  }
-
   setEmail(email) {
     this.email = email;
   }
@@ -58,36 +54,46 @@ class UserStore {
   setAddr(addr) {
     this.addr = addr;
   }
-  async loadUserFromServer() {
-    try {
-      const token = localStorage.getItem("token");
-      if (token) {
-        const userInfoResponse = await axios.get(`${URL}userInfo`, {
-          params: { token },
+  setPhonenumber(phonenumber) {
+    this.phonenumber = phonenumber;
+  }
+  loadUserFromServer() {
+    const token = localStorage.getItem("token");
+    if (token) {
+      let userData = null;
+      axios.get(`${URL}userInfo`, { params: { token } })
+        .then(userInfoResponse => {
+          userData = userInfoResponse.data;
+          this.setPhonenumber(userData.phonenumber);
+          this.setName(userData.name);
+          this.setId(userData.id);
+          this.setU_idx(userData.u_idx);
+          this.setEmail(userData.email);
+          this.setField(userData.field);
+          console.log("Loaded user data:", userData);
+          
+          return axios.get(`/mypage/selfprofile?id=${userData.id}`);
+        })
+        .then(selfProfileResponse => {
+          if (selfProfileResponse.data.length === 0) {
+            return axios.post(`/mypage/selfprofileinsert?u_idx=${userData.u_idx}`).then(() => null);
+          } else {
+            const selfProfileData = selfProfileResponse.data[0];
+            this.setAddr(selfProfileData.addr);
+            this.setP_job(selfProfileData.p_job);
+            this.setP_class(selfProfileData.p_class);
+            this.setP_career(selfProfileData.p_career);
+            this.setP_location(selfProfileData.p_location);
+            console.log("addr:", selfProfileData.addr);
+          }
+        })
+        .catch(error => {
+          console.error("Error loading user data", error);
         });
-        const userData = userInfoResponse.data;
-        console.log("Loaded user data:", userData);
-        
-        const selfProfileResponse = await axios.get(`/mypage/selfprofile?id=${userData.id}`);
-        const selfProfileData = selfProfileResponse.data[0];
-        this.setPhonenumber(selfProfileData.phonenumber);
-        this.setName(selfProfileData.name);
-        this.setId(selfProfileData.id);
-        this.setU_idx(selfProfileData.u_idx);
-        this.setEmail(selfProfileData.email);
-        this.setP_job(selfProfileData.p_job);
-        this.setP_class(selfProfileData.p_class);
-        this.setP_career(selfProfileData.p_career);
-        this.setP_location(selfProfileData.p_location);
-        this.setAddr(selfProfileData.addr);
-        this.setField(selfProfileData.field);
-  
-        console.log("Loaded selfProfileData:", selfProfileData);
-      }
-    } catch (error) {
-      console.error("Error loading user data", error);
     }
   }
+  
+  
 }
 const userStore = new UserStore();
 export default userStore;
