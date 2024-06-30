@@ -39,8 +39,14 @@ function reducer(state, action) {
       return { ...state, phonenumber };
     case "showTerms":
       return { ...state, showTerms: action.payload };
+    case "validateID":
+      return { ...state, validateId: true };
     case "isChecked":
-      return { ...state, isChecked: action.payload, requiredTermsChecked: true };
+      return {
+        ...state,
+        isChecked: action.payload,
+        requiredTermsChecked: true,
+      };
     case "updateRequiredTermsChecked":
       return { ...state, requiredTermsChecked: action.payload };
     case "isSelected":
@@ -51,12 +57,21 @@ function reducer(state, action) {
           isCustomDomain: true,
         };
       } else {
-        return {
-          ...state,
-          selectedOption: action.payload,
-          isCustomDomain: false,
-          email: `${state.email}@${action.payload}`,
-        };
+        const atIndex = state.email.indexOf("@");
+        const emailPrefix = state.email.slice(0, atIndex);
+
+        if (emailPrefix.length <= 3) {
+          alert("이메일 형식이 올바르지 않습니다.");
+
+          return state;
+        } else {
+          return {
+            ...state,
+            selectedOption: action.payload,
+            isCustomDomain: false,
+            email: `${state.email}@${action.payload}`,
+          };
+        }
       }
     default:
       return state;
@@ -64,7 +79,6 @@ function reducer(state, action) {
 }
 
 function CreateUserProvider({ children }) {
-
   const initialState = {
     name: "",
     email: "",
@@ -84,7 +98,8 @@ function CreateUserProvider({ children }) {
     requiredTermsChecked: false,
     isMatched: false,
     validPw: false,
-    isLoading: false
+    isLoading: false,
+    validateId: false,
   };
   const [
     {
@@ -106,7 +121,8 @@ function CreateUserProvider({ children }) {
       requiredTermsChecked,
       validPw,
       isMatched,
-      isLoading
+      isLoading,
+      validateId,
     },
     dispatch,
   ] = useReducer(reducer, initialState);
@@ -130,6 +146,7 @@ function CreateUserProvider({ children }) {
         alert("아이디가 이미 사용 중입니다. 다른 아이디를 사용해주세요.");
         return false;
       } else {
+        dispatch({ type: "validateID" });
         alert("사용 가능한 아이디입니다.");
         return true;
       }
@@ -170,9 +187,12 @@ function CreateUserProvider({ children }) {
   }
 
   function validateForm() {
-
     if (!isMatched) {
       alert("비밀번호가 일치하지 않습니다.");
+      return false;
+    }
+    if (!validateId) {
+      alert("아이디 중복체크를 해주세요");
       return false;
     }
     //  필수약관 체크 확인
@@ -201,8 +221,7 @@ function CreateUserProvider({ children }) {
 
     if (!validateForm()) return;
 
-
-    dispatch({ type: "loading" })
+    dispatch({ type: "loading" });
     setTimeout(async () => {
       try {
         const response = await axios.post(`${URL}create`, {
@@ -245,6 +264,7 @@ function CreateUserProvider({ children }) {
         isCustomDomain,
         requiredTermsChecked,
         validPw,
+        validateId,
         isLoading,
         handleFieldChange,
         handleIdValidation,
