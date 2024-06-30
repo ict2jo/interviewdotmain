@@ -5,6 +5,7 @@ import { useEffect, useState } from "react";
 import './recruitmentlist.css';
 import userStore from "@/stores/UserStore";
 import { CircularProgress, Table, TableBody, TableCell, TableContainer, TableFooter, TableHead, TableRow, Pagination, Button } from "@mui/material";
+import menuStore from "@/stores/MenuStore";
 
 export default function Myrecruitment() {
     const [list, setList] = useState([]); // 채용공고 리스트 상태
@@ -13,7 +14,7 @@ export default function Myrecruitment() {
     const rowsPerPage = 5; // 페이지 당 보여줄 항목 수
 
     useEffect(() => {
-        async function fetchData() {
+        const fetchData = async () => {
             try {
                 setLoading(true);
 
@@ -49,7 +50,7 @@ export default function Myrecruitment() {
                 console.error("데이터를 가져오는 중 오류가 발생했습니다:", error);
                 setLoading(false);
             }
-        }
+        };
 
         fetchData();
     }, []);
@@ -68,63 +69,62 @@ export default function Myrecruitment() {
     if (loading) {
         return <CircularProgress />;
     }
-
+    const handleMenuClick = (menu) => {
+        menuStore.setSelectedMenu(menu);
+    };
     return (
         <div>
-            <TableContainer sx={{ width: 1400 }} className='tablewrap'>
-        <h1>나의 채용공고</h1>
-        <Table sx={{ minWidth: 600 }}>
-            <TableHead sx={{ borderBottom: '3px solid blue' }}>
-            <TableRow>
-                <TableCell sx={{ width: '10px', textAlign:'center'}}>No</TableCell>
-                <TableCell sx={{ width: '300px', textAlign:'center' }}>Subject</TableCell>
-                <TableCell sx={{ width: '70px', textAlign:'center' }}>Content</TableCell>
-                <TableCell sx={{ width: '30px', textAlign:'center' }}>Active</TableCell>
-                <TableCell sx={{ width: '30px', textAlign:'center' }}>Active</TableCell>
-                <TableCell sx={{ width: '30px', textAlign:'center' }}>Active</TableCell>
-                <TableCell sx={{ width: '30px', textAlign:'center' }}>Active</TableCell>
-                <TableCell sx={{ width: '30px', textAlign:'center' }}>Active</TableCell>
-                <TableCell sx={{ width: '100px', textAlign:'center' }}>Active</TableCell>
-            </TableRow>
-            </TableHead>
-            <TableBody>
-            {list.slice((page - 1) * rowsPerPage, (page - 1) * rowsPerPage + rowsPerPage).map((item, index) => (
-                <TableRow key={index}>
-                    <TableCell sx={{ width: '10px', textAlign:'center'}}>{calculateIndex(page, index)}</TableCell>
-                    <TableCell sx={{ width: '300px', textAlign:'center' }}
-                        onClick={() => handleMenuClick(`inquirydetail/${row.i_idx}`)}>
-                                <p>{item.recrutPbancTtl}</p>
-                    </TableCell>  
-                    
-                    <TableCell sx={{ width: '70px', textAlign:'center' }}>
-                                <p>{item.instNm}</p>
-                    </TableCell>    
-                    <TableCell sx={{ width: '30px', textAlign:'center' }}
-                    onClick={() => handleMenuClick(`inquirydetail/${row.i_idx}`)}>
-                                <p>{item.hireTypeNmLst}</p>
-                    </TableCell>      
-                    <TableCell sx={{ width: '30px', textAlign:'center' }}>
-                    <p>{item.recrutSeNm}</p>
-                    </TableCell>          
-                    <TableCell sx={{ width: '30px', textAlign:'center' }}>
-                    <p>{item.recrutNope}</p>
-                    </TableCell>          
-                    <TableCell sx={{ width: '30px', textAlign:'center' }}>
-                    <p>{item.workRgnNmLst}</p>
-                    </TableCell>          
-                    <TableCell sx={{ width: '30px', textAlign:'center' }}>
-                    <p>D-{item.decimalDay}</p>
-                    </TableCell>  
-                    <TableCell sx={{ width: '100px', textAlign:'center' }}>
-                    <Button variant='contained' onClick={() => handleMenuClick("inquirywrite")}>지원하기</Button>
-                    </TableCell>  
-                </TableRow>
-                ))}        
-            </TableBody>
-            {/* Pagination */}
-            <TableFooter>
+            <TableContainer sx={{ width: 1500 }} className='tablewrap'>
+                <h1>나의 채용공고</h1>
+                <Table sx={{ minWidth: 600 }}>
+                    <TableHead sx={{ borderBottom: '3px solid blue' }}>
                         <TableRow>
-                            <TableCell colSpan={4} sx={{ border: 0, textAlign: 'center' }}>
+                            <TableCell sx={{ width: '10px', textAlign: 'center' }}>No</TableCell>
+                            <TableCell sx={{ width: '200px', textAlign: 'center' }}>공고제목</TableCell>
+                            <TableCell sx={{ width: '100px', textAlign: 'center' }}>회사</TableCell>
+                            <TableCell sx={{ width: '50px', textAlign: 'center' }}>고용유형</TableCell>
+                            <TableCell sx={{ width: '50px', textAlign: 'center' }}>채용유형</TableCell>
+                            <TableCell sx={{ width: '50px', textAlign: 'center' }}>채용인원</TableCell>
+                            <TableCell sx={{ width: '50px', textAlign: 'center' }}>지역</TableCell>
+                            <TableCell sx={{ width: '50px', textAlign: 'center' }}>기간</TableCell>
+                            <TableCell sx={{ width: '100px', textAlign: 'center' }}>지원하기</TableCell>
+                        </TableRow>
+                    </TableHead>
+                    <TableBody>
+                        {list.slice((page - 1) * rowsPerPage, (page - 1) * rowsPerPage + rowsPerPage).map((item, index) => (
+                            <TableRow key={index}>
+                                <TableCell sx={{ width: '10px', textAlign: 'center' }}>{calculateIndex(page, index)}</TableCell>
+                                <TableCell sx={{ width: '300px', textAlign: 'center' }} onClick={() => handleMenuClick(`detail/${item.recrutPblntSn}`)}>
+                                    <p>{item.recrutPbancTtl}</p>
+                                </TableCell>
+                                <TableCell sx={{ width: '70px', textAlign: 'center' }}>
+                                    <p>{item.instNm}</p>
+                                </TableCell>
+                                <TableCell sx={{ width: '30px', textAlign: 'center' }} onClick={() => handleMenuClick(`detail/${item.recrutPblntSn}`)}>
+                                    <p>{item.hireTypeNmLst}</p>
+                                </TableCell>
+                                <TableCell sx={{ width: '30px', textAlign: 'center' }}>
+                                    <p>{item.recrutSeNm}</p>
+                                </TableCell>
+                                <TableCell sx={{ width: '30px', textAlign: 'center' }}>
+                                    <p>{item.recrutNope}</p>
+                                </TableCell>
+                                <TableCell sx={{ width: '30px', textAlign: 'center' }}>
+                                    <p>{item.workRgnNmLst}</p>
+                                </TableCell>
+                                <TableCell sx={{ width: '30px', textAlign: 'center' }}>
+                                    <p>D-{item.decimalDay}</p>
+                                </TableCell>
+                                <TableCell sx={{ width: '100px', textAlign: 'center' }}>
+                                <Button variant='contained' onClick={() => window.open(item.srcUrl, '_blank')}>지원하기</Button>
+                                </TableCell>
+                            </TableRow>
+                        ))}
+                    </TableBody>
+                    {/* Pagination */}
+                    <TableFooter>
+                        <TableRow>
+                            <TableCell colSpan={12} sx={{ border: 0, textAlign: 'center' }}>
                                 <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
                                     <Pagination
                                         count={Math.ceil(list.length / rowsPerPage)} // 전체 페이지 수
@@ -135,8 +135,8 @@ export default function Myrecruitment() {
                                         className='pagination'
                                         style={{ marginLeft: 'auto', marginRight: 'auto' }} // 중앙 정렬
                                     />
-                                    <Button variant='contained' onClick={() => handleMenuClick("inquirywrite")}>Write</Button>
-                                </div>
+                                    <Button sx={{marginRight: 6}}variant='outlined' onClick={() => {handleMenuClick("recruitment");}}>채용목록</Button>
+                                    </div>
                             </TableCell>
                         </TableRow>
                     </TableFooter>
