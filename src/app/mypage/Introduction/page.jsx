@@ -1,4 +1,3 @@
-"use client"
 import * as React from 'react';
 import './introduction.css';
 import { useContext, useEffect} from 'react';
@@ -9,67 +8,54 @@ import userStore from '@/stores/UserStore';
 export default function Introduction() {
     const menuStore = useContext(MenuContext);
     const [loading, setLoading] = React.useState(true);
-    const [k, setUvo] = React.useState([]);
+
     useEffect(() => {
         async function fetchData() {
             try {
-                await userStore.loadUserFromServer();
-                setUvo({
-                u_idx: userStore.u_idx,
-                id: userStore.id,
-                name: userStore.name,
-                phonenumber: userStore.phonenumber,
-                email: userStore.email,
-                p_job: userStore.p_job,
-                p_class: userStore.p_class,
-                p_career: userStore.p_career,
-                p_location: userStore.p_location,
-                addr: userStore.addr,
-                field: userStore.field
-            });
-            console.log(userStore.addr);
-            setLoading(false);
+                userStore.loadUserFromServer();
+                setLoading(false);
             } catch (error) {
-                alert("실패");
+                alert("데이터를 가져오는 중 오류가 발생했습니다.");
                 console.error("데이터를 가져오는 중 오류가 발생했습니다:", error);
                 setLoading(false);
             }
         }
         fetchData();
-    }, []);  
+    }, [userStore]);  
+
     const handleMenuClick = (menu) => {
         menuStore.setSelectedMenu(menu);
-      };
+    };
+
     if (loading) {
         return <CircularProgress />;
     }
-    return(
+
+    return (
         <div>
             <>
             <h2 className='mymaintext'>자기소개서제목</h2> 
             <div className='blueline'></div>
             <div className='whitebox'>
                 <div className='myname'>
-                <h2 className='myname1'>{k.name}</h2>
+                <h2 className='myname1'>{userStore.name}</h2>
                 <p>&nbsp;</p>
-                <p>{k.birth}</p>
+                <p>{userStore.birth}</p>
                 </div>
                 <div className='myname'>
                 <div className='myinfotitle'>
                     <p>휴대폰</p>
                     <p>주소</p>
-                    
                 </div>
                 <div className='myinfodetail'>
-                    <p>{k.phonenumber}</p>
+                    <p>{userStore.phonenumber}</p>
                     <p>{userStore.addr}</p>
-                    
                 </div>
                 <div className='myinfotitle'>
                     <p>email</p>
                 </div>
                 <div className='myinfodetail'>
-                    <p>{k.email}</p>
+                    <p>{userStore.email}</p>
                 </div>
                 </div>
             </div>
@@ -84,10 +70,10 @@ export default function Introduction() {
                     <p>경력</p>
                 </div>
                 <div className='myinfodetail'>
-                    <p>{k.p_location}</p>
-                    <p>{k.p_job}</p>
-                    <p>{k.p_class}</p>
-                    <p>{k.p_career}</p>
+                    <p>{userStore.p_location}</p>
+                    <p>{userStore.p_job}</p>
+                    <p>{userStore.p_class}</p>
+                    <p>{userStore.p_career}</p>
                 </div>
                 </div>
             </div>
@@ -96,14 +82,14 @@ export default function Introduction() {
             <div className='whitebox'>
                 <div className='myname'>
                 <div className='myinfodetail'>
-                <p>{k.field}</p>
+                <p>{userStore.field}</p>
                 </div>
                 </div>
             </div>
-                <div className='mybut'>
-                <Button variant="contained"  onClick={() => handleMenuClick("verification")}>자기소개서 수정하기</Button>
-                </div>
-                </>
+            <div className='mybut'>
+                <Button variant="contained" onClick={() => handleMenuClick("verification")}>자기소개서 수정하기</Button>
+            </div>
+            </>
         </div>
-    )
+    );
 }
