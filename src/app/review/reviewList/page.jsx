@@ -21,7 +21,8 @@ import {
     DialogActions,
     Button,
     TextField,
-    Pagination
+    Pagination,
+    IconButton
 } from "@mui/material";
 import userStore from "@/stores/UserStore";
 import { Box } from "@mui/system";
@@ -34,7 +35,7 @@ export default function ReviewList() {
     const [comments, setComments] = useState([]);
     const [commentContent, setCommentContent] = useState(""); // 댓글 내용 상태 추가
     const [page, setPage] = useState(1); // 현재 페이지 상태 추가
-    const [totalPages, setTotalPages] = useState(); // 전체 페이지 수 상태 추가
+    const [totalPages, setTotalPages] = useState(""); // 전체 페이지 수 상태 추가
     const reviewsPerPage = 9; // 한 페이지당 보일 리뷰 개수
 
 
@@ -46,6 +47,8 @@ export default function ReviewList() {
         try {
             console.log("id" + userStore.id);
             const response = await axios.get(`/review/reviewlist?page=${page}&limit=${reviewsPerPage}`);
+            const activeReviews = response.data.filter(review => review.active === '0');
+            setReviewList(activeReviews);
             setReviewList(response.data); // 서버에서 받은 데이터를 상태에 저장
             setTotalPages(response.data.totalPages);
         } catch (error) {
@@ -140,6 +143,8 @@ export default function ReviewList() {
         }
     };
 
+    
+
 
     const fetchReviewListFromServer = async () => {
         try {
@@ -150,6 +155,7 @@ export default function ReviewList() {
             return [];
         }
     };
+
 
 
 
@@ -195,6 +201,14 @@ export default function ReviewList() {
         window.location.href = `/review/review_list_write?r_idx=${selectedReview.r_idx}`;
     }
 
+    const handlePageChange = (event, value) => {
+        setPage(value);
+    }
+
+    const startIndex = (page - 1) * reviewsPerPage;
+    const endIndex = startIndex + reviewsPerPage;
+    const currentReview = reviewList.slice(startIndex, endIndex);
+
     return (
         <>
             <Header />
@@ -209,40 +223,54 @@ export default function ReviewList() {
                                 <TableCell sx={{ width: '100px', textAlign: 'center' }}>NO</TableCell>
                                 <TableCell sx={{ width: '100px', textAlign: 'center' }}>작성자</TableCell>
                                 <TableCell sx={{ width: '100px', textAlign: 'center' }}>제목</TableCell>
-                                <TableCell sx={{ width: '200px', textAlign: 'center' }}>내용</TableCell>
+                                <TableCell sx={{ width: '300px', textAlign: 'center' }}>내용</TableCell>
                                 <TableCell sx={{ width: '100px', textAlign: 'center' }}>회사</TableCell>
-                                <TableCell sx={{ width: '100px', textAlign: 'center' }}>작성일</TableCell>
+                                <TableCell sx={{ width: '200px', textAlign: 'center' }}>작성일</TableCell>
                             </TableRow>
                         </TableHead>
                         <TableBody>
-                            {reviewList.map((review) => (
+                            {currentReview.map((review) => (
                                 <TableRow
                                     key={review.r_idx}
-                                    onClick={() => handleReviewClick(review)}
-                                    style={{ cursor: "pointer" }}
+                                    onClick={() => {
+                                        if (review.active !== '1') {
+                                            handleReviewClick(review)
+
+                                        }
+
+
+                                    }}
+                                    style={{ cursor: review.active === '1' ? 'default' : 'pointer' }}
                                 >
-                                    <TableCell sx={{ width: '100px', textAlign: 'center' }}>{review.r_idx}</TableCell>
-                                    <TableCell sx={{ width: '100px', textAlign: 'center' }}>{review.r_id}</TableCell>
-                                    <TableCell sx={{ width: '100px', textAlign: 'center' }}>{review.r_title}</TableCell>
-                                    <TableCell sx={{ width: '200px', textAlign: 'center' }}>{review.r_content}</TableCell>
-                                    <TableCell sx={{ width: '100px', textAlign: 'center' }}>{review.r_company}</TableCell>
-                                    <TableCell sx={{ width: '100px', textAlign: 'center' }}>{review.r_regdate.substring(0, 10)}</TableCell>
+                                    <TableCell sx={{ width: '100px', textAlign: 'center' }}>{review.active === '1' ? '' : review.r_idx}</TableCell>
+                                    <TableCell sx={{ width: '100px', textAlign: 'center' }}>{review.active === '1' ? '' : review.r_id}</TableCell>
+                                    <TableCell sx={{ width: '100px', textAlign: 'center' }}>{review.active === '1' ? '' : review.r_title}</TableCell>
+                                    <TableCell colSpan={1} sx={{ textAlign: 'center' }}>
+                                        {review.active === '1' ? (
+                                            <span style={{ color: 'red', marginLeft: '10px',  width: '300px'}}>삭제된 게시물 입니다.</span>
+                                        ) : (
+                                            review.r_content
+                                        )}
+                                    </TableCell>
+                                    <TableCell sx={{ width: '100px', textAlign: 'center' }}>{review.active === '1' ? '' : review.r_company}</TableCell>
+                                    <TableCell sx={{ width: '200px', textAlign: 'center' }}>{review.active === '1' ? '' : review.r_regdate.substring(0, 10)}</TableCell>
                                 </TableRow>
                             ))}
                         </TableBody>
                     </Table>
-                    <Box sx={{ display: 'flex', justifyContent: 'flex-end'}}>
-                    <Button onClick={handleWriteReview} color="primary" style={{ textAlign: "center" }}>
-                        작성하기
-                    </Button>
+                    <Box sx={{ display: 'flex', justifyContent: 'flex-end' }}>
+                        <Button onClick={handleWriteReview} color="primary" style={{ textAlign: "center" }}>
+                            작성하기
+                        </Button>
                     </Box>
                     {/* 페이지네이션 */}
                     <div style={{ display: 'flex', justifyContent: 'center', margin: '10px 0 25px 0' }}>
                         <Box sx={{ display: 'flex', justifyContent: 'center', marginBottom: '20px' }}>
                             <Pagination
-                                count={totalPages}
+                                /* count={totalPages} */
+                                count={Math.ceil(reviewList.length / reviewsPerPage)}
                                 page={page}
-                                onChange={(event, value) => setPage(value)}
+                                onChange={handlePageChange}
                                 color="primary"
                             />
                         </Box>
