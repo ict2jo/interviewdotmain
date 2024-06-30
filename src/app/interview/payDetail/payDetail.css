@@ -1,11 +1,9 @@
-/* payDetail.css */
-
 .detail {
     width: 80%;
     max-width: 1200px;
     margin: 20px auto;
     text-align: left;
-    height: 500px;
+    height: auto;
 }
 
 .detail h1 {
@@ -33,8 +31,27 @@
 }
 
 .detail_t table th, .detail_t table td {
-    padding: 15px;
+    padding: 10px;
     text-align: center;
+    border: 1px solid lightgray;
+}
+
+.detail_t table th {
+    background-color: blue;
+    color: white;
+}
+
+.detail_t button {
+    border: 1px solid #000099;
+    background: blue;
+    color: white;
+    padding: 5px;
+    border-radius: 5px;
+    width: 90px;
+}
+
+.detail_t button:hover {
+    background-color: #000099;
 }
 
 .modal {
@@ -54,18 +71,25 @@
     background-color: #fefefe;
     padding: 20px;
     border: 1px solid #888;
-    width: 50%;
-    max-width: 400px;
+    width: 40%;
     border-radius: 5px;
+    text-align: center;
+    height: 200px;
+}
+
+.modal-content h2 {
+    font-weight: bold;
 }
 
 .modal-content select {
     width: calc(100% - 16px);
-    margin-bottom: 16px;
+    margin: 30px auto;
+    border: 1px solid lightgray;
+    padding: 5px;
 }
 
 .modal-content button {
-    background-color: #4CAF50;
+    background-color: blue;
     color: white;
     border: none;
     padding: 10px 20px;
@@ -75,8 +99,9 @@
     font-size: 16px;
     border-radius: 4px;
     cursor: pointer;
+    margin: 0 5px;
 }
 
 .modal-content button:hover {
-    background-color: #45a049;
+    background-color: #000099;
 }

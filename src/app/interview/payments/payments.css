@@ -10,25 +10,8 @@
 .pay_container h1 {
     font-size: 30px;
     font-weight: bold;
-    margin-bottom: 20px;
-}
-
-.nav {
-    list-style: none;
-    display: flex;
-    padding: 0;
     margin-bottom: 50px;
-    border-bottom: 2px solid gray;
-}
-
-.nav li {
-    margin-right: 40px; 
-    font-size: 25px; 
-}
-
-.nav a.active {
-    padding-bottom: 3px; 
-    border-bottom: 3px solid blue;
+    border-bottom: 1px solid lightgray;
 }
 
 .tickets-container {
@@ -86,7 +69,7 @@
 .ticket-input {
     display: flex;
     align-items: center;
-    justify-content: center; /* 수평 가운데 정렬을 위한 추가 설정 */
+    justify-content: center;
     text-align: center;
 }
 
@@ -105,20 +88,6 @@
 }
 
 @media (max-width: 820px) {
-    .guide_container {
-        padding: 30px;
-        height: auto; 
-    }
-
-    .nav {
-        margin-bottom: 20px; 
-    }
-
-    .nav li {
-        margin-right: 15px; 
-        font-size: 18px; 
-    }
-
     .ticket {
         flex: 0 1 calc(50% - 20px); 
     }
