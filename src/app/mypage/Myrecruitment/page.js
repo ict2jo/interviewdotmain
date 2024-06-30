@@ -77,8 +77,13 @@ export default function Myrecruitment() {
             <TableHead sx={{ borderBottom: '3px solid blue' }}>
             <TableRow>
                 <TableCell sx={{ width: '10px', textAlign:'center'}}>No</TableCell>
-                <TableCell sx={{ width: '200px', textAlign:'center' }}>Subject</TableCell>
-                <TableCell sx={{ width: '200px', textAlign:'center' }}>Content</TableCell>
+                <TableCell sx={{ width: '300px', textAlign:'center' }}>Subject</TableCell>
+                <TableCell sx={{ width: '70px', textAlign:'center' }}>Content</TableCell>
+                <TableCell sx={{ width: '30px', textAlign:'center' }}>Active</TableCell>
+                <TableCell sx={{ width: '30px', textAlign:'center' }}>Active</TableCell>
+                <TableCell sx={{ width: '30px', textAlign:'center' }}>Active</TableCell>
+                <TableCell sx={{ width: '30px', textAlign:'center' }}>Active</TableCell>
+                <TableCell sx={{ width: '30px', textAlign:'center' }}>Active</TableCell>
                 <TableCell sx={{ width: '100px', textAlign:'center' }}>Active</TableCell>
             </TableRow>
             </TableHead>

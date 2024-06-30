@@ -24,9 +24,10 @@ export default function Introduction() {
                 p_class: userStore.p_class,
                 p_career: userStore.p_career,
                 p_location: userStore.p_location,
-                field: userStore.field,
-                addr: userStore.addr
+                addr: userStore.addr,
+                field: userStore.field
             });
+            console.log(userStore.addr);
             setLoading(false);
             } catch (error) {
                 alert("실패");
@@ -61,7 +62,7 @@ export default function Introduction() {
                 </div>
                 <div className='myinfodetail'>
                     <p>{k.phonenumber}</p>
-                    <p>{k.addr}</p>
+                    <p>{userStore.addr}</p>
                     
                 </div>
                 <div className='myinfotitle'>
