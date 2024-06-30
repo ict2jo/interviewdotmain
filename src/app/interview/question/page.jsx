@@ -44,16 +44,18 @@ const Question = observer(() => {
 
     const go_next_page = () => {
         if (confirm(`선택하신 문항은 총 ${questionStore.selectedCount}개 입니다. \n맞으면 확인 틀리면 취소를 눌러주세요.`)) {
-            if (questionStore.selectedCount > 0) {
-                const nextPage = currentPage + 1;
-                questionStore.setPage(nextPage); // 페이지를 변경해주어야 함
+            if (questionStore.selectedQuestions.length === 3) {
                 router.push(`/interview/start?category=${category}&q_idx=${q_idx}`);
             } else {
-                alert("선택하신 문항이 없습니다. 3개 선택해 주세요.");
+                alert("질문을 정확히 3개 선택해 주세요.");
             }
         }
     };
 
+
+    const go_before_page = () => {
+        router.push(`/interview/choose`)
+    }
     const handlePageChange = (event, page) => {
         questionStore.setPage(page);
     };
@@ -69,7 +71,7 @@ const Question = observer(() => {
                     <h1>질문 리스트</h1>
                     <span>최대 3개의 질문을 선택 하실 수 있습니다.</span>
                 </div>
-                <div className="count">{questionStore.selectedCount} / 10</div>
+                <div className="count">{questionStore.selectedCount} / 3 </div>
                 <div className="questions">
                     {paginatedQuestions.map((question, index) => (
                         <div
@@ -93,10 +95,10 @@ const Question = observer(() => {
                 </div>
             </div>
             <div className="before_page">
-                <ArrowBackIosNewIcon style={{ fontSize: 40 }} onClick={() => questionStore.setPage(currentPage - 1)} className="go_next_page" />
+                <ArrowBackIosNewIcon style={{ fontSize: 40 }} onClick={go_before_page} />
             </div>
             <div className="next_page">
-                <ArrowForwardIosIcon style={{ fontSize: 40 }} onClick={go_next_page} className="go_next_page" />
+                <ArrowForwardIosIcon style={{ fontSize: 40 }} onClick={go_next_page} />
             </div>
         </div>
     );

@@ -2,19 +2,17 @@
 import {useEffect, useState} from 'react';
 import {useParams, useRouter} from 'next/navigation';
 import userStore from "@/stores/UserStore";
-import Header from "@/app/_components/Header";
-import Footer from "@/app/_components/Footer";
 import "./historydetail.css";
 import {styled} from '@mui/material/styles';
 import Box from '@mui/material/Box';
 import Paper from '@mui/material/Paper';
 import Grid from '@mui/material/Grid';
+import UserStore from "@/stores/UserStore";
 import menuStore from "@/stores/MenuStore";
 
 export default function Historydetail() {
     const params = useParams();
     const router = useRouter();
-    const id = params.id;
     const [detail, setDetail] = useState([]);
     const [loading, setLoading] = useState(true);
 
@@ -26,17 +24,20 @@ export default function Historydetail() {
         marginBottom: theme.spacing(2),
     }));
 
-
+    const selectedMenu = menuStore.selectedMenu;
+    const r_idx = selectedMenu.split('/')[1];
+    console.log(r_idx," = r_idx ")
     useEffect(() => {
-        if (id) {
+        if (r_idx) {
             fetchDetail();
         }
-    }, [id]);
+    }, [r_idx]);
 
     const fetchDetail = async () => {
         try {
-            const response = await fetch(`http://localhost:8080/interview/historydetail?r_idx=${id}&id=${userStore.id}`);
+            const response = await fetch(`http://localhost:8080/interview/historydetail?r_idx=${r_idx}&id=${userStore.id}`);
             const data = await response.json();
+            console.log(data);
             setDetail(data);
             setLoading(false);
         } catch (error) {
@@ -46,8 +47,6 @@ export default function Historydetail() {
     };
 
     return (
-        <>
-            <Header/>
             <div className="history_container">
                 <h1>면접 상세 정보</h1>
                 {loading ? (
@@ -85,10 +84,10 @@ export default function Historydetail() {
                                         <Grid item xs={12} sm={6}>
                                             <div className="item-label">영상</div>
                                             <div className="item-content">
-                                                <video width="100%" controls>
+{/*                                                <video width="100%" controls>
                                                     <source src={`http://localhost:8010/video_get/${item.video_uuid}`}
                                                             type="video/mp4"/>
-                                                </video>
+                                                </video>*/}
                                             </div>
                                         </Grid>
                                     </Grid>
@@ -100,8 +99,6 @@ export default function Historydetail() {
                     <p>ERROR</p>
                 )}
             </div>
-            <Footer/>
-        </>
 
     );
 }
