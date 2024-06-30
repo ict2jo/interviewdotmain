@@ -37,6 +37,8 @@ export default function ReviewList() {
     const [page, setPage] = useState(1); // 현재 페이지 상태 추가
     const [totalPages, setTotalPages] = useState(""); // 전체 페이지 수 상태 추가
     const reviewsPerPage = 9; // 한 페이지당 보일 리뷰 개수
+    const [editingCommentContent, setEditingCommentContent] = useState("");
+    const [editingCommentId, setEditingCommentId] = useState("");
 
 
     useEffect(() => {
@@ -143,7 +145,7 @@ export default function ReviewList() {
         }
     };
 
-    
+
 
 
     const fetchReviewListFromServer = async () => {
@@ -180,6 +182,53 @@ export default function ReviewList() {
       setEditingTitle(event.target.value);
     } */
 
+
+
+
+    const handleEditComment = (re_idx, re_content) => {
+        setEditingCommentId(re_idx);
+        setEditingCommentContent(re_content);
+    }
+
+    const handleUpdateComment = async (re_idx) => {
+        try {
+            const response = await axios.post("http://localhost:8080/comments/updatecomment", {
+                re_idx: re_idx,
+                re_content: editingCommentContent
+            });
+            console.log("Comment updated:", response.data);
+
+            // 수정 후 댓글 목록 다시 불러오기
+            await fetchComments(selectedReview.r_idx);
+
+            // 수정 상태 초기화
+            setEditingCommentId(""); // 수정 중인 댓글 ID 초기화
+            setEditingCommentContent(""); // 수정 중인 댓글 내용 초기화
+        } catch (error) {
+            console.error("Error updating comment:", error);
+        }
+    };
+
+    const handleDeleteComment = async (re_idx) => {
+        try {
+            const response = await axios.post("http://localhost:8080/comments/deletecomment", {
+                re_idx: re_idx,
+            })
+            console.log("Comment deleted:", response.data);
+
+            // 삭제 후 댓글 목록 다시 불러오기
+            await fetchComments(selectedReview.r_idx);
+
+            handleCloseDialog(); // 팝업 창 닫기
+        } catch (error) {
+            console.error("Error deleting comment:", error);
+        }
+    };
+
+
+
+
+
     const handleContentChange = (event) => {
         setEditingContent(event.target.value); // 수정할 내용 업데이트
     };
@@ -200,6 +249,8 @@ export default function ReviewList() {
         handleCloseDialog();
         window.location.href = `/review/review_list_write?r_idx=${selectedReview.r_idx}`;
     }
+
+
 
     const handlePageChange = (event, value) => {
         setPage(value);
@@ -237,8 +288,6 @@ export default function ReviewList() {
                                             handleReviewClick(review)
 
                                         }
-
-
                                     }}
                                     style={{ cursor: review.active === '1' ? 'default' : 'pointer' }}
                                 >
@@ -247,7 +296,7 @@ export default function ReviewList() {
                                     <TableCell sx={{ width: '100px', textAlign: 'center' }}>{review.active === '1' ? '' : review.r_title}</TableCell>
                                     <TableCell colSpan={1} sx={{ textAlign: 'center' }}>
                                         {review.active === '1' ? (
-                                            <span style={{ color: 'red', marginLeft: '10px',  width: '300px'}}>삭제된 게시물 입니다.</span>
+                                            <span style={{ color: 'red', marginLeft: '10px', width: '300px' }}>삭제된 게시물 입니다.</span>
                                         ) : (
                                             review.r_content
                                         )}
@@ -330,18 +379,45 @@ export default function ReviewList() {
                             ) : (
                                 <Table>
                                     <TableBody>
-                                        {comments.map((comments) => (
+                                        {comments.filter(comments => comments.active !== '1').map((comments) => (
                                             <TableRow key={comments.re_idx}>
                                                 <TableCell>{comments.re_idx}</TableCell>
                                                 <TableCell>{comments.id}</TableCell>
-                                                <TableCell>{comments.re_content}</TableCell>
+                                                <TableCell>
+                                                    {editingCommentId === comments.re_idx ? (
+                                                        <TextField
+                                                            fullWidth
+                                                            multiline
+                                                            rows={4}
+                                                            variant="outlined"
+                                                            value={editingCommentContent}
+                                                            onChange={(e) => setEditingCommentContent(e.target.value)}
+                                                        />
+                                                    ) : (
+                                                        comments.re_content
+                                                    )}
+                                                </TableCell>
                                                 <TableCell>{comments.re_regdate}</TableCell>
+                                                <TableCell>
+                                                    {editingCommentId === comments.re_idx ? (
+                                                        <Button onClick={() => handleUpdateComment(comments.re_idx)} color="primary">
+                                                            저장
+                                                        </Button>
+                                                    ) : (
+                                                        <Button onClick={() => handleEditComment(comments.re_idx, comments.re_content)} color="primary">
+                                                            수정
+                                                        </Button>
+                                                    )}
+                                                    <Button onClick={() => handleDeleteComment(comments.re_idx)} color="primary">
+                                                        삭제
+                                                    </Button>
+                                                </TableCell>
                                             </TableRow>
                                         ))}
                                     </TableBody>
                                 </Table>
                             )}
-                        </>
+                    </>
                     )}
                 </DialogContent>
                 <DialogActions>
