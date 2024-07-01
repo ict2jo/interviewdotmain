@@ -19,7 +19,6 @@ import Inquiry from "./mypage/Inquiry/page";
 import Starthome from "./interview/starthome/page";
 import JobTest from "./job/test/JobTest";
 import Verification from "../../pages/verification";
-import Footer from "./_components/Footer";
 import Result from "./job/test/result/Result";
 import Introduction from "./mypage/Introduction/page";
 import Calendar from "./mypage/Schedule/page";
