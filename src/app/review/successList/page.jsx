@@ -24,16 +24,10 @@ import {
 } from "@mui/material";
 import userStore from "@/stores/UserStore";
 import { Box } from "@mui/system";
+import { useRouter } from "next/navigation";
 
 
 export default function SuccessList() {
-    /* const [successList, setSuccessList] = useState([]);
-    const [selectedSuccess, setSelectedSuccess] = useState([]);
-    const [openDialog, setOpenDialog] = useState(false);
-    const [editingContent, setEditingContent] = useState(""); // 수정할 내용 상태 추가
-    const [comments, setComments] = useState([]);
-    const [commentContent, setCommentContent] = useState([]); // 댓글 내용 상태 추가 */
-
     const [successList, setSuccessList] = useState([]);
     const [selectedSuccess, setSelectedSuccess] = useState([]);
     const [openDialog, setOpenDialog] = useState(false);
@@ -46,9 +40,15 @@ export default function SuccessList() {
     const [editingCommentContent, setEditingCommentContent] = useState("");
     const [editingCommentId, setEditingCommentId] = useState("");
 
+    const router = useRouter();
+
     useEffect(() => {
         fetchSuccessList(page); // 초기 데이터 불러오기
     }, [page]);
+
+    useEffect(() => {
+        fetchSuccessList(); // 컴포넌트가 처음 마운트될 때 한 번만 데이터를 불러옴
+    }, []);
 
     const fetchSuccessList = async (page) => {
         try {
@@ -56,7 +56,7 @@ export default function SuccessList() {
             const response = await axios.get(`/success/successlist?page=${page}&limit=${successPerPage}`);
             const activeSuccesses = response.data.filter(success => success.active === '0');
             setSuccessList(activeSuccesses);
-            setSuccessList("이새퀴: ", response.data);
+            setSuccessList(response.data);
             setTotalPages(response.data.totalPages);
         } catch (error) {
             console.error("합격 후기 데이터를 불러오는 중 오류 발생:", error);
@@ -77,6 +77,11 @@ export default function SuccessList() {
     }, []);
 
     const handleSuccessClick = (success) => {
+        if (!userStore.id) {
+            alert("로그인 후에 작성할 수 있습니다.");
+            router.push("/signin/login");
+            return;
+        }
         setSelectedSuccess(success);
         setEditingContent(success.s_content); // 선택된 후기의 내용을 수정할 내용 상태에 설정
         fetchComments(success.s_idx); // 해당 후기의 댓글 목록 불러오기
@@ -114,7 +119,7 @@ export default function SuccessList() {
 
             await fetchComments(selectedSuccess.s_idx); // 댓글 목록 다시 불러오기
             setCommentContent(""); // 댓글 입력 필드 초기화
-            handleCloseDialog(); // 팝업 닫기
+            /* handleCloseDialog(); // 팝업 닫기 */
 
         } catch (error) {
             console.error("댓글 작성 중 오류 발생:", error);
@@ -175,7 +180,7 @@ export default function SuccessList() {
 
     const handleUpdateComment = async (su_idx) => {
         try {
-            const response = await axios.post("http://localhost:8080/comentssucc/updatecomment", {
+            const response = await axios.post("http://localhost:8080/commentsucc/updatecomment", {
                 su_idx: su_idx,
                 su_content: editingCommentContent
             });
@@ -192,14 +197,14 @@ export default function SuccessList() {
 
     const handleDeleteComment = async (su_idx) => {
         try {
-            const response = await axios.post("http://localhost:8080/comentssucc/deletecomment", {
+            const response = await axios.post("http://localhost:8080/commentsucc/deletecomment", {
                 su_idx: su_idx,
             })
             console.log("Comment deleted : ", response.data);
 
             await fetchComments(selectedSuccess.s_idx);
 
-            handleCloseDialog();
+            /* handleCloseDialog(); */
         } catch (error) {
             console.error("Error deleting comment : ", error);
         }
@@ -222,6 +227,10 @@ export default function SuccessList() {
     };
 
     const handleWriteSuccess = () => {
+        if (!userStore.id) {
+            alert("로그인 후에 작성할 수 있습니다.");
+            return;
+        }
         handleCloseDialog();
         window.location.href = `/review/review_success_write?s_idx=${selectedSuccess.s_idx}`;
     };
@@ -270,7 +279,7 @@ export default function SuccessList() {
                                     <TableCell sx={{ width: '100px', textAlign: 'center' }}>{success.active === '1' ? '' : success.s_title}</TableCell>
                                     <TableCell colSpan={1} sx={{ textAlign: 'center' }}>
                                         {success.active === '1' ? (
-                                            <span style={{ color: 'red', marginLeft: '10px', width: '300px' }}>삭제된 게시물 입니다.</span>
+                                            <span style={{ color: 'red', marginLeft: '10px', width: '300px' }}>삭제된 게시물입니다.</span>
                                         ) : (
                                             success.s_content
                                         )}
@@ -320,13 +329,14 @@ export default function SuccessList() {
                                 fullWidth
                                 value={editingContent}
                                 onChange={handleContentChange}
+                                disabled={selectedSuccess.s_id !== userStore.id}
                             />
                             <Typography>회사: {selectedSuccess.s_company}</Typography>
                             <Typography>작성일 : {selectedSuccess.s_regdate}</Typography>
                             <Typography variant="h6" style={{ marginTop: 20 }}>
                                 댓글 작성
                             </Typography>
-                            <TextField 
+                            <TextField
                                 fullWidth
                                 multiline
                                 rows={4}
@@ -369,18 +379,24 @@ export default function SuccessList() {
                                                 </TableCell>
                                                 <TableCell>{comments.su_regdate}</TableCell>
                                                 <TableCell>
-                                                    {editingCommentId === comments.su_idx ? (
-                                                        <Button onClick={() => handleUpdateComment(comments.su_idx)} color="primary">
-                                                            저장
-                                                        </Button>
-                                                    ) : (
-                                                        <Button onClick={() => handleEditComment(comments.su_idx, comments.su_content)} color="primary">
-                                                            수정
-                                                        </Button>
+                                                    {comments.id === userStore.id && (
+                                                        <>
+                                                            {editingCommentId === comments.su_idx ? (
+                                                                <Button onClick={() => handleUpdateComment(comments.su_idx)} color="primary">
+                                                                    저장
+                                                                </Button>
+                                                            ) : (
+                                                                <Button onClick={() => handleEditComment(comments.su_idx, comments.su_content)} color="primary">
+                                                                    수정
+                                                                </Button>
+                                                            )}
+                                                            <Button onClick={() => handleDeleteComment(comments.su_idx)} color="primary">
+                                                                삭제
+                                                            </Button>
+
+                                                        </>
+
                                                     )}
-                                                    <Button onClick={() => handleDeleteComment(comments.su_idx)} color="primary">
-                                                        삭제
-                                                    </Button>
                                                 </TableCell>
                                             </TableRow>
                                         ))}
@@ -390,18 +406,22 @@ export default function SuccessList() {
                         </>
 
                     )}
-                        </DialogContent>
-                    <DialogActions>
-                        <Button onClick={handleUpdate} color="primary">
-                            수정
-                        </Button>
-                        <Button onClick={handleDelete} color="secondary">
-                            삭제
-                        </Button>
-                        <Button onClick={handleCloseDialog} color="primary">
-                            닫기
-                        </Button>
-                    </DialogActions>
+                </DialogContent>
+                <DialogActions>
+                    {userStore.id === selectedSuccess?.s_id && (
+                        <>
+                            <Button onClick={handleUpdate} color="primary">
+                                수정
+                            </Button>
+                            <Button onClick={handleDelete} color="secondary">
+                                삭제
+                            </Button>
+                        </>
+                    )}
+                    <Button onClick={handleCloseDialog} color="primary">
+                        닫기
+                    </Button>
+                </DialogActions>
             </Dialog>
         </>
     );
