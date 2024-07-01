@@ -56,6 +56,10 @@ const nextConfig = {
         source : "/comments/comment",
         destination : "http://localhost:8080/comments/comment"
       },
+      {
+        source : "/commentsucc/comment",
+        destination : "http://localhost:8080/commentsucc/comment"
+      },
     ];
   },
 };
