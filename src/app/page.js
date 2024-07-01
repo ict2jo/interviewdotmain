@@ -27,7 +27,6 @@ import Login from "./signin/login/page";
 import CreateUser from "./signin/createUser/page";
 import Inquiryedit from "./mypage/Inquiry/Inquiryedit/page";
 import Loading from "./loading/page";
-import Footer from "./_components/Footer";
 import FindIdPw from "./signin/findIdPw/page";
 import FindIdContent from "./signin/findId/page";
 import FindPwContent from "./signin/findPw/page";
