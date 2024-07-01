@@ -27,6 +27,7 @@ class QuestionStore {
         }
     }
 
+
     get selectedCount() {
         return this.selectedQuestions.length;
     }

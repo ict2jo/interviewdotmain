@@ -38,7 +38,7 @@ const Choose = () => {
                 console.error('질문을 가져오지 못했습니다.:', error);
             }
         } else {
-            router.push(`/question?category=${category}`);
+            router.push(`question?category=${category}`);
         }
     };
 

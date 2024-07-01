@@ -38,6 +38,7 @@ import PayStatus from "./interview/payStatus/page";
 import Recruitmentdetail from "./job/recruitment/detail/[id]/page";
 import Inquirydetail from "./mypage/Inquiry/Inquirydetail/[id]/page";
 import Myrecruitment from "./mypage/Myrecruitment/page";
+import Historydetail from "@/app/ai/interview_history/historydetail/[id]/page";
 
 
 function Home() {
@@ -68,6 +69,10 @@ function Home() {
     if (menuStore.selectedMenu.startsWith('inquiryedit/')) {
       const i_idx = menuStore.selectedMenu.split('/')[1];
       return <Inquiryedit i_idx={i_idx} />;
+    }
+    if (menuStore.selectedMenu.startsWith('historydetail/')) {
+      const r_idx = menuStore.selectedMenu.split('/')[1];
+      return <Historydetail re_idx={r_idx}/>;
     }
     switch (menuStore.selectedMenu) {
       case "main":

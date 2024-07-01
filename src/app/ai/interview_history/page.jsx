@@ -1,7 +1,7 @@
 "use client"
 import './interview_history.css';
 import * as React from 'react';
-import { useState, useEffect } from 'react';
+import {useState, useEffect} from 'react';
 import Table from '@mui/material/Table';
 import TableBody from '@mui/material/TableBody';
 import TableCell from '@mui/material/TableCell';
@@ -11,9 +11,10 @@ import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
 import Pagination from '@mui/material/Pagination';
 import Stack from '@mui/material/Stack';
-import { Button, Checkbox } from "@mui/material";
+import {Button, Checkbox} from "@mui/material";
 import userStore from "@/stores/UserStore";
 import Link from "next/link";
+import menuStore from "@/stores/MenuStore";
 
 export default function InterviewHistory() {
     const [history, setHistory] = useState([]);
@@ -90,7 +91,7 @@ export default function InterviewHistory() {
                     headers: {
                         'Content-Type': 'application/json',
                     },
-                    body: JSON.stringify({ r_idx: selectedIds }), // JSON 데이터로 변경
+                    body: JSON.stringify({r_idx: selectedIds}), // JSON 데이터로 변경
                 });
 
                 if (response.ok) {
@@ -109,10 +110,11 @@ export default function InterviewHistory() {
     };
 
 
-
-
-
     const filteredHistory = history.slice((page - 1) * itemsPerPage, page * itemsPerPage);
+
+    const handleMenuClick = async (menu) => {
+        menuStore.setSelectedMenu(menu);
+    };
 
     return (
         <>
@@ -137,7 +139,7 @@ export default function InterviewHistory() {
                                         <TableRow
                                             key={index}
                                             className="history_info"
-                                            style={{ cursor: 'pointer' }}
+                                            style={{cursor: 'pointer'}}
                                         >
                                             <TableCell>
                                                 <Checkbox
@@ -145,12 +147,12 @@ export default function InterviewHistory() {
                                                     onChange={() => handleCheckboxChange(index)}
                                                 />
                                             </TableCell>
-                                            <TableCell>
-                                                <Link href={`/historydetail/${entry.questions[0].r_idx}`} passHref>
-                                                    <span>
-                                                        {entry.questions[0].question} 외 {entry.questions.length - 1}건
-                                                    </span>
-                                                </Link>
+                                            <TableCell
+                                                onClick={() => handleMenuClick(`historydetail/${entry.questions[0].r_idx}`)}
+                                            >
+                                            <span>
+                                                {entry.questions[0].question} 외 {entry.questions.length - 1}건
+                                            </span>
                                             </TableCell>
                                             <TableCell>{entry.interview_date}</TableCell>
                                         </TableRow>
