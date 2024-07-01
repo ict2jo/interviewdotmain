@@ -1,41 +1,46 @@
 "use client"
 
-import { Typography } from "@mui/material";
-
-
 
 export default function MySubmenu({handleMenuClick}) {
   return (
     <ul className="absolute right-20 top-16 mt-0 bg-white border border-gray-300 shadow-lg">
       <li className="whitespace-nowrap">
-        <Typography className="block px-4 py-2 hover:bg-primary-100"
+        <div className="block px-4 py-2 hover:bg-primary-100"
         onClick={() => handleMenuClick("profile")}>
           내 정보 수정
-        </Typography>
+        </div>
       </li>
       <li className="whitespace-nowrap">
-        <Typography
+        <div
           onClick={() => handleMenuClick("schedule")}
           className="block px-4 py-2 hover:bg-primary-100"
         >
           캘린더
-        </Typography>
+        </div>
       </li>
       <li className="whitespace-nowrap">
-        <Typography
+        <div
           onClick={() => handleMenuClick("intoduction")}
           className="block px-4 py-2 hover:bg-primary-100"
         >
-          자기소개서 이력서
-        </Typography>
+          자기소개서
+        </div>
       </li>
       <li className="whitespace-nowrap">
-        <Typography
+        <div
           onClick={() => handleMenuClick("inquiry")}
           className="block px-4 py-2 hover:bg-primary-100"
         >
           1:1문의
-        </Typography>
+        </div>
+      </li>
+      <li className="whitespace-nowrap">
+        <div
+          onClick={() => handleMenuClick("myrecruitment")}
+          className="block px-4 py-2 hover:bg-primary-100"
+        >
+          내 채용공고 보기
+        </div>
       </li>
     </ul>
   );

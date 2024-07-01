@@ -2,37 +2,37 @@
 
 import { Typography } from "@mui/material";
 
-export default function Interview_result_submenu({handleMenuClick}) {
+export default function AI_submenu({handleMenuClick}) {
     return (
         <ul className="absolute left-0 mt-2 bg-white border border-gray-300 shadow-lg">
             <li className="whitespace-nowrap">
                 <Typography className="block px-4 py-2 hover:bg-primary-100"
-                    onClick={() => handleMenuClick("profile")}>
-                프로필
+                    onClick={() => handleMenuClick("ai")}>
+                    면접 연습하기
                 </Typography>
             </li>
             <li className="whitespace-nowrap">
                 <Typography
                     className="block px-4 py-2 hover:bg-primary-100"
-                    onClick={() => handleMenuClick("career")}
+                    onClick={() => handleMenuClick("payments")}
                 >
-                자기소개서 & 이력서
+                    이용권 구매
                 </Typography>
             </li>
             <li className="whitespace-nowrap">
                 <Typography
                     className="block px-4 py-2 hover:bg-primary-100"
-                    onClick={() => handleMenuClick("schedule")}
+                    onClick={() => handleMenuClick("payStatus")}
                 >
-                일정관리
+                    나의 이용현황
                 </Typography>
             </li>
             <li className="whitespace-nowrap">
                 <Typography
                     className="block px-4 py-2 hover:bg-primary-100"
-                    onClick={() => handleMenuClick("inquiry")}
+                    onClick={() => handleMenuClick("payDetail")}
                 >
-                1:1문의
+                    결제내역
                 </Typography>
             </li>
         </ul>

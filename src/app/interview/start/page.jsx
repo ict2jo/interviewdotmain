@@ -6,6 +6,7 @@ import questionStore from '@/stores/questionStore';
 import CircularProgress from '@mui/material/CircularProgress';
 import { Button } from '@mui/material';
 import Webcam from 'react-webcam';
+import UserStore from "@/stores/UserStore";
 
 const Start = () => {
     const router = useRouter();
@@ -20,21 +21,39 @@ const Start = () => {
     const mediaRecorderRef = useRef(null);
 
     useEffect(() => {
-        const questions = questionStore.selectedQuestions; // Assuming questionStore has the correct structure
+        const questions = questionStore.selectedQuestions;
         setParsedQuestions(questions);
     }, []);
 
     useEffect(() => {
         if (parsedQuestions.length > 0) {
             const query = new URLSearchParams({
-                q_idx: parsedQuestions[currentQuestionIndex]?.q_idx, // Include current question index
+                q_idx: parsedQuestions[currentQuestionIndex]?.q_idx,
                 selectedQuestions: JSON.stringify(parsedQuestions),
             }).toString();
             router.replace(`/interview/start?${query}`);
             console.log('parsedQuestions:', parsedQuestions);
+            console.log('queryquery',query);
         }
     }, [parsedQuestions, currentQuestionIndex, router]);
 
+    useEffect(() => {
+        const urlParams = new URLSearchParams(window.location.search);
+        const q_idx = urlParams.get('q_idx');
+        const selectedQuestionsString = urlParams.get('selectedQuestions');
+
+        if (q_idx && selectedQuestionsString) {
+            const selectedQuestions = JSON.parse(decodeURIComponent(selectedQuestionsString));
+            setParsedQuestions(selectedQuestions);
+
+            const currentIndex = selectedQuestions.findIndex(question => question.q_idx === q_idx);
+            if (currentIndex !== -1) {
+                setCurrentQuestionIndex(currentIndex);
+            }
+        } else {
+            console.error('질문 데이터를 가져오지 못했습니다.');
+        }
+    }, []);
     const startRecording = async () => {
         const stream = webcamRef.current.video.srcObject;
         if (stream) {
@@ -144,12 +163,12 @@ const Start = () => {
                         <div className="question">
                             <p>
                                 {parsedQuestions.length > 0
-                                    ? `q_idx: ${parsedQuestions[currentQuestionIndex]?.q_idx}, ${parsedQuestions[currentQuestionIndex]?.question || '질문을 받아오지 못했습니다.'}`
+                                    ? `${parsedQuestions[currentQuestionIndex]?.question || '질문을 받아오지 못했습니다.'}`
                                     : '질문을 받아오지 못했습니다.'}
                             </p>
                         </div>
                         <div className="my_camera">
-                            <Webcam width={'100%'} audio={true} ref={webcamRef} screenshotFormat="image/jpeg" />
+                            <Webcam width={'900vh'} audio={true} ref={webcamRef} screenshotFormat="image/jpeg" />
                         </div>
                         {!isRecording && (
                             <Button onClick={handleRecordButtonClick} variant="outlined" className="record_button">

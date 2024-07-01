@@ -19,6 +19,7 @@ import Inquiry from "./mypage/Inquiry/page";
 import Starthome from "./interview/starthome/page";
 import JobTest from "./job/test/JobTest";
 import Verification from "../../pages/verification";
+import Footer from "./_components/Footer";
 import Result from "./job/test/result/Result";
 import Introduction from "./mypage/Introduction/page";
 import Calendar from "./mypage/Schedule/page";
@@ -30,6 +31,14 @@ import Footer from "./_components/Footer";
 import FindIdPw from "./signin/findIdPw/page";
 import FindIdContent from "./signin/findId/page";
 import FindPwContent from "./signin/findPw/page";
+import CheckoutPage from "./sandbox/checkout/page";
+import Payments from "./interview/payments/page";
+import PayDetail from "./interview/payDetail/page";
+import PayStatus from "./interview/payStatus/page";
+import Recruitmentdetail from "./job/recruitment/detail/[id]/page";
+import Inquirydetail from "./mypage/Inquiry/Inquirydetail/[id]/page";
+import Myrecruitment from "./mypage/Myrecruitment/page";
+
 
 function Home() {
   // useContext 훅으로 MobX Store 가져오기
@@ -48,17 +57,37 @@ function Home() {
   }, []);
 
   const renderContent = () => {
+    if (menuStore.selectedMenu.startsWith('detail/')) {
+      const recrutPblntSn = menuStore.selectedMenu.split('/')[1];
+      return <Recruitmentdetail recrutPblntSn={recrutPblntSn} />;
+    }
+    if (menuStore.selectedMenu.startsWith('inquirydetail/')) {
+      const i_idx = menuStore.selectedMenu.split('/')[1];
+      return <Inquirydetail i_idx={i_idx} />;
+    }
+    if (menuStore.selectedMenu.startsWith('inquiryedit/')) {
+      const i_idx = menuStore.selectedMenu.split('/')[1];
+      return <Inquiryedit i_idx={i_idx} />;
+    }
     switch (menuStore.selectedMenu) {
       case "main":
         return <Main />;
       case "ai":
         return <Starthome />;
+      case "payments":
+        return <Payments />;  
+      case "payDetail":
+        return <PayDetail />;  
+      case "payStatus":
+        return <PayStatus />;  
       case "verification":
         return <Verification />;
       case "Airesult":
         return <Airesult />;
       case "airesult_history":
         return <Interview_history />; //면접 기록
+      case "historydetail":
+        return <Historydetail/>
       case "airesult_feedback":
         return <Interview_feedback />; //AI 피드백
       case "airesult_guide":
@@ -87,6 +116,8 @@ function Home() {
         return <Calendar />;
       case "inquiry":
         return <Inquiry />;
+      case "toss":
+        return <CheckoutPage />;
       case "inquirywrite":
         return <Inquirywrite />;
       case "inquiryedit":
@@ -101,6 +132,8 @@ function Home() {
         return <FindIdContent />;
       case "findPw":
         return <FindPwContent />;
+      case "myrecruitment":
+        return <Myrecruitment />;
       default:
         return <Loading />;
     }

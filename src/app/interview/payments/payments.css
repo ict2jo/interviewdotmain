@@ -1,0 +1,108 @@
+.pay_container {
+    border-radius: 20px;
+    padding: 50px;
+    width: 80%;
+    margin: 0 auto;
+    max-width: 1200px; 
+    height: auto; 
+}
+
+.pay_container h1 {
+    font-size: 30px;
+    font-weight: bold;
+    margin-bottom: 50px;
+    border-bottom: 1px solid lightgray;
+}
+
+.tickets-container {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+}
+
+.ticket {
+    flex: 0 1 calc(30% - 20px); 
+    margin-bottom: 20px; 
+    background-color: #f9f9f9;
+    border: 1px solid #ccc;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.ticket-op {
+    border-top-left-radius: 10px;
+    border-top-right-radius: 10px;
+    padding: 20px;
+    text-align: center;
+    font-size: 25px; 
+    font-weight: bold;
+    color: white;
+}
+
+.ticket-inner {
+    padding: 20px;
+    text-align: center;
+    border-bottom-left-radius: 10px;
+    border-bottom-right-radius: 10px;
+}
+
+.ticket p {
+    margin: 55px 0;
+}
+
+.ticket button {
+    background-color: lightgray;
+    color: black;
+    border: none;
+    border-radius: 30px;
+    padding: 10px 20px; 
+    cursor: pointer;
+    font-size: 16px; 
+    width: 70%;
+    margin: 10px auto; 
+}
+
+.ticket button:hover {
+    background-color: gray;
+}
+
+.ticket-input {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+}
+
+.ticket-input input {
+    width: 50px; 
+    margin-right: 10px;
+    border: 1px solid lightgray;
+    text-align: center;
+}
+
+.ticket-input p {
+    margin: 0;
+    font-size: 20px;
+    font-weight: bold;
+    text-align: center;
+}
+
+@media (max-width: 820px) {
+    .ticket {
+        flex: 0 1 calc(50% - 20px); 
+    }
+
+    .ticket-op {
+        font-size: 18px; 
+    }
+
+    .ticket p {
+        font-size: 12px; 
+    }
+
+    .ticket button {
+        font-size: 10px; 
+        padding: 6px 12px; 
+        width: 80%; 
+    }
+}
