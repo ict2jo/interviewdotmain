@@ -106,7 +106,7 @@ class UserStore {
         });
       }
     }
-  }
+}
 
 
 const userStore = new UserStore();

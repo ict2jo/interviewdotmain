@@ -26,6 +26,7 @@ import {
 } from "@mui/material";
 import userStore from "@/stores/UserStore";
 import { Box } from "@mui/system";
+import { useRouter } from "next/navigation";
 
 export default function ReviewList() {
     const [reviewList, setReviewList] = useState([]);
@@ -39,6 +40,8 @@ export default function ReviewList() {
     const reviewsPerPage = 9; // 한 페이지당 보일 리뷰 개수
     const [editingCommentContent, setEditingCommentContent] = useState("");
     const [editingCommentId, setEditingCommentId] = useState("");
+
+    const router = useRouter();
 
 
     useEffect(() => {
@@ -74,6 +77,11 @@ export default function ReviewList() {
 
 
     const handleReviewClick = (review) => {
+        if(!userStore.id){
+            alert("로그인 후에 작성할 수 있습니다.");
+            router.push("/signin/login"); // 로그인 페이지로 이동
+            return;
+        }
         setSelectedReview(review);
         setEditingContent(review.r_content); // 선택된 리뷰의 내용을 수정할 내용 상태에 설정
         fetchComments(review.r_idx); // 해당 리뷰의 댓글 목록 불러오기
@@ -116,7 +124,7 @@ export default function ReviewList() {
             await fetchComments(selectedReview.r_idx);
 
             setCommentContent(""); // 댓글 입력 필드 초기화  //
-            handleCloseDialog(); // 팝업 창 닫기
+            /* handleCloseDialog(); // 팝업 창 닫기 */
 
 
         } catch (error) {
@@ -219,7 +227,7 @@ export default function ReviewList() {
             // 삭제 후 댓글 목록 다시 불러오기
             await fetchComments(selectedReview.r_idx);
 
-            handleCloseDialog(); // 팝업 창 닫기
+            /* handleCloseDialog(); // 팝업 창 닫기 */
         } catch (error) {
             console.error("Error deleting comment:", error);
         }
@@ -246,6 +254,10 @@ export default function ReviewList() {
     };
 
     const handleWriteReview = () => {
+        if (!userStore.id) {
+            alert("로그인 후에 작성할 수 있습니다.");
+            return;
+        }
         handleCloseDialog();
         window.location.href = `/review/review_list_write?r_idx=${selectedReview.r_idx}`;
     }
@@ -350,6 +362,7 @@ export default function ReviewList() {
                                 variant="outlined"
                                 value={editingContent}
                                 onChange={handleContentChange}
+                                disabled={selectedReview.r_id !== userStore.id}
                             />
                             <Typography>회사: {selectedReview.r_company}</Typography>
                             <Typography>작성일: {selectedReview.r_regdate}</Typography>
@@ -399,34 +412,44 @@ export default function ReviewList() {
                                                 </TableCell>
                                                 <TableCell>{comments.re_regdate}</TableCell>
                                                 <TableCell>
-                                                    {editingCommentId === comments.re_idx ? (
-                                                        <Button onClick={() => handleUpdateComment(comments.re_idx)} color="primary">
-                                                            저장
-                                                        </Button>
-                                                    ) : (
-                                                        <Button onClick={() => handleEditComment(comments.re_idx, comments.re_content)} color="primary">
-                                                            수정
-                                                        </Button>
+                                                    {comments.id === userStore.id &&(
+                                                        <>
+                                                            {editingCommentId === comments.re_idx ? (
+                                                                <Button onClick={() => handleUpdateComment(comments.re_idx)} color="primary">
+                                                                    저장
+                                                                </Button>
+                                                            ) : (
+                                                                <Button onClick={() => handleEditComment(comments.re_idx, comments.re_content)} color="primary">
+                                                                    수정
+                                                                </Button>
+                                                            )}
+                                                            <Button onClick={() => handleDeleteComment(comments.re_idx)} color="primary">
+                                                                삭제
+                                                            </Button>
+
+                                                        </>
+
                                                     )}
-                                                    <Button onClick={() => handleDeleteComment(comments.re_idx)} color="primary">
-                                                        삭제
-                                                    </Button>
                                                 </TableCell>
                                             </TableRow>
                                         ))}
                                     </TableBody>
                                 </Table>
                             )}
-                    </>
+                        </>
                     )}
                 </DialogContent>
                 <DialogActions>
-                    <Button onClick={handleUpdate} color="primary">
-                        수정
-                    </Button>
-                    <Button onClick={handleDelete} color="primary">
-                        삭제
-                    </Button>
+                {userStore.id === selectedReview?.r_id && (
+                        <>
+                            <Button onClick={handleUpdate} color="primary">
+                                수정
+                            </Button>
+                            <Button onClick={handleDelete} color="primary">
+                                삭제
+                            </Button>
+                        </>
+                    )}
                     <Button onClick={handleCloseDialog} color="primary">
                         닫기
                     </Button>
