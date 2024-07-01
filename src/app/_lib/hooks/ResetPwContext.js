@@ -1,5 +1,6 @@
 "use client";
 import { URL } from "@/app/api/boot/route";
+import menuStore from "@/stores/MenuStore";
 import axios from "axios";
 import { useRouter } from "next/navigation";
 import React, { createContext, useReducer, useContext } from "react";
@@ -11,7 +12,8 @@ function reducer(state, action) {
       return { ...state, [action.field]: action.payload };
     case "verified":
       return { ...state, verified: true };
-
+    case "init":
+      return { ...state, pw: "" };
     case "validatePw":
       const pwRegex =
         /^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,16}$/;
@@ -43,7 +45,7 @@ function ResetPwProvider({ children }) {
   }
 
   const [{ id, name, email, pw, checkPw, authCode, verified, isMatched, validPw }, dispatch] = useReducer(reducer, initialState)
-  const rounter = useRouter();
+
 
   const handleFieldChange = (field) => (e) => {
     dispatch({ type: "updateField", field, payload: e.target.value });
@@ -51,18 +53,19 @@ function ResetPwProvider({ children }) {
 
   async function handleGetCode(e) {
     e.preventDefault();
-    console.log("click");
     try {
       const res = await axios.post(`${URL}findPw`, {
         id: id,
         email: email,
         name: name,
       });
-
       alert("인증번호를 이메일로 보냈습니다.")
-
     } catch (err) {
-      console.error("인증번호 오류:", err);
+      if (err.response && err.response.status === 404) {
+        alert("회원님의 정보를 찾을 수 없습니다.");
+      } else {
+        console.error("인증번호 오류:", err);
+      }
     }
   }
 
@@ -74,12 +77,15 @@ function ResetPwProvider({ children }) {
         authCode: authCode,
       });
       if (res.status === 200) {
-        dispatch({ type: "verified" })
-      } else {
-        alert("인증번호가 틀렸습니다")
+        dispatch({ type: "verified" });
       }
     } catch (err) {
-      console.error("Auth code verification request error:", err);
+      if (err.response && err.response.status === 401) {
+        alert("인증번호가 틀렸습니다");
+      } else {
+        console.error("Auth code verification request error:", err);
+        alert("An unexpected error occurred. Please try again later.");
+      }
     }
   }
 
@@ -92,7 +98,7 @@ function ResetPwProvider({ children }) {
       });
       if (res.status === 200) {
         alert("비밀번호를 변경했습니다.")
-        rounter.push("/signin/login")
+        menuStore.setSelectedMenu("login")
       }
     } catch (err) {
       console.error("비밀번호 변경 오류:", err);

@@ -27,6 +27,10 @@ import Login from "./signin/login/page";
 import CreateUser from "./signin/createUser/page";
 import Inquiryedit from "./mypage/Inquiry/Inquiryedit/page";
 import Loading from "./loading/page";
+import Footer from "./_components/Footer";
+import FindIdPw from "./signin/findIdPw/page";
+import FindIdContent from "./signin/findId/page";
+import FindPwContent from "./signin/findPw/page";
 import CheckoutPage from "./sandbox/checkout/page";
 import Payments from "./interview/payments/page";
 import PayDetail from "./interview/payDetail/page";
@@ -118,12 +122,16 @@ function Home() {
         return <Inquirywrite />;
       case "inquiryedit":
         return <Inquiryedit />;
-      case "option":
-        return <OptionalInfo />;
       case "login":
         return <Login />;
       case "createUser":
         return <CreateUser />;
+      case "findIdPw":
+        return <FindIdPw />;
+      case "findId":
+        return <FindIdContent />;
+      case "findPw":
+        return <FindPwContent />;
       case "myrecruitment":
         return <Myrecruitment />;
       default:

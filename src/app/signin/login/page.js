@@ -15,6 +15,7 @@ import { useRouter } from "next/navigation";
 import { observer } from "mobx-react-lite";
 import menuStore from "@/stores/MenuStore";
 import userStore from "@/stores/UserStore";
+import { Typography } from "@mui/material";
 
 const Login = observer(() => {
   const router = useRouter()
@@ -72,9 +73,9 @@ const Login = observer(() => {
       if (response.data.token) {
         authStore.setToken(response.data.token);
         await fetchUserInfo(response.data.token);
-
         router.push("/");
       }
+      else alert("아이디 또는 비밀번호가 일치하지 않습니다. ")
     } catch (error) {
       alert("로그인 실패")
       setUser({
@@ -101,9 +102,11 @@ const Login = observer(() => {
   function handleGoogleLogin() {
     window.location.href = "http://localhost:8080/oauth2/authorization/google"
   }
+
+  const handleMenuClick = async (menu) => {
+    menuStore.setSelectedMenu(menu)
+  }
   return (
-
-
     <Form width="w-1/3">
       <div className="flex flex-col gap-5 border-b-2 border-gray-500 pb-5">
         <h1 className="text-3xl font-bold text-center">인터뷰닷</h1>
@@ -121,12 +124,10 @@ const Login = observer(() => {
           onChange={changeUserLoginInfo}
         />
         <div className="flex flex-col items-end">
-          <Link href="/signin/findIdPw">
-            <p className="border-b border-black text-sm">
-              아이디/비밀번호 찾기
-            </p>
-          </Link>
-          <Link href="/signin/adminLogin">
+          <Typography onClick={() => handleMenuClick("findIdPw")} className="border-b border-black text-sm cursor-pointer">
+            아이디/비밀번호 찾기
+          </Typography>
+          <Link href="/signin/adminLogin ">
             <p className="border-b border-gray-700 text-gray-700 text-sm mt-2">
               관리자 로그인
             </p>
@@ -135,8 +136,8 @@ const Login = observer(() => {
         <Button type="longBlue" onClick={handleLogin}>
           로그인
         </Button>
-        <Button type="longWhite">
-          <Link href="/signin/createUser"> 회원가입 </Link>
+        <Button type="longWhite" onClick={() => menuStore.setSelectedMenu("createUser")}>
+          회원가입
         </Button>
       </div>
       <p className="text-xs text-center text-gray-600 bg-white pt-3">

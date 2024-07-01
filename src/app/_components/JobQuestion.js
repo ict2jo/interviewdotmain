@@ -3,11 +3,16 @@
 import Button from "@/app/_components/Button";
 import { useJobTest } from "../_lib/hooks/JobTestContext";
 import CheckBox from "./CheckBox";
+import { useEffect } from "react";
 
 export default function JobQuestion() {
   const { questions, index, dispatch, page, answers, points, numQuestions } =
     useJobTest();
   const questionsPerPage = 5;
+
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, [page]);
 
   const currentQuestions = questions.slice(
     (page - 1) * questionsPerPage,

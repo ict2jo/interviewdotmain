@@ -12,13 +12,8 @@ export default function Main() {
     };
     return (
         <>
-            <div className="w-full flex flex-col justify-center items-center mb-20">
-
-                {/* <Button variant="text">Text</Button>
-          <Button variant="contained">Contained</Button>
-          <Button variant="outlined">Outlined</Button> */}
+            <div className="w-full flex flex-col justify-center items-center mb-20 h-[80vh]">
                 <div className="w-1/3 mt-10">
-                    {/*  임시 이미지 */}
                     <Image src={bg} className="" alt="background image" />
                 </div>
                 <p className="text-3xl m-10 font-extrabold mpt-10">

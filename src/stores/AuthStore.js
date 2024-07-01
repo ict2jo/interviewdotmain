@@ -24,22 +24,23 @@ class AuthStore {
 
 
   logout() {
-    this.token = null;
-    this.isAuthenticated = false;
-    localStorage.removeItem("token");
+    setTimeout(() => {
+      this.token = null;
+      this.isAuthenticated = false;
+      localStorage.removeItem("token");
 
-    this.setUserInfo({
-      id: '',
-      name: '',
-      email: '',
-      phonenumber: '',
-      provider: '',
-      kakao: '',
-      naver: '',
-      google: '',
-    });
+      this.setUserInfo({
+        id: '',
+        name: '',
+        email: '',
+        phonenumber: '',
+        provider: '',
+        kakao: '',
+        naver: '',
+        google: '',
+      });
+    }, 2000)
 
-    console.log(this.isAuthenticated);
   }
 
   setUser(user) {
