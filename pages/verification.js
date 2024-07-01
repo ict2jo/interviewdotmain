@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import './verification.css'; 
 import userStore from '@/stores/UserStore';
+import axios from 'axios';
 
 export default function Verification() {
   const [question, setQuestion] = useState('');
@@ -19,7 +20,7 @@ export default function Verification() {
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ question, type: 'correction' }),
+        body: JSON.stringify({ question: userStore.field, type: 'correction' }),
       });
 
       const data = await response.json();
@@ -47,7 +48,7 @@ export default function Verification() {
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ question, feedback, type: 'rewrite' }), // feedback도 함께 전송
+        body: JSON.stringify({ question: userStore.field, feedback, type: 'rewrite' }), // feedback도 함께 전송
       });
 
       const data = await response.json();
@@ -66,28 +67,33 @@ export default function Verification() {
     }
   };
 
+  console.log("유저유저"+userStore.id)
   const handleSave = async () => {
     try {
-      const response = await fetch('/api/save', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
+      const response = await axios.post(
+        'http://localhost:8080/introduce/save',
+        {
+          id: userStore.id,
+          correctedEssay: correctedEssay,
         },
-        body: JSON.stringify({ correctedEssay }),
-      });
-
-      const data = await response.json();
-
-      if (!response.ok) {
-        throw new Error(data.error || `Request failed with status ${response.status}`);
+        {
+          headers: {
+            'Content-Type': 'application/json',
+          },
+        }
+      );
+  
+      if (response.status === 200) {
+        alert('자기소개서가 성공적으로 저장되었습니다.');
+      } else {
+        throw new Error(response.data.error || `Request failed with status ${response.status}`);
       }
-
-      alert('자기소개서가 성공적으로 저장되었습니다.');
     } catch (error) {
       console.error('Error:', error);
       alert('자기소개서 저장 중 오류가 발생했습니다.');
     }
   };
+  
 
   return (
     <div className="chat-container">

@@ -104,19 +104,10 @@ class UserStore {
         .catch((error) => {
           console.error("Error loading user data", error);
         });
-        const userData = response.data;
-        this.setId(userData.id);
-        this.setName(userData.name);
-        this.setEmail(userData.email);
-        this.setPhonenumber(userData.phonenumber);
-        console.log("Loaded user data:", userData);
-
-      } catch (error) {
-        console.error("Error loading user data", error);
       }
     }
   }
-}
+
 
 const userStore = new UserStore();
 export default userStore;

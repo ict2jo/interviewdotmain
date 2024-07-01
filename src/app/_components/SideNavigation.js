@@ -1,6 +1,7 @@
 "use client"
 import NoSsr from '@mui/material/NoSsr';
 
+import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import MySubmenu from "./MySubMenu";
@@ -9,7 +10,6 @@ import menuStore from "@/stores/MenuStore";
 import authStore from "@/stores/AuthStore";
 import { observer } from "mobx-react-lite";
 import userStore from "@/stores/UserStore";
-import Spinner from './Spinner';
 
 
 const SideNavigation = observer(() => {
@@ -17,7 +17,7 @@ const SideNavigation = observer(() => {
   const submenuTimeoutRef = useRef(null);
   const router = useRouter();
   const [isSubmenuVisible, setSubmenuVisible] = useState(false);
-  const [isLoggingOut, setIsLoggingOut] = useState(false);
+
   const handleMouseEnter = () => {
     if (submenuTimeoutRef.current) {
       clearTimeout(submenuTimeoutRef.current);
@@ -35,18 +35,14 @@ const SideNavigation = observer(() => {
     menuStore.setSelectedMenu(menu)
   }
 
-  const handleLogout = () => {
-    setIsLoggingOut(true);
+  function handleLogout() {
     authStore.logout();
-    setTimeout(() => {
-      router.push("/");
-      setIsLoggingOut(false);
-    }, 2000);
+    router.push("/");
   };
+
   useEffect(() => {
     userStore.loadUserFromServer();
   }, []);
-
   return (
     <NoSsr>
       <nav className="z-10 text-xl">
@@ -63,11 +59,8 @@ const SideNavigation = observer(() => {
                 <span onClick={() => handleMenuClick("profile")}>{userStore.name}</span>
 
               <li>
-                {isLoggingOut ? (
-                  <Spinner type="spinner-mini" />
-                ) : (
-                  <button className="hover:bg-primary-100 transition-colors" onClick={handleLogout}>로그아웃</button>
-                )}
+              {isSubmenuVisible && <MySubmenu handleMenuClick={handleMenuClick} />}
+                <button className="hover:bg-primary-100 transition-colors" onClick={handleLogout}>로그아웃</button>
               </li>
               </div>
             </>
@@ -76,14 +69,14 @@ const SideNavigation = observer(() => {
 
               <Typography
                 onClick={() => handleMenuClick("login")}
-                className="hover:bg-primary-100 transition-colors whitespace-nowrap cursor-pointer"
+                className="hover:bg-primary-100 transition-colors whitespace-nowrap"
               >
                 로그인
               </Typography>
 
               <Typography
                 onClick={() => handleMenuClick("createUser")}
-                className="hover:bg-primary-100 transition-colors whitespace-nowrap cursor-pointer"
+                className="hover:bg-primary-100 transition-colors whitespace-nowrap"
               >
                 회원가입
               </Typography>
