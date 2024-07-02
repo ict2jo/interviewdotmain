@@ -8,7 +8,7 @@ import { Typography } from "@mui/material";
 import Resume_submenu from "./Resume_submenu";
 import { observer } from "mobx-react-lite";
 import AI_submenu from "./AI_submenu";
-
+import userStore from "@/stores/UserStore";
 const Navigation = observer(() => {
   const [activeMenu, setActiveMenu] = useState(null);
   const submenuTimeoutRef = useRef(null);
@@ -106,7 +106,7 @@ const Navigation = observer(() => {
           >
             <Typography
               className="block hover:bg-primary-100 transition-colors"
-              onClick={() => handleMenuClick("jobTest")}
+              onClick={userStore.name? () => handleMenuClick("jobTest") : () => handleMenuClick("login")}
             >
               직업검사
             </Typography>
