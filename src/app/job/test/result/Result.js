@@ -124,7 +124,7 @@ function PageContent() {
   return (
     <div className="w-full bg-white py-10">
       <div className="m-auto">
-        {answers ? (
+        {storedAnswers  ? (
           <>
             <div className="flex justify-center gap-3">
               <div className="h-[90vh]">
