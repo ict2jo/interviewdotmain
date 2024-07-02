@@ -1,5 +1,5 @@
 "use client";
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { observer } from 'mobx-react-lite';
 import './question.css';
 import questionStore from '@/stores/questionStore';
@@ -7,8 +7,7 @@ import { useRouter, useSearchParams } from "next/navigation";
 import Pagination from '@mui/material/Pagination';
 import PaginationItem from '@mui/material/PaginationItem';
 import { styled } from '@mui/system';
-import ArrowBackIosNewIcon from '@mui/icons-material/ArrowBackIosNew';
-import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
+import { TextField, Button } from "@mui/material";
 
 const StyledPaginationItem = styled(PaginationItem)(({ theme }) => ({
     '&.Mui-selected': {
@@ -19,6 +18,7 @@ const StyledPaginationItem = styled(PaginationItem)(({ theme }) => ({
 }));
 
 const Question = observer(() => {
+    const [search, setSearch] = useState('');
     const router = useRouter();
     const searchParams = useSearchParams();
     const category = searchParams.get('category');
@@ -27,7 +27,6 @@ const Question = observer(() => {
     const { currentPage, itemsPerPage, questions } = questionStore;
 
     useEffect(() => {
-        // Initial fetch when category or q_idx changes
         fetchQuestions();
     }, [category, q_idx]);
 
@@ -52,12 +51,31 @@ const Question = observer(() => {
         }
     };
 
-
     const go_before_page = () => {
-        router.push(`/interview/choose`)
-    }
+        questionStore.reset();
+        router.push(`/interview/choose`);
+    };
+
     const handlePageChange = (event, page) => {
         questionStore.setPage(page);
+    };
+
+    const handleSearchChange = (event) => {
+        setSearch(event.target.value);
+    };
+
+    const handleSearch = () => {
+        fetch(`http://localhost:8080/interview/search?search=${search}&category=${category}`)
+            .then(response => response.json())
+            .then(data => questionStore.setQuestions(data))
+            .catch(error => console.error('질문을 가져오지 못했습니다.:', error));
+    };
+
+    const handleKeyPress = (event) => {
+        if (event.key === 'Enter') {
+            handleSearch();
+            console.log("엔터");
+        }
     };
 
     const startIndex = (currentPage - 1) * itemsPerPage;
@@ -72,6 +90,8 @@ const Question = observer(() => {
                     <span>최대 3개의 질문을 선택 하실 수 있습니다.</span>
                 </div>
                 <div className="count">{questionStore.selectedCount} / 3 </div>
+                <Button onClick={go_before_page} variant="outlined" className="question_before_button">이전</Button>
+                <Button onClick={go_next_page} variant="contained" className="question_next_button">다음</Button>
                 <div className="questions">
                     {paginatedQuestions.map((question, index) => (
                         <div
@@ -83,6 +103,17 @@ const Question = observer(() => {
                         </div>
                     ))}
                 </div>
+                <div className="question_button_container">
+                </div>
+                <TextField
+                    className="Search_TextField"
+                    id="outlined-basic"
+                    label="질문을 검색해보세요"
+                    variant="outlined"
+                    value={search}
+                    onChange={handleSearchChange}
+                    onKeyPress={handleKeyPress}
+                />
                 <div className="pagination_container">
                     <Pagination
                         count={Math.ceil(questions.length / itemsPerPage)}
@@ -94,15 +125,8 @@ const Question = observer(() => {
                     />
                 </div>
             </div>
-            <div className="before_page">
-                <ArrowBackIosNewIcon style={{ fontSize: 40 }} onClick={go_before_page} />
-            </div>
-            <div className="next_page">
-                <ArrowForwardIosIcon style={{ fontSize: 40 }} onClick={go_next_page} />
-            </div>
         </div>
     );
 });
 
 export default Question;
-

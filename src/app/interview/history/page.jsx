@@ -1,7 +1,7 @@
 "use client"
-import './interview_history.css';
+
 import * as React from 'react';
-import {useState, useEffect} from 'react';
+import { useState, useEffect } from 'react';
 import Table from '@mui/material/Table';
 import TableBody from '@mui/material/TableBody';
 import TableCell from '@mui/material/TableCell';
@@ -11,15 +11,16 @@ import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
 import Pagination from '@mui/material/Pagination';
 import Stack from '@mui/material/Stack';
-import {Button, Checkbox} from "@mui/material";
 import userStore from "@/stores/UserStore";
-import menuStore from "@/stores/MenuStore";
+import "./history.css";
+import { useRouter } from "next/navigation";
+import {Button} from "@mui/material";
 
 export default function InterviewHistory() {
     const [history, setHistory] = useState([]);
     const [page, setPage] = useState(1);
-    const [isCheckedAll, setIsCheckedAll] = useState(false);
     const itemsPerPage = 5;
+    const router = useRouter();
 
     useEffect(() => {
         if (userStore.id) {
@@ -57,75 +58,41 @@ export default function InterviewHistory() {
         setPage(newPage);
     };
 
-    const handleCheckboxChange = (index) => {
-        const updatedHistory = [...history];
-        updatedHistory[index].isChecked = !updatedHistory[index].isChecked;
-        setHistory(updatedHistory);
-    };
+    const handleSelectQuestion = (entry) => {
+        if (entry.questions.length > 0) {
+            const selectedQuestions = entry.questions.map(question => ({
+                q_idx: question.q_idx,
+                question: question.question
+            }));
+            const selectedQuestionsString = encodeURIComponent(JSON.stringify(selectedQuestions));
+            const q_idx = entry.questions.map(question => question.q_idx);
 
-    const handleSelectAll = () => {
-        const updatedHistory = history.map(entry => ({
-            ...entry,
-            isChecked: !isCheckedAll
-        }));
-        setHistory(updatedHistory);
-        setIsCheckedAll(!isCheckedAll);
-    };
-
-    const handleSelectDelete = async () => {
-        const selectedIndexes = history.reduce((acc, entry, index) => {
-            if (entry.isChecked) {
-                acc.push(index);
-            }
-            return acc;
-        }, []);
-
-        const selectedIds = selectedIndexes.map(index => history[index].questions[0].r_idx);
-        console.log(selectedIds); // 선택된 r_idx 배열 콘솔 출력
-
-        if (selectedIds.length > 0) {
-            try {
-                const response = await fetch(`http://localhost:8080/interview/historydelete`, {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify({r_idx: selectedIds}), // JSON 데이터로 변경
-                });
-
-                if (response.ok) {
-                    console.log('삭제 완료');
-                    alert("정상적으로 삭제되었습니다. ");
-                    getHistory();
-                } else {
-                    console.error('삭제 실패');
-                }
-            } catch (error) {
-                console.error('삭제 요청 에러:', error);
-            }
+            router.push(`/interview/start?q_idx=${q_idx}&selectedQuestions=${selectedQuestionsString}`);
         } else {
-            console.warn('선택된 항목이 없습니다.');
+            console.error("질문이 없습니다.");
         }
     };
 
     const filteredHistory = history.slice((page - 1) * itemsPerPage, page * itemsPerPage);
 
-    const handleMenuClick = async (menu) => {
-        menuStore.setSelectedMenu(menu);
-    };
+    const handlebefore = () => {
+        localStorage.removeItem("rand");
+        router.push('/interview/select')
+    }
 
     return (
-        <div className="container">
-            <div className="white_box">
+        <div className="history_container">
+            <div className="history_white_box">
                 <div className="title">
-                    <h1>면접기록</h1>
+                    <h1>과거 면접기록</h1>
+                    <span>클릭 시 해당 질문에 대한 면접이 시작됩니다.</span><br/>
                 </div>
+                <br/>
                 <div className="history_title">
                     <TableContainer component={Paper} className="history_table_container">
                         <Table>
                             <TableHead>
                                 <TableRow className="history_title">
-                                    <TableCell></TableCell>
                                     <TableCell>면접 질문</TableCell>
                                     <TableCell>면접 날짜</TableCell>
                                 </TableRow>
@@ -143,19 +110,14 @@ export default function InterviewHistory() {
                                             key={index}
                                             className="history_info"
                                             style={{cursor: 'pointer'}}
+                                            onClick={() => handleSelectQuestion(entry)}
                                         >
                                             <TableCell>
-                                                <Checkbox
-                                                    checked={entry.isChecked || false}
-                                                    onChange={() => handleCheckboxChange(index)}
-                                                />
-                                            </TableCell>
-                                            <TableCell
-                                                onClick={() => handleMenuClick(`historydetail/${entry.questions[0].r_idx}`)}
-                                            >
-                                                <span>
-                                                    {entry.questions[0].question} 외 {entry.questions.length - 1}건
-                                                </span>
+                                                {entry.questions.map((question, i) => (
+                                                    <React.Fragment key={i}>
+                                                        {question.question}<br/>
+                                                    </React.Fragment>
+                                                ))}
                                             </TableCell>
                                             <TableCell>{entry.interview_date}</TableCell>
                                         </TableRow>
@@ -165,18 +127,7 @@ export default function InterviewHistory() {
                         </Table>
                     </TableContainer>
                 </div>
-                <div className="history_button">
-                    <Button
-                        variant="outlined"
-                        className="select_button"
-                        onClick={handleSelectAll}
-                    >
-                        {isCheckedAll ? '전체 해제' : '전체 선택'}
-                    </Button>
-                    <Button variant="outlined" className="delete_button" onClick={handleSelectDelete}>
-                        선택 삭제
-                    </Button>
-                </div>
+                <Button onClick={handlebefore} variant="contained" className="history_before_button">이전</Button>
                 {history.length > 0 && (
                     <Stack spacing={2} className="paging_number">
                         <Pagination
@@ -190,5 +141,5 @@ export default function InterviewHistory() {
                 <div className="history_list"></div>
             </div>
         </div>
-    )
+    );
 }
