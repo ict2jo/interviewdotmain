@@ -1,7 +1,6 @@
 "use client"
 
 import "./review_success.css"
-import Header from "@/app/_components/Header"
 import { useEffect, useState } from "react"
 import axios from "axios";
 import {
@@ -235,6 +234,22 @@ export default function SuccessList() {
         window.location.href = `/review/review_success_write?s_idx=${selectedSuccess.s_idx}`;
     };
 
+    const handleReportReview = async () => {
+        try {
+            const response = await axios.post("http://localhost:8080/reportsucc/reportinsert", {
+                u_idx: selectedSuccess.u_idx,
+                u2_idx: userStore.u_idx,
+                s_idx: selectedSuccess.s_idx,
+                rep_active: "1"
+            });
+            console.log("리뷰리스트_idx", selectedSuccess.u_idx),
+            console.log("Review reported:", response.data);
+            handleCloseDialog();
+        } catch (error) {
+            console.error("Error reporting review:", error);
+        }
+    };
+
     const handlePageChange = (event, value) => {
         setPage(value);
     };
@@ -245,7 +260,6 @@ export default function SuccessList() {
 
     return (
         <>
-            <Header />
             <Container className="reviewwrap" sx={{ width: 1000 }}>
                 <Typography variant="h4" padding={"10px"}>
                     합격 후기 게시판
@@ -418,6 +432,9 @@ export default function SuccessList() {
                             </Button>
                         </>
                     )}
+                    <Button onClick={handleReportReview} color="primary">
+                        신고하기
+                    </Button>
                     <Button onClick={handleCloseDialog} color="primary">
                         닫기
                     </Button>

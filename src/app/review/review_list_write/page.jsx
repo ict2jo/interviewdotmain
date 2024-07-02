@@ -39,10 +39,12 @@ export default function Review_List_Write() {
         try {
             console.log("id" + userStore.id);
             const response = await axios.post("http://localhost:8080/review/reviewwrite", {
+                u_idx: userStore.u_idx,
                 r_id: userStore.id, // URL 파라미터로 받은 작성자 정보 사용
                 r_title: r_title,
                 r_company: r_company,
-                r_content: r_content
+                r_content: r_content,
+                
             });
             console.log("리뷰 작성 완료:", response.data);
             setTitle(response.data);
@@ -68,7 +70,7 @@ export default function Review_List_Write() {
     };
 
     const handleContentChange = (value) => {
-        value = value.replace(/<p>/gi, "").replace(/<\/p>/gi, "");
+        /* value = value.replace(/<p>/gi, "").replace(/<\/p>/gi, ""); */
         setContent(value);
     };
 
