@@ -13,7 +13,6 @@ export default function Verification() {
 
   const handleCorrection = async () => {
     setLoading(true);
-
     try {
       const response = await fetch('/api/generate', {
         method: 'POST',
@@ -41,7 +40,6 @@ export default function Verification() {
 
   const handleRewrite = async () => {
     setLoading2(true);
-
     try {
       const response = await fetch('/api/generate', {
         method: 'POST',
