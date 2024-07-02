@@ -50,8 +50,8 @@ const Choose = () => {
 
     return (
         <div className="choose_container">
-            <h1>직업군을 선택해주세요.</h1>
             <div className="choose_button_container">
+                <h1>직업군을 선택해주세요.</h1>
                 <Button variant="outlined" className="choose_button" onClick={() => handleClick('MM')}>경영사무</Button>
                 <Button variant="outlined" className="choose_button" onClick={() => handleClick('SM')}>영업마케팅</Button>
                 <Button variant="outlined" className="choose_button" onClick={() => handleClick('PS')}>공공서비스</Button>
@@ -59,8 +59,8 @@ const Choose = () => {
                 <Button variant="outlined" className="choose_button" onClick={() => handleClick('ARD')}>디자인</Button>
                 <Button variant="outlined" className="choose_button" onClick={() => handleClick('ICT')}>정보통신</Button>
                 <Button variant="outlined" className="choose_button" onClick={() => handleClick('BM')}>생산관리</Button>
+                <Button onClick={handlebefore} variant="contained" className="choose_before_button">이전으로</Button>
             </div>
-            <Button onClick={handlebefore} variant="contained" className="choose_before_button">이전</Button>
         </div>
     );
 };

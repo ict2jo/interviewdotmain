@@ -51,9 +51,9 @@
 }
 
 .pagination_container {
+    position: absolute;
     display: flex;
     justify-content: center;
-    margin-top: 40px;
 }
 
 .pagination_button {
@@ -82,8 +82,12 @@
     top: 60px;
     cursor:pointer;
 }
-.Search_TextField{
-    position: absolute;
-    bottom: 120px;
-    right: 15%;
+.Search_TextField {
+    margin-top: 30px;
+    display: flex;
+    flex-direction: row-reverse;
+    align-items: baseline;
+}
+.question_paging_button{
+    margin-right: 110px;
 }

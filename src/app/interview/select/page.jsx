@@ -117,6 +117,7 @@ export default function Select() {
                 </div>
             </div>
 
+
             <Button variant="outlined" onClick={handleClose}>뒤로가기</Button>
             <Button variant="contained" onClick={handleConfirm}>확인</Button>
         </div>

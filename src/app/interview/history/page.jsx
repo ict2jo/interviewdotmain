@@ -127,7 +127,6 @@ export default function InterviewHistory() {
                         </Table>
                     </TableContainer>
                 </div>
-                <Button onClick={handlebefore} variant="contained" className="history_before_button">이전</Button>
                 {history.length > 0 && (
                     <Stack spacing={2} className="paging_number">
                         <Pagination
@@ -138,6 +137,7 @@ export default function InterviewHistory() {
                         />
                     </Stack>
                 )}
+                <Button onClick={handlebefore} variant="contained" className="history_before_button">이전</Button>
                 <div className="history_list"></div>
             </div>
         </div>

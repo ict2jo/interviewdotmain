@@ -7,7 +7,6 @@ import {styled} from '@mui/material/styles';
 import Box from '@mui/material/Box';
 import Paper from '@mui/material/Paper';
 import Grid from '@mui/material/Grid';
-import UserStore from "@/stores/UserStore";
 import menuStore from "@/stores/MenuStore";
 
 export default function Historydetail() {
@@ -54,8 +53,7 @@ export default function Historydetail() {
                 ) : detail.length > 0 ? (
                     detail.map((item, index) => (
                         <div className="history_box" key={index}>
-                            <Box sx={{marginBottom: 2}}>
-                                <Item>
+                            <Box sx={{ width: '80%', margin: '0 auto', marginBottom: 2 }}>                                <Item>
                                     <Grid container spacing={2}>
                                         <Grid item xs={12} sm={12}>
                                             <div className="item-label">질문</div>
