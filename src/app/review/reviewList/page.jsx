@@ -2,7 +2,6 @@
 "use client"
 
 import "./reviewList.css";
-import Header from "@/app/_components/Header";
 import { useEffect, useState } from "react";
 import axios from "axios";
 
@@ -22,7 +21,9 @@ import {
     Button,
     TextField,
     Pagination,
-    IconButton
+    IconButton,
+    Select,
+    MenuItem
 } from "@mui/material";
 import userStore from "@/stores/UserStore";
 import { Box } from "@mui/system";
@@ -77,7 +78,7 @@ export default function ReviewList() {
 
 
     const handleReviewClick = (review) => {
-        if(!userStore.id){
+        if (!userStore.id) {
             alert("로그인 후에 작성할 수 있습니다.");
             router.push("/signin/login"); // 로그인 페이지로 이동
             return;
@@ -261,6 +262,43 @@ export default function ReviewList() {
         handleCloseDialog();
         window.location.href = `/review/review_list_write?r_idx=${selectedReview.r_idx}`;
     }
+    /* const handleReportReview = async () => {
+        try {
+            if (!reportReason) {
+                alert("신고 사유를 선택해주세요.");
+                return;
+            }
+            // 서버에 신고 사유와 함께 신고 요청
+            const response = await axios.get("http://localhost:8080/report/reportlist", {
+                u2_idx: userStore.id,
+                r_idx: selectedReview.r_idx,
+                rep_sysdate: new Date().toISOString(),
+                reason: reportReason, // 선택된 신고 사유
+                rep_active: "1"
+            });
+            console.log("Review reported:", response.data);
+            // 신고 후 추가 작업 (예: 신고 완료 메시지 표시 등)
+            handleCloseDialog();
+        } catch (error) {
+            console.error("Error reporting review:", error);
+        }
+    }; */
+
+    const handleReportReview = async () => {
+        try {
+            const response = await axios.post("http://localhost:8080/report/reportinsert", {
+                u_idx: selectedReview.u_idx,
+                u2_idx: userStore.u_idx,
+                r_idx: selectedReview.r_idx,
+                rep_active: "1"
+            });
+            console.log("리뷰리스트_idx", selectedReview.u_idx),
+            console.log("Review reported:", response.data);
+            handleCloseDialog();
+        } catch (error) {
+            console.error("Error reporting review:", error);
+        }
+    };
 
 
 
@@ -274,7 +312,6 @@ export default function ReviewList() {
 
     return (
         <>
-            <Header />
             <Container className="reviewwrap" sx={{ width: 1000 }}>
                 <Typography variant="h4" padding={"10px"}>
                     면접 후기 게시판
@@ -359,14 +396,13 @@ export default function ReviewList() {
                                 multiline
                                 fullWidth
                                 rows={6}
-                                variant="outlined"
+                                variant="filled"
                                 value={editingContent}
                                 onChange={handleContentChange}
                                 disabled={selectedReview.r_id !== userStore.id}
                             />
                             <Typography>회사: {selectedReview.r_company}</Typography>
                             <Typography>작성일: {selectedReview.r_regdate}</Typography>
-
                             <Typography variant="h6" style={{ marginTop: 20 }}>
                                 댓글 작성
                             </Typography>
@@ -412,7 +448,7 @@ export default function ReviewList() {
                                                 </TableCell>
                                                 <TableCell>{comments.re_regdate}</TableCell>
                                                 <TableCell>
-                                                    {comments.id === userStore.id &&(
+                                                    {comments.id === userStore.id && (
                                                         <>
                                                             {editingCommentId === comments.re_idx ? (
                                                                 <Button onClick={() => handleUpdateComment(comments.re_idx)} color="primary">
@@ -440,7 +476,7 @@ export default function ReviewList() {
                     )}
                 </DialogContent>
                 <DialogActions>
-                {userStore.id === selectedReview?.r_id && (
+                    {userStore.id === selectedReview?.r_id && (
                         <>
                             <Button onClick={handleUpdate} color="primary">
                                 수정
@@ -450,6 +486,9 @@ export default function ReviewList() {
                             </Button>
                         </>
                     )}
+                    <Button onClick={handleReportReview} color="primary">
+                        신고하기
+                    </Button>
                     <Button onClick={handleCloseDialog} color="primary">
                         닫기
                     </Button>

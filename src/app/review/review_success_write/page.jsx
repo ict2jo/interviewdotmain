@@ -39,6 +39,7 @@ export default function Review_Success_Write() {
         try{
             console.log("id" + userStore.id);
             const response = await axios.post("http://localhost:8080/success/successwrite",{
+                u_idx: userStore.u_idx,
                 s_id: userStore.id,
                 s_title: s_title,
                 s_company: s_company,
@@ -68,7 +69,7 @@ export default function Review_Success_Write() {
 
     // Quill 에디터의 내용이 변경될 때 호출되는 콜백 함수
     const handleContentChange = (value) => {
-        value = value.replace(/<p>/gi, "").replace(/<\/p>/gi, "");
+        /* value = value.replace(/<p>/gi, "").replace(/<\/p>/gi, ""); */
         setContent(value);
     };
 
