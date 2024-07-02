@@ -28,7 +28,10 @@ export default function list() {
     }, [pageNo, numOfRows, acbgCondLst, recrutSe, workRgnLst, searchQuery, ongoingYn]); 
 
     const fetchData = async () => {
-        let queryParams = `serviceKey=B6imLe%2BFf%2B3fVWotgO%2BhgAihHyVI%2F7tlmTiqrvZifWgzl94sf9U4VL3GuwTIkEkjW3MsF%2BtQ3OnUHkqwMRmuMA%3D%3D&pageNo=${pageNo}&acbgCondLst=${acbgCondLst}&recrutSe=${recrutSe}&workRgnLst=${workRgnLst}&recrutPbancTtl=${searchQuery}&ongoingYn=${ongoingYn}`;
+        let queryParams = `serviceKey=B6imLe%2BFf%2B3fVWotgO%2BhgAihHyVI%2F7
+        tlmTiqrvZifWgzl94sf9U4VL3GuwTIkEkjW3MsF%2BtQ3OnUHkqwMRmuMA%3D%3D
+        &pageNo=${pageNo}&acbgCondLst=${acbgCondLst}&recrutSe=${recrutSe}
+        &workRgnLst=${workRgnLst}&recrutPbancTtl=${searchQuery}&ongoingYn=${ongoingYn}`;
         const API_URL = `/recruitment/list?${queryParams}`;
 
         try {
@@ -74,11 +77,6 @@ export default function list() {
         setOngoingYn(prevState => prevState === "Y" ? "" : "Y");
     };
 
-    // const handleMyChange = () =>{
-    //     setAcbgCondLst(menuStore.uvolist.p_class)//학력
-    //     setRecrutSe(menuStore.uvolist.p_career)  //고용유형
-    //     setWorkRgnLst(menuStore.uvolist.p_location)//근무지
-    // }
     return (
         <div className="recruitmentlistwrapbg">
         <div className="recruitmentlistwrap">
@@ -96,7 +94,6 @@ export default function list() {
                 handleSearchChange={handleSearchChange} 
                 totalItems={totalItems} 
                 ongoingYn={ongoingYn} handleOngoingYnChange={handleOngoingYnChange}
-                //handleMyChange = {handleMyChange} 
                 />
             <Innerlist list={list} />
             <Pagination

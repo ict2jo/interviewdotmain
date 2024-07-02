@@ -17,10 +17,8 @@ export default function Recruitmentdetail({recrutPblntSn} ) {
         axios
             .get(API_URL)
             .then((data) => {
-                console.log(data.data.result);
                 setItem(data.data.result);
                 setFiles(data.data.result.files);
-                console.log(data.data.result.files);
             })
             .catch(console.log('에러 발생'));
             setLoading(false);
@@ -132,7 +130,7 @@ export default function Recruitmentdetail({recrutPblntSn} ) {
                 <div className='rdetailinfodetail2'>
                 <List>
                 {files.map((file, index) => (
-                    <ListItem key={index} button component="a" href={file.url} target="_blank" rel="noopener noreferrer">
+                    <ListItem key={index} component="a" href={file.url} target="_blank" rel="noopener noreferrer">
                         <ListItemText primary={file.atchFileNm} secondary={`파일 유형: ${file.url}`} />
                     </ListItem>
                 ))}
