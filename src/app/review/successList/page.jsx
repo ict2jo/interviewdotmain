@@ -228,16 +228,16 @@ export default function SuccessList() {
 
     const handleMenuClick = async (menu) => {
         menuStore.setSelectedMenu(menu);
-    };
-
-    const handleWriteSuccess = () => {
         if (!userStore.id) {
             alert("로그인 후에 작성할 수 있습니다.");
             return;
         }
         handleCloseDialog();
-        window.location.href = `/review/review_success_write`;
     };
+
+    /* const handleWriteSuccess = () => {
+        window.location.href = `/review/review_success_write`;
+    }; */
 
     const handleReportReview = async () => {
         try {
@@ -268,7 +268,7 @@ export default function SuccessList() {
             <Container className="reviewwrap" sx={{ width: 1000 }}>
                    <h1>합격 후기 게시판</h1>
                     <Table sx={{ minWidth: 600 }} className="review_box">
-                        <TableHead >
+                        <TableHead sx={{borderTop: '3px solid blue'}}>
                             <TableRow>
                                 <TableCell sx={{ width: '100px', textAlign: 'center' }}>NO</TableCell>
                                 <TableCell sx={{ width: '100px', textAlign: 'center' }}>작성자</TableCell>

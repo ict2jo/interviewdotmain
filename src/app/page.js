@@ -84,6 +84,13 @@ function Home() {
     if (menuStore.selectedMenu.startsWith('review/successList')) {
       return <SuccessList/>;
     }
+    if (menuStore.selectedMenu.startsWith('review/review_list_write')) {
+      return <Review_List_Write/>;
+    }
+    if (menuStore.selectedMenu.startsWith('review/review_success_write')) {
+      return <Review_Success_Write/>;
+    }
+    
     
     switch (menuStore.selectedMenu) {
       case "main":
@@ -126,6 +133,10 @@ function Home() {
         return <Review_Community />; //면접후기
       case "success":
         return <Review_Community />; //면접후기
+      case "review_list_write":
+        return <ReviewList />; //면접후기
+      case "reivew_success_write":
+        return <SuccessList/>; //면접후기
       case "profile":
         return <Selfprofile />;
       case "intoduction":

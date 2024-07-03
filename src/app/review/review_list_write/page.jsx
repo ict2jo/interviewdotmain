@@ -1,6 +1,5 @@
 "use client"
 
-import Header from "@/app/_components/Header"
 import dynamic from "next/dynamic"
 import { useEffect, useState } from "react"
 import 'react-quill/dist/quill.snow.css'; // Quill의 snow 테마 CSS를 import
@@ -13,8 +12,11 @@ import {
 import { useRouter } from "next/navigation"
 import axios from "axios";
 import userStore from "@/stores/UserStore";
+import menuStore from "@/stores/MenuStore";
+import Clipboard from "quill/modules/clipboard";
 
 const ReactQuill = dynamic(() => import('react-quill'), { ssr: false });
+
 export default function Review_List_Write() {
     const [r_title, setTitle] = useState('');
     const [r_company, setCompany] = useState('');
@@ -26,10 +28,10 @@ export default function Review_List_Write() {
     const name = userStore.name;
 
 
-    useEffect(() => {
+    /* useEffect(() => {
 
 
-    }, [name]);
+    }, [name]); */
 
     // 리뷰 작성 API 호출 함수
     const handleSubmitReview = async () => {
@@ -53,36 +55,41 @@ export default function Review_List_Write() {
             setSnackbarMessage('리뷰가 성공적으로 작성되었습니다.');
             setSnackbarOpen(true);
 
+            menuStore.setSelectedMenu("review/reviewList");
+            /* if (response.status === 200) {
+                alert("리뷰작성 성공@@@@");
+                const response2 = await axios.get("/review/reviewlist");
+                setReviewList(response2.data);
+            } */
+
             // 작성 완료 후 홈페이지로 이동
-            router.push("/review/reviewList");
+            //router.push("/review/reviewList");
         } catch (error) {
             console.error("리뷰 작성 중 에러 발생:", error);
             // 실패 시 스낵바 열기
             setSnackbarMessage('리뷰 작성 중 오류가 발생했습니다.');
             setSnackbarOpen(true);
-            setTitle([]);
-            setContent([]);
-            setCompany([]);
+            setTitle('');
+            setContent('');
+            setCompany('');
         }
     };
 
-    const handleContentChange = (value) => {
-        /* value = value.replace(/<p>/gi, "").replace(/<\/p>/gi, ""); */
-        setContent(value);
+    const handleContentChange = (content) => {
+        setContent(content);
     };
-
+    
     const handleSnackbarClose = () => {
         setSnackbarOpen(false);
     };
 
 
     useEffect(() => {
-        console.log('dddd', r_content);
+        console.log('입력 : ', r_content);
     }, [r_content])
 
     return (
         <>
-            <Header />
             <Container>
                 <div className="list_container">
                     <h1>면접 후기 작성</h1>
@@ -102,6 +109,16 @@ export default function Review_List_Write() {
                         <ReactQuill
                             value={r_content}
                             onChange={handleContentChange}
+                            modules={{
+                                toolbar: [
+                                    [{ 'header': '1'}, {'header': '2'}, { 'font': [] }],
+                                    [{size: []}],
+                                    ['bold', 'italic', 'underline', 'strike', 'blockquote'],
+                                    [{'list': 'ordered'}, {'list': 'bullet'}, 
+                                     {'indent': '-1'}, {'indent': '+1'}],['clean']
+                                    /* ['link', 'image', 'video'], */
+                                  ], 
+                            }}
                             placeholder="내용을 입력해주세요..."
                             style={{ width: '100%', height: '90%', padding: '10px', fontSize: '16px' }}
                         />
