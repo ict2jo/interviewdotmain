@@ -9,14 +9,13 @@ import {
     Container,
     Snackbar
 } from '@mui/material';
-
 import { useRouter } from 'next/navigation';
 import axios from 'axios';
 import userStore from '@/stores/UserStore';
+import menuStore from '@/stores/MenuStore';
 
 // Quill 에디터를 동적으로 import하여 서버 사이드 렌더링 문제를 피합니다
 const ReactQuill = dynamic(() => import('react-quill'), { ssr: false });
-
 export default function Review_Success_Write() {
     const [s_title, setTitle] = useState('');
     const [s_company, setCompany] = useState('');
@@ -27,8 +26,9 @@ export default function Review_Success_Write() {
 
     const name = userStore.name;
 
-    /*  useEffect(() => {
-     }, []); */
+     useEffect(() => {
+
+     }, [name]);
 
     const handleSubmitReview = async () => {
         try {
@@ -50,7 +50,7 @@ export default function Review_Success_Write() {
             setSnackbarOpen(true);
 
             // 작성 완료 후 홈페이지로 이동
-            router.push("/review/successList");
+            menuStore.setSelectedMenu("review/successList");
         } catch (error) {
             console.error("리뷰 작성 중 에러 발생 : ", error);
             // 실패 시 스낵바 열기
@@ -64,9 +64,13 @@ export default function Review_Success_Write() {
 
     // Quill 에디터의 내용이 변경될 때 호출되는 콜백 함수
     const handleContentChange = (value) => {
-        // 정규 표현식을 사용하여 <p>와 </p> 태그를 제거
-        const sanitizedValue = value.replace(/<\/?p>/gi, "");
-        setContent(sanitizedValue);
+        const plainText = stripHtml(value);
+        setContent(plainText);
+    };
+
+    const stripHtml = (html) => {
+        const doc = new DOMParser().parseFromString(html, 'text/html');
+        return doc.body.textContent || "";
     };
 
     const handleSnackbarClose = () => {
@@ -74,13 +78,21 @@ export default function Review_Success_Write() {
     };
 
 
-    useEffect(() => {
+    /* useEffect(() => {
         console.log('dddd', s_content);
-    }, [s_content])
+    }, [s_content]) */
 
     return (
         <>
             <Container>
+                {/* Snackbar */}
+                <Snackbar
+                    open={snackbarOpen}
+                    autoHideDuration={6000}
+                    onClose={handleSnackbarClose}
+                    message={snackbarMessage}
+                    anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }}
+                />
                 <div className="write_container">
                     <h1>합격 후기 작성</h1>
                     <div className="write_list">
@@ -99,6 +111,19 @@ export default function Review_Success_Write() {
                         <ReactQuill
                             value={s_content}
                             onChange={handleContentChange}
+                            modules={{
+                                toolbar: [
+                                    [{ 'header': '1'}, {'header': '2'}, { 'font': [] }],
+                                    [{size: []}],
+                                    ['bold', 'italic', 'underline', 'strike', 'blockquote'],
+                                    [{'list': 'ordered'}, {'list': 'bullet'}, 
+                                     {'indent': '-1'}, {'indent': '+1'}],['clean']
+                                    /* ['link', 'image', 'video'], */
+                                  ], 
+                                  clipboard: {
+                                    matchVisual: false, // 비주얼 태그 제거
+                                },  
+                            }}
                             placeholder="내용을 입력해주세요..."
                             style={{ width: '100%', height: '90%', padding: '10px', fontSize: '16px' }}
                         />
@@ -110,14 +135,7 @@ export default function Review_Success_Write() {
                 </div>
             </Container>
 
-            {/* Snackbar */}
-            <Snackbar
-                open={snackbarOpen}
-                autoHideDuration={6000}
-                onClose={handleSnackbarClose}
-                message={snackbarMessage}
-                anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }}
-            />
+
         </>
     );
 }

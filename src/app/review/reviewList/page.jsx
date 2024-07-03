@@ -4,7 +4,7 @@
 import "./reviewList.css";
 import { useEffect, useState } from "react";
 import axios from "axios";
-
+import userStore from "@/stores/UserStore";
 import {
     Container,
     Paper,
@@ -25,9 +25,10 @@ import {
     Select,
     MenuItem
 } from "@mui/material";
-import userStore from "@/stores/UserStore";
 import { Box } from "@mui/system";
 import { useRouter } from "next/navigation";
+import { menu } from "@nextui-org/react";
+import menuStore from "@/stores/MenuStore";
 
 export default function ReviewList() {
     const [reviewList, setReviewList] = useState([]);
@@ -43,7 +44,6 @@ export default function ReviewList() {
     const [editingCommentId, setEditingCommentId] = useState("");
 
     const router = useRouter();
-
 
     useEffect(() => {
         fetchReviewList(page); // 초기 데이터 불러오기
@@ -254,16 +254,25 @@ export default function ReviewList() {
         setComments([]); // 댓글 목록 초기화
     };
 
-    const handleWriteReview = () => {
+    /* const handleWriteReview = () => {
+        if (!userStore.id) {
+            alert("로그인 후에 작성할 수 있습니다.");
+            return;
+        }
+        menuStore.setSelectedMenu(menu);
+        handleCloseDialog();
+         router.push("/review/review_list_write"); 
+         console.log("idx가 있니?",selectedReview.r_idx); 
+    } */
+    
+    const handleMenuClick = async (menu) => {
+        menuStore.setSelectedMenu(menu);
         if (!userStore.id) {
             alert("로그인 후에 작성할 수 있습니다.");
             return;
         }
         handleCloseDialog();
-        window.location.href = '/review/review_list_write';
-        console.log("idx가 있니?",selectedReview.r_idx);
-    }
-    
+    };
 
     const handleReportReview = async () => {
         try {
@@ -335,7 +344,7 @@ export default function ReviewList() {
                         </TableBody>
                     </Table>
                     <Box sx={{ display: 'flex', justifyContent: 'flex-end' }}>
-                        <Button onClick={handleWriteReview} color="primary" style={{ textAlign: "center" }}>
+                        <Button  onClick={() => handleMenuClick(`review/review_list_write`)} color="primary" style={{ textAlign: "center" }}>
                             작성하기
                         </Button>
                     </Box>
