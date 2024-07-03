@@ -24,6 +24,7 @@ import {
 import userStore from "@/stores/UserStore";
 import { Box } from "@mui/system";
 import { useRouter } from "next/navigation";
+import menuStore from "@/stores/MenuStore";
 
 
 export default function SuccessList() {
@@ -219,10 +220,14 @@ export default function SuccessList() {
 
     const handleCloseDialog = () => {
         setOpenDialog(false);
-        setSelectedSuccess(null); // 선택된 후기 초기화
+        /* setSelectedSuccess(null); // 선택된 후기 초기화 */
         setEditingContent(""); // 수정할 내용 초기화
         setCommentContent(""); // 댓글 내용 초기화
-        setComments([]); // 댓글 목록 초기화
+        /* setComments([]); // 댓글 목록 초기화 */
+    };
+
+    const handleMenuClick = async (menu) => {
+        menuStore.setSelectedMenu(menu);
     };
 
     const handleWriteSuccess = () => {
@@ -231,7 +236,7 @@ export default function SuccessList() {
             return;
         }
         handleCloseDialog();
-        window.location.href = `/review/review_success_write?s_idx=${selectedSuccess.s_idx}`;
+        window.location.href = `/review/review_success_write`;
     };
 
     const handleReportReview = async () => {
@@ -261,12 +266,9 @@ export default function SuccessList() {
     return (
         <>
             <Container className="reviewwrap" sx={{ width: 1000 }}>
-                <Typography variant="h4" padding={"10px"}>
-                    합격 후기 게시판
-                </Typography>
-                <Paper>
-                    <Table sx={{ minWidth: 600 }}>
-                        <TableHead>
+                   <h1>합격 후기 게시판</h1>
+                    <Table sx={{ minWidth: 600 }} className="review_box">
+                        <TableHead >
                             <TableRow>
                                 <TableCell sx={{ width: '100px', textAlign: 'center' }}>NO</TableCell>
                                 <TableCell sx={{ width: '100px', textAlign: 'center' }}>작성자</TableCell>
@@ -305,7 +307,7 @@ export default function SuccessList() {
                         </TableBody>
                     </Table>
                     <Box sx={{ display: 'flex', justifyContent: 'flex-end' }}>
-                        <Button onClick={handleWriteSuccess} color="primary" style={{ textAlign: "center" }}>
+                        <Button variant='outlined' onClick={() => handleMenuClick(`review/review_success_write`)} color="primary" style={{ textAlign: "center" }}>
                             작성하기
                         </Button>
                     </Box>
@@ -324,7 +326,6 @@ export default function SuccessList() {
                             />
                         </Box>
                     </div>
-                </Paper>
             </Container>
             <Dialog open={openDialog} onClose={handleCloseDialog}>
                 <DialogTitle>합격 후기 상세보기 및 댓글</DialogTitle>

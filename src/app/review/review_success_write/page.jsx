@@ -1,14 +1,13 @@
 "use client"
 
-import Header from "@/app/_components/Header"
 import dynamic from 'next/dynamic'; // Next.js에서 동적으로 컴포넌트를 불러오기 위해 필요
 import { useEffect, useState } from 'react';
 import 'react-quill/dist/quill.snow.css'; // Quill의 snow 테마 CSS를 import
 import "./review_success_write.css"; // 추가적인 컴포넌트 CSS 파일
-import { 
-        Button, 
-        Container,
-        Snackbar 
+import {
+    Button,
+    Container,
+    Snackbar
 } from '@mui/material';
 
 import { useRouter } from 'next/navigation';
@@ -25,20 +24,16 @@ export default function Review_Success_Write() {
     const [snackbarOpen, setSnackbarOpen] = useState(false);
     const [snackbarMessage, setSnackbarMessage] = useState('');
     const router = useRouter();
-    
-    useEffect(() => {
-        const urlParams = new URLSearchParams(window.location.search);
-        const id = urlParams.get('s_id');
 
-        if(!id) {
-            console.log("id가 없습니다.");
-        }
-    }, []);
+    const name = userStore.name;
+
+    /*  useEffect(() => {
+     }, []); */
 
     const handleSubmitReview = async () => {
-        try{
+        try {
             console.log("id" + userStore.id);
-            const response = await axios.post("http://localhost:8080/success/successwrite",{
+            const response = await axios.post("http://localhost:8080/success/successwrite", {
                 u_idx: userStore.u_idx,
                 s_id: userStore.id,
                 s_title: s_title,
@@ -56,8 +51,8 @@ export default function Review_Success_Write() {
 
             // 작성 완료 후 홈페이지로 이동
             router.push("/review/successList");
-        }catch(error){
-            console.error("리뷰 작성 중 에러 발생 : " , error);
+        } catch (error) {
+            console.error("리뷰 작성 중 에러 발생 : ", error);
             // 실패 시 스낵바 열기
             setSnackbarMessage('리뷰 작성 중 오류가 발생했습니다.');
             setSnackbarOpen(true);
@@ -69,8 +64,9 @@ export default function Review_Success_Write() {
 
     // Quill 에디터의 내용이 변경될 때 호출되는 콜백 함수
     const handleContentChange = (value) => {
-        /* value = value.replace(/<p>/gi, "").replace(/<\/p>/gi, ""); */
-        setContent(value);
+        // 정규 표현식을 사용하여 <p>와 </p> 태그를 제거
+        const sanitizedValue = value.replace(/<\/?p>/gi, "");
+        setContent(sanitizedValue);
     };
 
     const handleSnackbarClose = () => {
@@ -84,15 +80,14 @@ export default function Review_Success_Write() {
 
     return (
         <>
-        <Header />
-        <Container>
+            <Container>
                 <div className="write_container">
-                    <h1>면접 후기 작성</h1>
+                    <h1>합격 후기 작성</h1>
                     <div className="write_list">
                         <div className="write_area">
                             <div className="write_box">
                                 <h2>면접 후기</h2>
-                                작성자 : <input type="text" value={userStore.id} disabled /><br />
+                                작성자 : <input type="text" value={name} disabled /><br />
                                 제목   : <input type="text" value={s_title} onChange={(e) => setTitle(e.target.value)} />
                             </div>
                             <div className="write_sub">
