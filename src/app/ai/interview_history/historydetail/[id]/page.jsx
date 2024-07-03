@@ -82,10 +82,10 @@ export default function Historydetail() {
                                         <Grid item xs={12} sm={6}>
                                             <div className="item-label">영상</div>
                                             <div className="item-content">
-{/*                                                <video width="100%" controls>
+                                            <video width="100%" controls>
                                                     <source src={`http://localhost:8010/video_get/${item.video_uuid}`}
                                                             type="video/mp4"/>
-                                                </video>*/}
+                                                </video>
                                             </div>
                                         </Grid>
                                     </Grid>

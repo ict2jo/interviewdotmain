@@ -113,7 +113,7 @@ const Start = () => {
             formData.append('q_idx', questionData.q_idx);
             formData.append('question', questionData.question);
 
-            const response = await fetch('http://192.168.53.139:8010/video/', {
+            const response = await fetch('http://192.168.0.22:8010/video/', {
                 method: 'POST',
                 body: formData,
             });

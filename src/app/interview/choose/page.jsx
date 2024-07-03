@@ -1,7 +1,7 @@
 "use client";
 import React from 'react';
-import { Button } from '@mui/material';
-import { useRouter } from 'next/navigation';
+import {Button} from '@mui/material';
+import {useRouter} from 'next/navigation';
 import "./choose.css";
 import questionStore from '@/stores/questionStore';
 
@@ -28,7 +28,7 @@ const Choose = () => {
 
                 questionStore.setQuestions(selectedQuestions);
 
-                const q_idx = selectedQuestions.length > 0 ? selectedQuestions[0].q_idx : ''; // 첫 번째 질문의 q_idx 사용
+                const q_idx = selectedQuestions.length > 0 ? selectedQuestions[0].q_idx : '';
 
                 const selectedQuestionsString = encodeURIComponent(JSON.stringify(selectedQuestions));
 
