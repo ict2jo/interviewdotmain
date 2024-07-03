@@ -15,12 +15,15 @@ const Inquirywrite = observer(() => {
     i_content: '',
     id: userStore.id
   });
-
+  const handleMenuClick = async (menu) => {
+    menuStore.setSelectedMenu(menu);
+  };
   async function write() {
     try {
       const response = await axios.post(API_URL, ivo);
       console.log('작성 완료:', response.data);
       menuStore.setSelectedMenu('inquiry');
+      alert("문의 등록되었습니다. 등록하신 메일로 영업일 1~3일내 답변을 남겨드리겠습니다.");
     } catch (error) {
       alert("작성 실패");
       console.error(error); // 에러 출력
@@ -37,7 +40,7 @@ const Inquirywrite = observer(() => {
   return (
     <div className=''>
     <FormControl className="inquirydetailcontainer">
-    <h1 className='inqwrite'>1:1문의 내역</h1>
+    <h1 className='inqwrite'>1:1문의 작성</h1>
     <div className='inquirydetailbox'>
       <p className='inqwrite'>제목</p>
       <div className='inquirytitlebox'>

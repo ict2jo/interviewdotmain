@@ -27,7 +27,7 @@ const schoollist = [
 ];
 
 export default function Schoollist({ uvo, handleSchoollistChange }) {
-  const [p_class, setP_class] = React.useState([]); // uvo.p_job의 기본 값으로 설정
+  const [p_class, setP_class] = React.useState([]);
 
   React.useEffect(() => {
     if (uvo.p_class) {
@@ -40,7 +40,7 @@ export default function Schoollist({ uvo, handleSchoollistChange }) {
   const handleChange = (event) => {
     const { value } = event.target;
     setP_class(value);
-    handleSchoollistChange(value.join(',').replace(/^,/, '')); // 맨 앞의 쉼표 제거 후 전달
+    handleSchoollistChange(value.join(',').replace(/^,/, '')); 
   };
 
   return (

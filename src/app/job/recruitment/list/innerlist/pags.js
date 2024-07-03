@@ -44,24 +44,21 @@ export default function Innerlist({ list }) {
                 alert("로그인 후 이용해주세요");
                 menuStore.setSelectedMenu("login");
             }
-            setFavorites(prevFavorites => [...prevFavorites, recrutPblntSn.toString()]); // 문자열로 변환하여 저장
+            setFavorites(prevFavorites => [...prevFavorites, recrutPblntSn.toString()]);
             setUvo(updatedUvo);
         } catch (error) {
             console.error("즐겨찾기 저장 중 오류가 발생했습니다:", error);
         }
     };
-    
     const handleFavoritenoneClick = async (recrutPblntSn) => {
         const updatedUvo = {
             id: userStore.u_idx,
             f_num: recrutPblntSn,
         };
-        
         try {
             await axios.post('/mypage/nonefavorites', updatedUvo);
             alert("즐겨찾기 해제", updatedUvo.id, recrutPblntSn);
-            // 즐겨찾기 해제 후 다시 데이터를 불러옴
-            setFavorites(prevFavorites => prevFavorites.filter(sn => sn !== recrutPblntSn.toString())); // 문자열로 변환하여 필터링
+            setFavorites(prevFavorites => prevFavorites.filter(sn => sn !== recrutPblntSn.toString())); 
             setUvo(updatedUvo);
         } catch (error) {
             alert("즐겨찾기 해제 중 오류가 발생했습니다:", updatedUvo.u_idx, recrutPblntSn, error);
@@ -76,8 +73,8 @@ export default function Innerlist({ list }) {
         menuStore.setSelectedMenu(menu);
     };
     const renderStarIcon = (recrutPblntSn) => {
-        if (loading) return null; // 데이터 로딩 중에는 아이콘을 표시하지 않음
-        const isFavorite = favorites.some(item => item === recrutPblntSn.toString()); // 문자열로 변환하여 비교
+        if (loading) return null; 
+        const isFavorite = favorites.some(item => item === recrutPblntSn.toString()); 
         console.log(isFavorite);
         const handleStarClick = () => {
             if (isFavorite) {

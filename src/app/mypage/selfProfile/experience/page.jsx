@@ -37,7 +37,7 @@ export default function Experience({ uvo, handleCareerlistChange }) {
   const handleChange = (event) => {
     const { value } = event.target;
     setP_career(value);
-    handleCareerlistChange(value.join(',').replace(/^,/, '')); // 선택된 값 변경 시 부모 컴포넌트에 전달
+    handleCareerlistChange(value.join(',').replace(/^,/, '')); 
   };
 
   return (
