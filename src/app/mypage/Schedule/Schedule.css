@@ -1,6 +1,6 @@
 /* 일요일 날짜: 빨간색 */
 .fc-day-sun a {
-    color: #6166fe;
+    color: red;
 }
 /* 토요일 날짜: 파란색 */
 .fc-day-sat a {
@@ -14,7 +14,14 @@
     margin: 0 auto;
 }
 .fc .fc-button-primary{
-  background-color:  #66d9ef;
+  background-color:  #1400ff !important;
+  border-color: #1400ff !important;
+  color: white !important;
+}
+.fc .fc-button-primary:hover{
+  background-color:  #6166fe !important;
+  border-color: #6166fe !important;
+  color: black !important;
 }
 /* 각 클래스의 색상을 바꾸는 방법도 있지만 지정된 변수들을 재할당하여 색상 및 크기를 조절 하는 방법을 사용했습니다.  */
 :root {
