@@ -44,7 +44,7 @@ function PageContent() {
     index,
   }) => {
     const RADIAN = Math.PI / 180;
-    const radius = innerRadius + (outerRadius - innerRadius) * 0.5;
+    const radius = innerRadius + (outerRadius - innerRadius) * 0.3;
     const x = cx + radius * Math.cos(-midAngle * RADIAN);
     const y = cy + radius * Math.sin(-midAngle * RADIAN);
     return (
@@ -124,7 +124,7 @@ function PageContent() {
   return (
     <div className="w-full bg-white py-10">
       <div className="m-auto">
-        {answers ? (
+        {storedAnswers  ? (
           <>
             <div className="flex justify-center gap-3">
               <div className="h-[90vh]">
