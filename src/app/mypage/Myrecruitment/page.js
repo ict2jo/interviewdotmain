@@ -24,7 +24,7 @@ export default function Myrecruitment() {
                 // 2. 로드된 사용자 정보로 API 호출합니다.
                 const getStarResponse = await axios.get("/mypage/getstar", {
                     params: {
-                        id: userStore.id
+                        u_idx: userStore.u_idx
                     }
                 });
                 const favoriteSnList = getStarResponse.data.map(item => item.f_num);

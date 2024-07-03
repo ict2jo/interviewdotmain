@@ -11,7 +11,7 @@ export default function Innerlist({ list }) {
     const [favorites, setFavorites] = useState([]);
     const [loading, setLoading] = useState(true); // 데이터 로딩 상태 추가
     const [uvo, setUvo] = useState({
-        id: userStore.id,
+        u_idx: userStore.u_idx,
         f_num: '', // 클릭한 recrutPblntSn이 들어갈 자리입니다.
     });
 
@@ -19,7 +19,7 @@ export default function Innerlist({ list }) {
         try {
             const response = await axios.get("/mypage/getstar", {
                 params: {
-                    id: userStore.id
+                    u_idx: userStore.u_idx
                 }
             });
             const favoriteSnList = response.data.map(item => item.f_num);
@@ -33,13 +33,13 @@ export default function Innerlist({ list }) {
     };
     const handleFavoriteClick = async (recrutPblntSn) => {
         const updatedUvo = {
-            id: userStore.id,
+            u_idx: userStore.u_idx,
             f_num: recrutPblntSn,
         };
         try {
             await axios.post('/mypage/favorites', updatedUvo);
-            if (updatedUvo.id) {
-                alert("즐겨찾기 저장", recrutPblntSn, updatedUvo.id);
+            if (updatedUvo.u_idx) {
+                alert("즐겨찾기 저장", recrutPblntSn, updatedUvo.u_idx);
             } else {
                 alert("로그인 후 이용해주세요");
                 menuStore.setSelectedMenu("login");
@@ -53,7 +53,7 @@ export default function Innerlist({ list }) {
     
     const handleFavoritenoneClick = async (recrutPblntSn) => {
         const updatedUvo = {
-            id: userStore.id,
+            id: userStore.u_idx,
             f_num: recrutPblntSn,
         };
         
@@ -64,7 +64,7 @@ export default function Innerlist({ list }) {
             setFavorites(prevFavorites => prevFavorites.filter(sn => sn !== recrutPblntSn.toString())); // 문자열로 변환하여 필터링
             setUvo(updatedUvo);
         } catch (error) {
-            alert("즐겨찾기 해제 중 오류가 발생했습니다:", updatedUvo.id, recrutPblntSn, error);
+            alert("즐겨찾기 해제 중 오류가 발생했습니다:", updatedUvo.u_idx, recrutPblntSn, error);
         }
     };
     

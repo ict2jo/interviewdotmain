@@ -89,7 +89,7 @@ class UserStore {
         .then((selfProfileResponse) => {
           if (selfProfileResponse.data.length === 0) {
             return axios
-              .post(`/mypage/selfprofileinsert?u_idx=${this.u_idx}`)
+              .post(`/mypage/selfprofileinsert?u_idx=${userData.u_idx}`)
               .then(() => null);
           } else {
             const selfProfileData = selfProfileResponse.data[0];

@@ -28,10 +28,7 @@ export default function list() {
     }, [pageNo, numOfRows, acbgCondLst, recrutSe, workRgnLst, searchQuery, ongoingYn]); 
 
     const fetchData = async () => {
-        let queryParams = `serviceKey=B6imLe%2BFf%2B3fVWotgO%2BhgAihHyVI%2F7
-        tlmTiqrvZifWgzl94sf9U4VL3GuwTIkEkjW3MsF%2BtQ3OnUHkqwMRmuMA%3D%3D
-        &pageNo=${pageNo}&acbgCondLst=${acbgCondLst}&recrutSe=${recrutSe}
-        &workRgnLst=${workRgnLst}&recrutPbancTtl=${searchQuery}&ongoingYn=${ongoingYn}`;
+        let queryParams = `serviceKey=B6imLe%2BFf%2B3fVWotgO%2BhgAihHyVI%2F7tlmTiqrvZifWgzl94sf9U4VL3GuwTIkEkjW3MsF%2BtQ3OnUHkqwMRmuMA%3D%3D&pageNo=${pageNo}&acbgCondLst=${acbgCondLst}&recrutSe=${recrutSe}&workRgnLst=${workRgnLst}&recrutPbancTtl=${searchQuery}&ongoingYn=${ongoingYn}`;
         const API_URL = `/recruitment/list?${queryParams}`;
 
         try {
