@@ -37,12 +37,9 @@ import Recruitmentdetail from "./job/recruitment/detail/[id]/page";
 import Inquirydetail from "./mypage/Inquiry/Inquirydetail/[id]/page";
 import Myrecruitment from "./mypage/Myrecruitment/page";
 import Historydetail from "@/app/ai/interview_history/historydetail/[id]/page";
-import Footer from "@/app/_components/Footer";
 import Footer from "./_components/Footer";
 import ReviewList from "./review/reviewList/page";
 import SuccessList from "./review/successList/page";
-import Review_List_Write from "./review/review_list_write/page";
-import Review_Success_Write from "./review/review_success_write/page";
 
 
 
