@@ -5,6 +5,7 @@ import { useParams } from 'next/navigation';
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import "./payDetail.css";
+import { Box, Pagination } from '@mui/material';
 
 export default function PayDetail() {
     const [payments, setPayments] = useState([]);
@@ -12,61 +13,82 @@ export default function PayDetail() {
     const [loading, setLoading] = useState(true);
     const [showModal, setShowModal] = useState(false);
     const [selectedPayment, setSelectedPayment] = useState(null);
+    const [page, setPage] = useState(1); // 현재 페이지 상태 추가
+    const payPerPage = 5; // 한 페이지당 보일 리뷰 개수
     const secretKey = process.env.NEXT_PUBLIC_TOSS_SECRET_KEY;
     const encodedKey = btoa(secretKey + ':');
     const params = useParams();
     const id = params.id;
 
-    console.log("결제취소창"+userStore.id);
-
+    console.log("결제취소창" + userStore.id);
+    console.log("인증키" + encodedKey)
+    console.log("인증키22" + secretKey)
     const fetchData = async () => {
         try {
-            const response = await fetch(
-                `http://localhost:8080/payments/userPay?id=${userStore.id}`);
-            const data = await response.json();
-            
+            const response = await axios.get(
+                `http://localhost:8080/payments/userPay?id=${userStore.id}`
+            );
+            const data = response.data;
+
             // t_idx 값 기준으로 내림차순 정렬
             data.sort((a, b) => b.t_idx - a.t_idx);
-            
+
             setPayments(data);
             setLoading(false);
         } catch (error) {
             console.error('데이터를 가져오는 중 오류가 발생하였습니다.', error);
             setLoading(false);
         }
-        
     };
-    
+
+    useEffect(() => {
+        fetchData();
+    }, []);
+
     // 결제취소
     const handleCancel = async () => {
         try {
             console.log("취소시작 " + userStore.id);
 
-            // 결제취소 사유 확인
             const cancelReason = cancelReasons[selectedPayment.t_idx];
             if (!cancelReason) {
                 alert("결제 취소 사유를 선택해 주세요.");
                 return;
             }
+            
+            // const response = await axios.post(
+            //     `http://localhost:8080/payments/cancel`,
+            //     {
+            //         t_idx: selectedPayment.t_idx,
+            //         paymentKey: selectedPayment.paymentKey,
+            //         cancelReason: cancelReason,
+            //         id: userStore.id
+            //     },
+            //     {
+            //         headers: {
+            //             'Content-Type': 'application/json',
+            //             Authorization: `Basic ${encodedKey}`
+            //         },
+            //     }
+            // );
 
             const response = await axios.post(
                 `http://localhost:8080/payments/cancel`,
                 {
                     t_idx: selectedPayment.t_idx,
-                    paymentKey: selectedPayment.paymentKey,
                     cancelReason: cancelReason,
                     id: userStore.id
                 },
                 {
                     headers: {
                         'Content-Type': 'application/json',
-                        Authorization: `Basic ${encodedKey}`
                     },
                 }
             );
+            
 
             if (response.status === 200) {
-                alert("결제가 취소되었습니다.");
+                alert("취소 요청이 접수되었습니다.\n영업일 기준 1~3일 내로 처리될 예정입니다.");
                 fetchData();
                 setShowModal(false);
             } else {
@@ -95,9 +117,12 @@ export default function PayDetail() {
         setShowModal(false);
     };
 
-    useEffect(() => {
-        fetchData();
-    },[]);
+    const handlePageChange = (event, value) => {
+        setPage(value);
+    };
+
+    const startIndex = (page - 1) * payPerPage;
+    const currentReview = payments.slice(startIndex, startIndex + payPerPage);
 
     return (
         <>
@@ -117,7 +142,7 @@ export default function PayDetail() {
                         <tr>
                             <th>취소일자</th>
                         </tr>
-                            
+
                             {loading ? (
                                 <tr>
                                     <td colSpan="6">로딩중...</td>
@@ -127,7 +152,7 @@ export default function PayDetail() {
                                     <td colSpan="6">이용권 구매 이력이 없습니다.</td>
                                 </tr>
                             ) : (
-                                payments.map((payment, index) => (
+                                currentReview.map((payment, index) => (
                                     <React.Fragment key={index}>
                                         <tr>
                                             <td rowSpan="2">{payment.payStatus}</td>
@@ -136,23 +161,37 @@ export default function PayDetail() {
                                             <td rowSpan="2">{payment.provider}</td>
                                             <td>{payment.approvedAt}</td>
                                             <td rowSpan="2">
-                                                {payment.payStatus !== "취소완료" ? (
-                                                    <button onClick={() => openModal(payment)}>
-                                                        취소
-                                                    </button>
+                                                {payment.payStatus === "결제완료" ? (
+                                                    payment.statusCount > payment.remainCount ? (
+                                                        <span>사용 중인 상품은 환불 불가합니다</span>
+                                                    ) : (
+                                                        <button onClick={() => openModal(payment)}>
+                                                            취소
+                                                        </button>
+                                                    )
                                                 ) : (
                                                     <span>{payment.cancelReason}</span>
                                                 )}
                                             </td>
                                         </tr>
                                         <tr>
-                                            <td >{payment.canceledAt ? payment.canceledAt : <span style={{color: 'white'}}>없음</span>}</td>
+                                            <td>{payment.canceledAt ? payment.canceledAt : <span style={{color: 'white'}}>없음</span>}</td>
                                         </tr>
                                     </React.Fragment>
                                 ))
                             )}
                         </tbody>
                     </table>
+                </div>
+                <div style={{ display: 'flex', justifyContent: 'center', margin: '10px 0 25px 0' }}>
+                    <Box sx={{ display: 'flex', justifyContent: 'center', marginBottom: '20px' }}>
+                        <Pagination
+                            count={Math.ceil(payments.length / payPerPage)}
+                            page={page}
+                            onChange={handlePageChange}
+                            color="primary"
+                        />
+                    </Box>
                 </div>
             </div>
 

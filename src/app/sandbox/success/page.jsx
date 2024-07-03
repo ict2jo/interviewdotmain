@@ -50,6 +50,10 @@ const SuccessPage = observer(() => {
         }
     };
 
+    const closeWindow = () => {
+        window.close();
+    };
+
     return (
         <div className="wrapper w-100">
             {isConfirmed ? (
@@ -77,12 +81,7 @@ const SuccessPage = observer(() => {
                                 {orderId}
                             </span>
                         </div>
-                        <div className="flex justify-between">
-                            <span className="response-label">paymentKey</span>
-                            <span id="paymentKey" className="response-text">
-                                {paymentKey}
-                            </span>
-                        </div>
+                        <button className="btn primary w-100" onClick={closeWindow} style={{marginTop:"15px"}}>닫기</button>
                     </div>
 
                     

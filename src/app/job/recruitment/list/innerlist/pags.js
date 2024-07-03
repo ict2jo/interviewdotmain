@@ -28,16 +28,14 @@ export default function Innerlist({ list }) {
         } catch (error) {
             console.error(error);
         } finally {
-            setLoading(false); // 데이터 로딩이 완료되면 로딩 상태를 false로 설정
+            setLoading(false); 
         }
     };
-
     const handleFavoriteClick = async (recrutPblntSn) => {
         const updatedUvo = {
             id: userStore.id,
             f_num: recrutPblntSn,
         };
-        
         try {
             await axios.post('/mypage/favorites', updatedUvo);
             if (updatedUvo.id) {

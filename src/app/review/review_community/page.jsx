@@ -4,29 +4,23 @@
 
 import { useRouter } from "next/navigation";
 import "./review_community.css";
-import { useEffect } from "react";
-import Header from "@/app/_components/Header";
-
+import menuStore from "@/stores/MenuStore";
 export default function Review_Community() {
     const router = useRouter();
 
     
-    
-    const handleReviewList = () => {
-        router.push("review/reviewList")
-    };
-    const handleSuccess = () => {
-        router.push("review/successList")
+    const handleMenuClick = async (menu) => {
+        menuStore.setSelectedMenu(menu);
     };
 
 
     return (
         
         <div className="comm_container">
-            <div className="bord_box_1" onClick={handleReviewList}>
+            <div className="bord_box_1" onClick={() => handleMenuClick(`review/reviewList`)}>
                     면접 후기
             </div>
-            <div className="bord_box_2" onClick={handleSuccess}>
+            <div className="bord_box_2" onClick={() => handleMenuClick(`review/successList`)}>
                 합격자 면접 후기
             </div>
         </div>

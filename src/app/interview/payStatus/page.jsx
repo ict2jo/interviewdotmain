@@ -66,20 +66,26 @@ export default function PayStatus() {
                         rows.map((row, rowIndex) => (
                             <div className='payStatus_row' key={rowIndex}>
                                 {row.map((payment, index) => (
+                                    payment.payStatus !== "취소완료" && (
                                     <div className='payStatus_t' key={index}>
                                         <div className={`${getBackgroundClass(payment.orderName)}`}>{payment.orderName}</div>
                                         <div className='payStatus_inner'>
                                             <p style={{ fontSize: "25px", fontWeight: "bold" }}>₩ {payment.amount.toLocaleString()}</p>
                                             <p>{payment.amount / 1000}회 면접 연습 + 분석</p>
-                                            <button disabled>{payment.payStatus}</button>
+                                            <p style={{margin: "0px"}}>사용가능 {payment.remainCount}/{payment.statusCount}</p>
+                                            <button disabled>
+                                                {payment.statusCount >= payment.remainCount ? "사용중" : payment.remainCount === 0 ? "사용완료" : ""}
+                                            </button>
+
                                         </div>
                                     </div>
+                                    )
                                 ))}
                                 
-                                {/* 빈칸 채우기 */}
-                                {row.length < 3 && (
-                                    Array.from({ length: 3 - row.length }).map((_, index) => (
-                                        <div className='payStatus_t empty' key={index}></div>
+                                 {/* 빈칸 채우기 */}
+                                {row.filter(payment => payment.payStatus !== "취소완료").length < 3 && (
+                                Array.from({ length: 3 - row.filter(payment => payment.payStatus !== "취소완료").length }).map((_, index) => (
+                                    <div className='payStatus_t empty' key={index}></div>
                                     ))
                                 )}
                             </div>

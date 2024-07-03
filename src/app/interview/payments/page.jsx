@@ -28,7 +28,7 @@ export default function Payments() {
             // 입력 값이 숫자인지 확인하고 숫자로 변환
             const numericValue = parseInt(value, 10);
             // 숫자인 경우에만 상태 업데이트
-            if (!isNaN(numericValue) && numericValue >= 1) {
+            if (!isNaN(numericValue) && numericValue >= 1 && numericValue <= 100) {
                 setCount(numericValue);
             }
         }
@@ -58,14 +58,15 @@ export default function Payments() {
                 </div>
                 
                 <div className='ticket'>
-                    <div className='ticket-op' style={{backgroundColor: "lightpink"}}>내맘대로 이용권</div>
+                    <div className='ticket-op' style={{backgroundColor: "lightpink"}}>내맘대로 이용권 <br /></div>
                     <div className='ticket-inner'>
                         <div className='ticket-input'>
                             <input 
                                 type="number" 
                                 value={count} 
                                 onChange={handleCountChange} 
-                                min="0"
+                                min="1"
+                                max="100"
                             />
                             <p>회</p>
                         </div>
