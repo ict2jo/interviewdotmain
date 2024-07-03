@@ -260,29 +260,10 @@ export default function ReviewList() {
             return;
         }
         handleCloseDialog();
-        window.location.href = `/review/review_list_write?r_idx=${selectedReview.r_idx}`;
+        window.location.href = '/review/review_list_write';
+        console.log("idx가 있니?",selectedReview.r_idx);
     }
-    /* const handleReportReview = async () => {
-        try {
-            if (!reportReason) {
-                alert("신고 사유를 선택해주세요.");
-                return;
-            }
-            // 서버에 신고 사유와 함께 신고 요청
-            const response = await axios.get("http://localhost:8080/report/reportlist", {
-                u2_idx: userStore.id,
-                r_idx: selectedReview.r_idx,
-                rep_sysdate: new Date().toISOString(),
-                reason: reportReason, // 선택된 신고 사유
-                rep_active: "1"
-            });
-            console.log("Review reported:", response.data);
-            // 신고 후 추가 작업 (예: 신고 완료 메시지 표시 등)
-            handleCloseDialog();
-        } catch (error) {
-            console.error("Error reporting review:", error);
-        }
-    }; */
+    
 
     const handleReportReview = async () => {
         try {
@@ -313,12 +294,9 @@ export default function ReviewList() {
     return (
         <>
             <Container className="reviewwrap" sx={{ width: 1000 }}>
-                <Typography variant="h4" padding={"10px"}>
-                    면접 후기 게시판
-                </Typography>
-                <Paper>
-                    <Table sx={{ minWidth: 600 }}>
-                        <TableHead>
+                    <h1>면접 후기 게시판</h1>
+                    <Table sx={{ minWidth: 600, marginBottom:'20px' }} >
+                        <TableHead sx={{borderTop: '3px solid blue'}} className="tablehead">
                             <TableRow>
                                 <TableCell sx={{ width: '100px', textAlign: 'center' }}>NO</TableCell>
                                 <TableCell sx={{ width: '100px', textAlign: 'center' }}>작성자</TableCell>
@@ -381,7 +359,6 @@ export default function ReviewList() {
                         
                     />
                     </Box> */}
-                </Paper>
             </Container>
 
             <Dialog open={openDialog} onClose={handleCloseDialog}>

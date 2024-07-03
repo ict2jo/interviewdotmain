@@ -40,6 +40,8 @@ import Historydetail from "@/app/ai/interview_history/historydetail/[id]/page";
 import Footer from "./_components/Footer";
 import ReviewList from "./review/reviewList/page";
 import SuccessList from "./review/successList/page";
+import Review_List_Write from "./review/review_list_write/page";
+import Review_Success_Write from "./review/review_success_write/page";
 
 
 
@@ -82,6 +84,7 @@ function Home() {
     if (menuStore.selectedMenu.startsWith('review/successList')) {
       return <SuccessList/>;
     }
+    
     switch (menuStore.selectedMenu) {
       case "main":
         return <Main />;
@@ -120,6 +123,8 @@ function Home() {
       case "recruitment":
         return <List />;
       case "review":
+        return <Review_Community />; //면접후기
+      case "success":
         return <Review_Community />; //면접후기
       case "profile":
         return <Selfprofile />;

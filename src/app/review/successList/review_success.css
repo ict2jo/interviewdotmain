@@ -1,15 +1,22 @@
-.success_container {
+.reviewwrap{
     text-align: center;
     width: 1000px;
     margin: 0 auto;
 }
 
-.success_container h1 {
+.reviewwrap h1 {
     font-size: 30px;
     text-align: center;
     margin-bottom: 20px;
     margin-top: 20px;
     padding: 10px;
+}
+
+.review_box{
+    color: #1400FF;
+    width: 100%;
+    height: 10px;
+    margin: 0px auto;
 }
 
 .success_list {
@@ -65,4 +72,7 @@
     margin: 0 auto;
     margin-bottom: 50px;
     margin-top: 50px;
+}
+.review_btn{
+    background-color: #1400FF;
 }
