@@ -9,7 +9,8 @@ import userStore from "@/stores/UserStore";
 const Finish = () => {
     const [results, setResults] = useState([]);
     const [loading, setLoading] = useState(true);
-    const [responses, setResponses] = useState({}); 
+    const [responses, setResponses] = useState({});
+    const [saved, setSaved] = useState(false);
 
     useEffect(() => {
         const fetchAssistantResponses = async () => {
@@ -90,22 +91,26 @@ const Finish = () => {
         fetchAssistantResponses();
 
     }, []);
-    
+
 
     const handleQuit = () => {
         try {
-            localStorage.removeItem('interviewResults');
-            console.log("삭제완료");
-            window.close();
+            if(confirm("정말로 나가시겠습니까? \n 저장이 필요한 경우 저장 후 나가시길 바랍니다.")) {
+                localStorage.removeItem('interviewResults');
+                console.log("삭제완료");
+                window.close();
+            }
         } catch (error) {
-            console.log(error)
+            console.log(error);
         }
     };
+
 
 
     const handleSave = async () => {
         try {
             const token = localStorage.getItem('token');
+            if (saved) return;
 
             const requestBody = {
                 id: userStore.id,
@@ -133,6 +138,7 @@ const Finish = () => {
 
             if (response.ok) {
                 console.log("DB에 저장 완료.");
+                alert("면접 기록이 저장되었습니다.")
             } else {
                 console.error('에러발생;;;;;');
             }

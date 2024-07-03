@@ -51,9 +51,9 @@
 }
 
 .pagination_container {
+    position: absolute;
     display: flex;
     justify-content: center;
-    margin-top: 60px;
 }
 
 .pagination_button {
@@ -70,15 +70,24 @@
     background-color: blue;
     color: white;
 }
-.before_page{
+.question_before_button{
     position: absolute;
-    left: 10px;
-    bottom: 50%;
+    left: 240px;
+    top: 60px;
     cursor:pointer;
 }
-.next_page{
+.question_next_button{
     position: absolute;
-    right: 10px;
-    bottom: 50%;
+    right: 240px;
+    top: 60px;
     cursor:pointer;
+}
+.Search_TextField {
+    margin-top: 30px;
+    display: flex;
+    flex-direction: row-reverse;
+    align-items: baseline;
+}
+.question_paging_button{
+    margin-right: 110px;
 }

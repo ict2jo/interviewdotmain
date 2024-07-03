@@ -39,6 +39,12 @@ class QuestionStore {
     getPage() {
         return this.currentPage;
     }
+
+    reset() {
+        this.questions = [];
+        this.selectedQuestions = [];
+        this.currentPage = 1;
+    }
 }
 
 const questionStore = new QuestionStore();
