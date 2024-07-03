@@ -59,9 +59,6 @@ export default function Local({handleLocationlistChange, uvo }) {
           </MenuItem>
         ))}
       </Select>
-      <Typography variant="body2" color="textSecondary">
-        선택된 경력: {p_location}
-      </Typography>
     </FormControl>
   );
 }

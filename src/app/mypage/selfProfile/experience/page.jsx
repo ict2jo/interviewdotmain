@@ -58,9 +58,6 @@ export default function Experience({ uvo, handleCareerlistChange }) {
           </MenuItem>
         ))}
       </Select>
-      <Typography variant="body2" color="textSecondary">
-        선택된 경력: {p_career}
-      </Typography>
     </FormControl>
   );
 }

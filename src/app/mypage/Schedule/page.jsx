@@ -24,9 +24,11 @@ const Calendar = () => {
   const [modal2Open, setModal2Open] = useState(false);
   const [newEventTitle, setNewEventTitle] = useState("");
   const [c_idx, setC_idx] = useState("");
+  const [recrutPbancTtl, setRecrutPbancTtl] = useState("");
   const [newEventStart, setNewEventStart] = useState(null);
   const [newEventEnd, setNewEventEnd] = useState(null);
   const [list, setList] = useState([]);
+  const [newEventColor, setNewEventColor] = useState("#E0FFFF");
 
   const fetchData = async () => {
     try {
@@ -66,10 +68,12 @@ const Calendar = () => {
     }
 };
 const handleRecruitChange = (event) => {
-  const selectedRecruitInfo = list.find(item => item.recrutPbancTtl === event.target.value);
-  setNewEventTitle(selectedRecruitInfo ? selectedRecruitInfo.recrutPbancTtl : '');
-  setNewEventStart(selectedRecruitInfo ? formatDate(selectedRecruitInfo.pbancBgngYmd) : null);
-  setNewEventEnd(selectedRecruitInfo ? formatDate(selectedRecruitInfo.pbancEndYmd) : null);
+  const selectedValue = event.target.value; // 선택된 값
+    const selectedRecruitInfo = list.find(item => item.recrutPbancTtl === selectedValue); // 선택된 채용 공고 정보 찾기
+    setNewEventTitle(selectedRecruitInfo ? selectedRecruitInfo.recrutPbancTtl : ''); // 선택된 공고 제목 설정
+    setRecrutPbancTtl(selectedRecruitInfo ? selectedRecruitInfo.recrutPbancTtl : ''); // 선택된 공고의 c_idx 설정
+    setNewEventStart(selectedRecruitInfo ? formatDate(selectedRecruitInfo.pbancBgngYmd) : null);
+    setNewEventEnd(selectedRecruitInfo ? formatDate(selectedRecruitInfo.pbancEndYmd) : null);
 };
 const formatDate = (dateString) => {
     if (!dateString) return null;
@@ -98,6 +102,7 @@ const formatDate = (dateString) => {
     setModalOpen(true);
     setNewEventStart(info.startStr);
     setNewEventEnd(info.endStr);
+    setNewEventColor(info.event.backgroundColor);
   };
   const handleEventClick = (info) => {
     console.log('Date selected:', info);
@@ -106,6 +111,7 @@ const formatDate = (dateString) => {
     setNewEventEnd(info.event.endStr);
     setNewEventTitle(info.event._def.title);
     setC_idx(info.event._def.extendedProps.c_idx);
+    setNewEventColor(info.event.backgroundColor);
   };
 
   const handleCloseModal = () => {
@@ -114,6 +120,7 @@ const formatDate = (dateString) => {
     setNewEventTitle("");
     setNewEventStart(null);
     setNewEventEnd(null);
+    setNewEventColor("#a0c5ff");
   };
 
   const handleModalEdit = (info) => {
@@ -135,6 +142,7 @@ const formatDate = (dateString) => {
       title: newEventTitle,
       start: newEventStart,
       end: newEventEnd,
+      color: newEventColor,
       allDay: false // 예시에서는 allDay를 false로 설정합니다.
     };
 
@@ -169,6 +177,7 @@ const formatDate = (dateString) => {
       title: newEventTitle,
       start: newEventStart,
       end: newEventEnd,
+      color: newEventColor,
       allDay: false // 예시에서는 allDay를 false로 설정합니다.
     };
 
@@ -247,6 +256,10 @@ const formatDate = (dateString) => {
           console.error('일정 삭제 오류:', error);
         });
     }
+  };
+  
+  const handleColorChange = (event) => {
+    setNewEventColor(event.target.value);
   };
   return (
     <div className="calendar">
@@ -342,13 +355,28 @@ const formatDate = (dateString) => {
               shrink: true,
             }}
           />
+           <InputLabel>색상 선택</InputLabel>
+          <div>
+                <label>
+                  <input type="radio" name="color" value="#E0FFFF" checked={newEventColor === "#E0FFFF"} onChange={handleColorChange} />
+                  <div className="color-box" style={{backgroundColor: '#E0FFFF'}}></div>
+                </label>
+                <label>
+                  <input type="radio" name="color" value="#a0c5ff" checked={newEventColor === "#a0c5ff"} onChange={handleColorChange} />
+                  <div className="color-box" style={{backgroundColor: '#a0c5ff'}}></div>
+                </label>
+                <label>
+                  <input type="radio" name="color" value="#98FB" checked={newEventColor === "#98FB"} onChange={handleColorChange} />
+                  <div className="color-box" style={{backgroundColor: '#98FB'}}></div>
+                </label>
+              </div>
           <InputLabel id="demo-simple-select-label">채용공고추가</InputLabel>
       <Select
         labelId="demo-simple-select-label"
         id="demo-simple-select"
         label="즐겨찾는 공고"
         fullWidth
-        value={newEventTitle}
+        value={recrutPbancTtl}
         onChange={handleRecruitChange}
       >{list.map((item, index) => (
         <MenuItem key={index} value={item.recrutPbancTtl}>{item.recrutPbancTtl}</MenuItem>
@@ -413,13 +441,28 @@ const formatDate = (dateString) => {
               shrink: true,
             }}
           />
+          <InputLabel>색상 선택</InputLabel>
+          <div>
+                <label>
+                  <input type="radio" name="color" value="#E0FFFF" checked={newEventColor === "#E0FFFF"} onChange={handleColorChange} />
+                  <div className="color-box" style={{backgroundColor: '#E0FFFF'}}></div>
+                </label>
+                <label>
+                  <input type="radio" name="color" value="#a0c5ff" checked={newEventColor === "#a0c5ff"} onChange={handleColorChange} />
+                  <div className="color-box" style={{backgroundColor: '#a0c5ff'}}></div>
+                </label>
+                <label>
+                  <input type="radio" name="color" value="#98FB" checked={newEventColor === "#98FB"} onChange={handleColorChange} />
+                  <div className="color-box" style={{backgroundColor: '#98FB'}}></div>
+                </label>
+              </div>
           <InputLabel id="demo-simple-select-label">채용공고수정</InputLabel>
       <Select
         labelId="demo-simple-select-label"
         id="demo-simple-select"
         label="즐겨찾는 공고"
         fullWidth
-        value={newEventTitle}
+        value={recrutPbancTtl}
         onChange={handleRecruitChange}
       >{list.map((item, index) => (
         <MenuItem key={index} value={item.recrutPbancTtl}>{item.recrutPbancTtl}</MenuItem>

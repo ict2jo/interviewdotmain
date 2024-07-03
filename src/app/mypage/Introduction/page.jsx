@@ -87,7 +87,8 @@ export default function Introduction() {
                 </div>
             </div>
             <div className='mybut'>
-                <Button variant="contained" onClick={() => handleMenuClick("verification")}>자기소개서 수정하기</Button>
+                <Button variant="contained" onClick={() => handleMenuClick("verification")}>자기소개서 교정하기</Button>
+                <Button variant="contained" onClick={() => handleMenuClick("verification")}>자기소개서 피드백받기</Button>
             </div>
             </>
         </div>

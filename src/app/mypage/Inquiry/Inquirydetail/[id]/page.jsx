@@ -76,7 +76,7 @@ const Inquirydetail= observer(({i_idx}) => {
           </Typography>
           </div>
           <div className='inquirybut'>
-          <Button variant='contained' onClick={() => {handleMenuClick(`inquiryedit/${ivo.i_idx}`);}}>수정하기</Button>
+          {/* <Button variant='contained' onClick={() => {handleMenuClick(`inquiryedit/${ivo.i_idx}`);}}>수정하기</Button> */}
           <Button variant='outlined' onClick={deleteInquiry}>삭제하기</Button>
           <Button variant='outlined' onClick={() => {handleMenuClick("inquiry");}}>목록으로</Button>
           </div>

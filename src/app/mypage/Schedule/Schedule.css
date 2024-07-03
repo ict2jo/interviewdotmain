@@ -141,3 +141,16 @@
     border-radius: 8px;
     width: 700px;
   }
+  .color-box {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    display: inline-block;
+    cursor: pointer;
+}
+input[type="radio"] {
+    display: none;
+}
+input[type="radio"]:checked + .color-box {
+    border: 2px solid black;
+}
