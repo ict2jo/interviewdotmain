@@ -55,7 +55,7 @@ export default function Introduction() {
                     <p>email</p>
                 </div>
                 <div className='myinfodetail'>
-                    <p>{userStore.email}</p>
+                    <p>{userStore.birth}</p>
                 </div>
                 </div>
             </div>

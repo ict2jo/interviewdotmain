@@ -11,7 +11,7 @@ import axios from "axios";
 import { Button, Fade, Input, InputLabel, MenuItem, Modal, Select, TextField } from "@mui/material";
 import { format } from 'date-fns';
 const Calendar = () => {
-  
+  const employKey = process.env.NEXT_PUBLIC_EMPOLY_KEY;
   const plugins = [
     dayGridPlugin, // 월간 달력 // day 그리드
     timeGridPlugin, // 주간, 일간 달력 // time 그리드 보기
@@ -50,7 +50,7 @@ const Calendar = () => {
         // 3. favoriteSnList를 기반으로 API 호출
         const results = [];
         for (const sn of favoriteSnList) {
-            const queryParams = `serviceKey=B6imLe%2BFf%2B3fVWotgO%2BhgAihHyVI%2F7tlmTiqrvZifWgzl94sf9U4VL3GuwTIkEkjW3MsF%2BtQ3OnUHkqwMRmuMA%3D%3D&sn=${sn}`;
+            const queryParams = `serviceKey=${employKey}&sn=${sn}`;
             const API_URL = `/recruitment/detail?${queryParams}`;
             const response = await axios.get(API_URL);
             results.push(response.data.result);
@@ -69,9 +69,9 @@ const Calendar = () => {
 };
 const handleRecruitChange = (event) => {
   const selectedValue = event.target.value; // 선택된 값
-    const selectedRecruitInfo = list.find(item => item.recrutPbancTtl === selectedValue); // 선택된 채용 공고 정보 찾기
-    setNewEventTitle(selectedRecruitInfo ? selectedRecruitInfo.recrutPbancTtl : ''); // 선택된 공고 제목 설정
-    setRecrutPbancTtl(selectedRecruitInfo ? selectedRecruitInfo.recrutPbancTtl : ''); // 선택된 공고의 c_idx 설정
+    const selectedRecruitInfo = list.find(item => item.recrutPbancTtl === selectedValue);
+    setNewEventTitle(selectedRecruitInfo ? selectedRecruitInfo.recrutPbancTtl : ''); 
+    setRecrutPbancTtl(selectedRecruitInfo ? selectedRecruitInfo.recrutPbancTtl : '');
     setNewEventStart(selectedRecruitInfo ? formatDate(selectedRecruitInfo.pbancBgngYmd) : null);
     setNewEventEnd(selectedRecruitInfo ? formatDate(selectedRecruitInfo.pbancEndYmd) : null);
 };
@@ -102,7 +102,7 @@ const formatDate = (dateString) => {
     setModalOpen(true);
     setNewEventStart(info.startStr);
     setNewEventEnd(info.endStr);
-    setNewEventColor(info.event.backgroundColor);
+    //setNewEventColor(info.event.backgroundColor);
   };
   const handleEventClick = (info) => {
     console.log('Date selected:', info);
@@ -201,13 +201,9 @@ const formatDate = (dateString) => {
         title: info.event._def.title,
         start: info.event.startStr, // 수정된 시작 시간
         end: info.event.endStr === "" ? info.event.startStr + "T01:00:00" : info.event.endStr,
-        // oldTitle: info.oldEvent._def.title,
-        // oldStart: info.oldEvent._instance.range.start,
-        // oldEnd: info.oldEvent._instance.range.end,
       };
       console.log(updatedEvent);
       
-      // PATCH 요청으로 변경된 이벤트 업데이트
       axios.post('/mypage/updateCalendar', updatedEvent)
         .then(response => {
           console.log('이벤트 수정 성공:', response.data);
