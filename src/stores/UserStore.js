@@ -115,7 +115,6 @@ if (token) {
     });
       }
     }
-}
 
 
 const userStore = new UserStore();

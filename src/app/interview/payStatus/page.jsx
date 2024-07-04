@@ -35,7 +35,7 @@ export default function PayStatus() {
     },[]);
 
     function getBackgroundClass(orderName, payStatus) {
-        if (payStatus === "취소완료") {
+        if (payStatus === "취소완료" || payStatus === "취소중") {
             return "transparent-black"; // 스타일 클래스 이름
         }
     
@@ -78,9 +78,17 @@ export default function PayStatus() {
                                     <div className='payStatus_inner'>
                                         <p style={{ fontSize: "25px", fontWeight: "bold" }}>₩ {payment.amount.toLocaleString()}</p>
                                         <p>{payment.amount / 1000}회 면접 연습 + 분석</p>
-                                        <p style={{ margin: "0px" }}>사용가능 {payment.remainCount}/{payment.statusCount}</p>
+                                        <p style={{ margin: "0px" }}>
+                                            {payment.payStatus === "취소완료" || payment.remainCount === 0 ? <br /> : `${payment.remainCount}회 사용가능`}
+                                        </p>
                                         <button disabled>
-                                            {payment.statusCount >= payment.remainCount ? "사용중" : payment.remainCount === 0 ? "사용완료" : ""}
+                                            {payment.payStatus === "취소중" || payment.payStatus === "취소완료"
+                                                ? "사용불가"
+                                                : payment.remainCount === 0
+                                                ? "사용완료"
+                                                : payment.statusCount >= payment.remainCount
+                                                ? "사용중"
+                                                : ""}
                                         </button>
                                     </div>
                                 </div>
