@@ -16,7 +16,6 @@ import Interview_guide from "./ai/interview_guide/page";
 import QuestionRepository from "./ai/question_repository/page";
 import Inquirywrite from "./mypage/Inquiry/Inquirywrite/page";
 import Inquiry from "./mypage/Inquiry/page";
-import Starthome from "./interview/starthome/page";
 import JobTest from "./job/test/JobTest";
 import Verification from "../../pages/verification";
 import Result from "./job/test/result/Result";
@@ -85,8 +84,6 @@ function Home() {
     switch (menuStore.selectedMenu) {
       case "main":
         return <Main />;
-      case "ai":
-        return <Starthome />;
       case "payments":
         return <Payments />;  
       case "payDetail":
