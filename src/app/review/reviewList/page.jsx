@@ -27,7 +27,6 @@ import {
 } from "@mui/material";
 import { Box } from "@mui/system";
 import { useRouter } from "next/navigation";
-import { menu } from "@nextui-org/react";
 import menuStore from "@/stores/MenuStore";
 
 export default function ReviewList() {
@@ -97,6 +96,56 @@ export default function ReviewList() {
         console.log("comments", comments);
     }, [commentContent])
 
+    const handleContentChange = (event) => {
+        setEditingContent(event.target.value); // 수정할 내용 업데이트
+    };
+
+    const handleUpdate = async () => {
+        try {
+            // 서버에 수정할 내용 전송
+            const response = await axios.post("http://localhost:8080/review/updatereview", {
+                r_idx: selectedReview.r_idx,
+                r_content: editingContent // 수정된 내용
+            });
+            console.log("Review updated:", response.data);
+
+            // 수정 후 리뷰 목록 다시 불러오기
+            const updatedList = await fetchReviewListFromServer(); // 서버에서 업데이트된 목록을 다시 가져오기
+            setReviewList(updatedList);
+            
+            handleCloseDialog(); // 팝업 창 닫기
+
+        } catch (error) {
+            console.error("Error updating review:", error);
+        }
+    };
+
+    const fetchReviewListFromServer = async () => {
+        try {
+            const response = await axios.get("/review/reviewlist");
+            return response.data;
+        } catch (error) {
+            console.error("Error fetching review data:", error);
+            return [];
+        }
+    };
+
+    const handleDelete = async () => {
+        try {
+            // 서버에 삭제할 리뷰 정보 전송
+            const response = await axios.post("http://localhost:8080/review/deletereview", {
+                r_idx: selectedReview.r_idx,
+            });
+            console.log("Review deleted:", response.data);
+
+            // 삭제 후 리뷰 목록 다시 불러오기
+            await fetchReviewList();
+            handleCloseDialog(); // 팝업 창 닫기
+
+        } catch (error) {
+            console.error("Error deleting review:", error);
+        }
+    };
 
     const fetchComments = async (r_idx) => {
         try {
@@ -132,65 +181,6 @@ export default function ReviewList() {
             console.error("Error posting comment:", error);
         }
     };
-
-
-
-    const handleUpdate = async () => {
-        try {
-            // 서버에 수정할 내용 전송
-            const response = await axios.post("http://localhost:8080/review/updatereview", {
-                r_idx: selectedReview.r_idx,
-                r_content: editingContent // 수정된 내용
-            });
-            console.log("Review updated:", response.data);
-
-            // 수정 후 리뷰 목록 다시 불러오기
-            const updatedList = await fetchReviewListFromServer(); // 서버에서 업데이트된 목록을 다시 가져오기
-            setReviewList(updatedList); // 업데이트된 목록을 상태에 반영
-            handleCloseDialog(); // 팝업 창 닫기
-
-        } catch (error) {
-            console.error("Error updating review:", error);
-        }
-    };
-
-
-
-
-    const fetchReviewListFromServer = async () => {
-        try {
-            const response = await axios.get("/review/reviewlist");
-            return response.data;
-        } catch (error) {
-            console.error("Error fetching review data:", error);
-            return [];
-        }
-    };
-
-
-
-
-    const handleDelete = async () => {
-        try {
-            // 서버에 삭제할 리뷰 정보 전송
-            const response = await axios.post("http://localhost:8080/review/deletereview", {
-                r_idx: selectedReview.r_idx,
-            });
-            console.log("Review deleted:", response.data);
-
-            // 삭제 후 리뷰 목록 다시 불러오기
-            await fetchReviewList();
-            handleCloseDialog(); // 팝업 창 닫기
-
-        } catch (error) {
-            console.error("Error deleting review:", error);
-        }
-    };
-
-    /* const handleTitleChange = (event) => {
-      setEditingTitle(event.target.value);
-    } */
-
 
 
 
@@ -235,13 +225,6 @@ export default function ReviewList() {
     };
 
 
-
-
-
-    const handleContentChange = (event) => {
-        setEditingContent(event.target.value); // 수정할 내용 업데이트
-    };
-
     const handleCommentChange = (event) => {
         setCommentContent(event.target.value);
     }
@@ -254,22 +237,11 @@ export default function ReviewList() {
         setComments([]); // 댓글 목록 초기화
     };
 
-    /* const handleWriteReview = () => {
-        if (!userStore.id) {
-            alert("로그인 후에 작성할 수 있습니다.");
-            return;
-        }
-        menuStore.setSelectedMenu(menu);
-        handleCloseDialog();
-         router.push("/review/review_list_write"); 
-         console.log("idx가 있니?",selectedReview.r_idx); 
-    } */
-    
     const handleMenuClick = async (menu) => {
         menuStore.setSelectedMenu(menu);
         if (!userStore.id) {
             alert("로그인 후에 작성할 수 있습니다.");
-            return;
+            router.push("/signin/login");
         }
         handleCloseDialog();
     };
@@ -310,7 +282,7 @@ export default function ReviewList() {
                                 <TableCell sx={{ width: '100px', textAlign: 'center' }}>NO</TableCell>
                                 <TableCell sx={{ width: '100px', textAlign: 'center' }}>작성자</TableCell>
                                 <TableCell sx={{ width: '100px', textAlign: 'center' }}>제목</TableCell>
-                                <TableCell sx={{ width: '300px', textAlign: 'center' }}>내용</TableCell>
+                                <TableCell sx={{ width: '400px', textAlign: 'center' }}>내용</TableCell>
                                 <TableCell sx={{ width: '100px', textAlign: 'center' }}>회사</TableCell>
                                 <TableCell sx={{ width: '200px', textAlign: 'center' }}>작성일</TableCell>
                             </TableRow>
@@ -332,7 +304,7 @@ export default function ReviewList() {
                                     <TableCell sx={{ width: '100px', textAlign: 'center' }}>{review.active === '1' ? '' : review.r_title}</TableCell>
                                     <TableCell colSpan={1} sx={{ textAlign: 'center' }}>
                                         {review.active === '1' ? (
-                                            <span style={{ color: 'red', marginLeft: '10px', width: '300px' }}>삭제된 게시물 입니다.</span>
+                                            <span style={{ color: 'red', marginLeft: '10px', width: '400px' }}>삭제된 게시물 입니다.</span>
                                         ) : (
                                             review.r_content
                                         )}
@@ -352,7 +324,6 @@ export default function ReviewList() {
                     <div style={{ display: 'flex', justifyContent: 'center', margin: '10px 0 25px 0' }}>
                         <Box sx={{ display: 'flex', justifyContent: 'center', marginBottom: '20px' }}>
                             <Pagination
-                                /* count={totalPages} */
                                 count={Math.ceil(reviewList.length / reviewsPerPage)}
                                 page={page}
                                 onChange={handlePageChange}
@@ -360,33 +331,38 @@ export default function ReviewList() {
                             />
                         </Box>
                     </div>
-                    {/* <Box sx={{display: "flex", justifyContent: "center", margin: '20px 0 20px 0'}}>
-                    <Pagination
-                        count={totalPages}
-                        page={page}
-                        onChange={(event, value) => setPage(value)}
-                        
-                    />
-                    </Box> */}
             </Container>
 
             <Dialog open={openDialog} onClose={handleCloseDialog}>
                 <DialogTitle>면접 후기 상세 정보 및 댓글</DialogTitle>
-                <DialogContent>
+                <DialogContent >
                     {selectedReview && (
                         <>
-                            <Typography variant="h6">제목: {selectedReview.r_title}</Typography>
-                            <Typography>작성자: {selectedReview.r_id}</Typography>
+                            <Typography variant="h5">제목: {selectedReview.r_title}</Typography>
+                            <Typography variant="h6">작성자: {selectedReview.r_id}</Typography>
+
+                            <Box sx={{ display: 'flex', flexDirection: 'row', gap: 2 }}>
                             <Typography>내용:</Typography>
-                            <TextField
+                            {selectedReview.r_id !== userStore.id ? 
+                             
+                            (<Typography className="dialogcotent"
                                 multiline
                                 fullWidth
-                                rows={6}
                                 variant="filled"
+                                sx={{ marginTop: 1 }}
                                 value={editingContent}
                                 onChange={handleContentChange}
-                                disabled={selectedReview.r_id !== userStore.id}
-                            />
+                            >{editingContent}</Typography>): 
+                            (<TextField
+                                multiline
+                                fullWidth
+                                variant="filled"
+                                sx={{ backgroundColor: "white", marginTop: 1  }}
+                                value={editingContent}
+                                onChange={handleContentChange}
+                            />)}
+                            </Box>
+                            
                             <Typography>회사: {selectedReview.r_company}</Typography>
                             <Typography>작성일: {selectedReview.r_regdate}</Typography>
                             <Typography variant="h6" style={{ marginTop: 20 }}>
@@ -400,7 +376,6 @@ export default function ReviewList() {
                                 placeholder="댓글을 입력하세요"
                                 value={commentContent}
                                 onChange={handleCommentChange}
-                                style={{ marginTop: 10 }}
                             />
                             <Button onClick={handlePostComment} color="primary" style={{ marginTop: 10 }}>
                                 댓글 작성
@@ -426,6 +401,7 @@ export default function ReviewList() {
                                                             rows={4}
                                                             variant="outlined"
                                                             value={editingCommentContent}
+                                                            sx={{ whiteSpace: 'nowrap' }}
                                                             onChange={(e) => setEditingCommentContent(e.target.value)}
                                                         />
                                                     ) : (
@@ -435,21 +411,21 @@ export default function ReviewList() {
                                                 <TableCell>{comments.re_regdate}</TableCell>
                                                 <TableCell>
                                                     {comments.id === userStore.id && (
-                                                        <>
+                                                        <Box sx={{ display: 'flex', gap: 1 }}>
                                                             {editingCommentId === comments.re_idx ? (
-                                                                <Button onClick={() => handleUpdateComment(comments.re_idx)} color="primary">
+                                                                <Button onClick={() => handleUpdateComment(comments.re_idx)} color="primary" sx={{ whiteSpace: 'nowrap' }}>
                                                                     저장
                                                                 </Button>
                                                             ) : (
-                                                                <Button onClick={() => handleEditComment(comments.re_idx, comments.re_content)} color="primary">
+                                                                <Button onClick={() => handleEditComment(comments.re_idx, comments.re_content)} color="primary" sx={{ whiteSpace: 'nowrap' }}>
                                                                     수정
                                                                 </Button>
                                                             )}
-                                                            <Button onClick={() => handleDeleteComment(comments.re_idx)} color="primary">
+                                                            <Button onClick={() => handleDeleteComment(comments.re_idx)} color="primary" sx={{ whiteSpace: 'nowrap' }}>
                                                                 삭제
                                                             </Button>
 
-                                                        </>
+                                                        </Box>
 
                                                     )}
                                                 </TableCell>
@@ -461,21 +437,21 @@ export default function ReviewList() {
                         </>
                     )}
                 </DialogContent>
-                <DialogActions>
+                <DialogActions sx={{ display: 'flex', flexDirection: 'row', justifyContent: 'flex-end', gap: 1 }}>
                     {userStore.id === selectedReview?.r_id && (
                         <>
-                            <Button onClick={handleUpdate} color="primary">
+                            <Button onClick={handleUpdate} color="primary" sx={{ whiteSpace: 'nowrap' }}>
                                 수정
                             </Button>
-                            <Button onClick={handleDelete} color="primary">
+                            <Button onClick={handleDelete} color="primary" sx={{ whiteSpace: 'nowrap' }}>
                                 삭제
                             </Button>
                         </>
                     )}
-                    <Button onClick={handleReportReview} color="primary">
+                    <Button onClick={handleReportReview} color="primary" sx={{ whiteSpace: 'nowrap' }}>
                         신고하기
                     </Button>
-                    <Button onClick={handleCloseDialog} color="primary">
+                    <Button onClick={handleCloseDialog} color="primary" sx={{ whiteSpace: 'nowrap' }}>
                         닫기
                     </Button>
                 </DialogActions>
