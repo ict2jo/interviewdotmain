@@ -34,7 +34,11 @@ export default function PayStatus() {
         fetchData();
     },[]);
 
-    function getBackgroundClass(orderName) {
+    function getBackgroundClass(orderName, payStatus) {
+        if (payStatus === "취소완료") {
+            return "transparent-black"; // 스타일 클래스 이름
+        }
+    
         switch (orderName) {
             case '1회 이용권':
                 return 'yellow-background';
@@ -53,46 +57,42 @@ export default function PayStatus() {
         rows.push(payments.slice(i, i + 3));
     }
 
-    return (
-        <>
-            <div className='pay_container'>
-                <h1>나의 이용권 현황</h1>
-                <div className='payStatus'>
-                    {loading ? (
-                        <p>로딩중...</p>
-                    ) : payments.length === 0 ? (
-                        <p>이용권 구매 이력이 없습니다.</p>
-                    ) : (
-                        rows.map((row, rowIndex) => (
-                            <div className='payStatus_row' key={rowIndex}>
-                                {row.map((payment, index) => (
-                                    payment.payStatus !== "취소완료" && (
-                                    <div className='payStatus_t' key={index}>
-                                        <div className={`${getBackgroundClass(payment.orderName)}`}>{payment.orderName}</div>
-                                        <div className='payStatus_inner'>
-                                            <p style={{ fontSize: "25px", fontWeight: "bold" }}>₩ {payment.amount.toLocaleString()}</p>
-                                            <p>{payment.amount / 1000}회 면접 연습 + 분석</p>
-                                            <p style={{margin: "0px"}}>사용가능 {payment.remainCount}/{payment.statusCount}</p>
-                                            <button disabled>
-                                                {payment.statusCount >= payment.remainCount ? "사용중" : payment.remainCount === 0 ? "사용완료" : ""}
-                                            </button>
 
-                                        </div>
+
+    return (
+    <div className='pay_container'>
+        <h1>나의 이용권 현황</h1>
+        <div className='payStatus'>
+            {loading ? (
+                <p>로딩중...</p>
+            ) : payments.length === 0 ? (
+                <p>이용권 구매 이력이 없습니다.</p>
+            ) : (
+                rows.map((row, rowIndex) => (
+                    <div className='payStatus_row' key={rowIndex}>
+                        {Array.from({ length: 3 }).map((_, index) => {
+                            const payment = row[index];
+                            return payment ? (
+                                <div className='payStatus_t' key={index}>
+                                    <div className={`${getBackgroundClass(payment.orderName, payment.payStatus)}`}>{payment.orderName}</div>
+                                    <div className='payStatus_inner'>
+                                        <p style={{ fontSize: "25px", fontWeight: "bold" }}>₩ {payment.amount.toLocaleString()}</p>
+                                        <p>{payment.amount / 1000}회 면접 연습 + 분석</p>
+                                        <p style={{ margin: "0px" }}>사용가능 {payment.remainCount}/{payment.statusCount}</p>
+                                        <button disabled>
+                                            {payment.statusCount >= payment.remainCount ? "사용중" : payment.remainCount === 0 ? "사용완료" : ""}
+                                        </button>
                                     </div>
-                                    )
-                                ))}
-                                
-                                 {/* 빈칸 채우기 */}
-                                {row.filter(payment => payment.payStatus !== "취소완료").length < 3 && (
-                                Array.from({ length: 3 - row.filter(payment => payment.payStatus !== "취소완료").length }).map((_, index) => (
-                                    <div className='payStatus_t empty' key={index}></div>
-                                    ))
-                                )}
-                            </div>
-                        ))
-                    )}
-                </div>
-            </div>
-        </>
-    )
+                                </div>
+                            ) : (
+                                <div className='payStatus_t empty' key={index}></div>
+                            );
+                        })}
+                    </div>
+                ))
+            )}
+        </div>
+    </div>
+);
+
 }
