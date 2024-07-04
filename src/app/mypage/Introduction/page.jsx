@@ -32,65 +32,47 @@ export default function Introduction() {
     }
 
     return (
-        <div>
-            <>
-            <h2 className='mymaintext'>자기소개서제목</h2> 
-            <div className='blueline'></div>
-            <div className='whitebox'>
-                <div className='myname'>
-                <h2 className='myname1'>{userStore.name}</h2>
-                <p>&nbsp;</p>
-                <p>{userStore.birth}</p>
-                </div>
-                <div className='myname'>
-                <div className='myinfotitle'>
-                    <p>휴대폰</p>
-                    <p>주소</p>
-                </div>
-                <div className='myinfodetail'>
-                    <p>{userStore.phonenumber}</p>
-                    <p>{userStore.addr}</p>
-                </div>
-                <div className='myinfotitle'>
-                    <p>email</p>
-                </div>
-                <div className='myinfodetail'>
-                    <p>{userStore.email}</p>
-                </div>
-                </div>
-            </div>
-            <p className='mymaintext'>희망 근무 조건</p> 
-            <div className='blueline'></div>
-            <div className='whitebox'>
-                <div className='myname'>
-                <div className='myinfotitle'>
-                    <p>근무지</p>
-                    <p>업종</p>
-                    <p>학력</p>
-                    <p>경력</p>
-                </div>
-                <div className='myinfodetail'>
-                    <p>{userStore.p_location}</p>
-                    <p>{userStore.p_job}</p>
-                    <p>{userStore.p_class}</p>
-                    <p>{userStore.p_career}</p>
-                </div>
-                </div>
-            </div>
-            <p className='mymaintext'>자기소개서</p> 
-            <div className='blueline'></div>
-            <div className='whitebox'>
-                <div className='myname'>
-                <div className='myinfodetail'>
-                <p>{userStore.field}</p>
-                </div>
-                </div>
-            </div>
-            <div className='mybut'>
-                <Button variant="contained" onClick={() => handleMenuClick("verification")}>자기소개서 교정하기</Button>
-                <Button variant="contained" onClick={() => handleMenuClick("verification")}>자기소개서 피드백받기</Button>
-            </div>
-            </>
+        <>
+        <div className='profile_con'>
+        <h2 className='mymaintext'>자기소개서제목</h2> 
+        <div className='profile'>
+            <table class='styled-table'>
+                <tbody>
+                    <tr><th colspan="4" style={{backgroundColor:"blue", color: "white"}}>인적사항</th></tr>
+                    <tr><th>이름</th><td>{userStore.name}</td><th>생년월일</th><td>{userStore.birth}</td></tr>
+                    <tr><th>Email</th><td>{userStore.email}</td><th>휴대폰</th><td>{userStore.phonenumber}</td></tr>
+                    <tr><th>주소</th><td colspan="3">{userStore.addr}</td></tr>
+                </tbody>
+            </table>
         </div>
+    
+
+        <div className='profile'>
+            <table class='styled-table'>
+                <tbody>
+                    <tr><th colspan="2" style={{backgroundColor:"blue", color: "white"}}>희망 근무조건</th></tr>
+                    <tr><th>근무지</th><td>{userStore.p_location}</td></tr>
+                    <tr><th>업종</th><td>{userStore.p_job}</td></tr>
+                    <tr><th>학력</th><td>{userStore.p_class}</td></tr>
+                    <tr><th>경력</th><td>{userStore.p_career}</td></tr>
+                </tbody>
+            </table>
+        </div>
+    
+
+        <div className='profile'>
+            <table class='styled-table'>
+                <tbody>
+                    <tr><th style={{backgroundColor:"blue", color: "white"}}>자기소개서</th></tr>
+                    <tr><td>{userStore.field}</td></tr>
+                </tbody>
+            </table>
+        </div>
+        
+        <div className='mybut'>
+            <Button variant="contained" onClick={() => handleMenuClick("verification")}>자기소개서 피드백 받기</Button>
+        </div>
+        </div>
+        </>
     );
 }

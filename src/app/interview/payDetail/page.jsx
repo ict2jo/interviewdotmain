@@ -14,15 +14,12 @@ export default function PayDetail() {
     const [showModal, setShowModal] = useState(false);
     const [selectedPayment, setSelectedPayment] = useState(null);
     const [page, setPage] = useState(1); // 현재 페이지 상태 추가
-    const payPerPage = 5; // 한 페이지당 보일 리뷰 개수
+    const payPerPage = 7; // 한 페이지당 보일 리뷰 개수
     const secretKey = process.env.NEXT_PUBLIC_TOSS_SECRET_KEY;
     const encodedKey = btoa(secretKey + ':');
     const params = useParams();
     const id = params.id;
 
-    console.log("결제취소창" + userStore.id);
-    console.log("인증키" + encodedKey)
-    console.log("인증키22" + secretKey)
     const fetchData = async () => {
         try {
             const response = await axios.get(
@@ -49,29 +46,12 @@ export default function PayDetail() {
     const handleCancel = async () => {
         try {
             console.log("취소시작 " + userStore.id);
-
             const cancelReason = cancelReasons[selectedPayment.t_idx];
             if (!cancelReason) {
                 alert("결제 취소 사유를 선택해 주세요.");
                 return;
             }
             
-            // const response = await axios.post(
-            //     `http://localhost:8080/payments/cancel`,
-            //     {
-            //         t_idx: selectedPayment.t_idx,
-            //         paymentKey: selectedPayment.paymentKey,
-            //         cancelReason: cancelReason,
-            //         id: userStore.id
-            //     },
-            //     {
-            //         headers: {
-            //             'Content-Type': 'application/json',
-            //             Authorization: `Basic ${encodedKey}`
-            //         },
-            //     }
-            // );
-
             const response = await axios.post(
                 `http://localhost:8080/payments/cancel`,
                 {
@@ -88,7 +68,7 @@ export default function PayDetail() {
             
 
             if (response.status === 200) {
-                alert("취소 요청이 접수되었습니다.\n영업일 기준 1~3일 내로 처리될 예정입니다.");
+                alert("취소 요청이 접수되었습니다.\n영업일 기준 7일 내로 처리될 예정입니다.");
                 fetchData();
                 setShowModal(false);
             } else {
@@ -142,7 +122,7 @@ export default function PayDetail() {
                         <tr>
                             <th>취소일자</th>
                         </tr>
-
+                            
                             {loading ? (
                                 <tr>
                                     <td colSpan="6">로딩중...</td>

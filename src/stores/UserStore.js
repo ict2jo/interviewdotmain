@@ -71,11 +71,12 @@ class UserStore {
 
   loadUserFromServer() {
     const token = localStorage.getItem("token");
+    let userData = {};
     if (token) {
       axios
         .get(`${URL}userInfo`, { params: { token } })
         .then((userInfoResponse) => {
-          const userData = userInfoResponse.data;
+          userData = userInfoResponse.data;
           this.setPhonenumber(userData.phonenumber);
           this.setName(userData.name);
           this.setId(userData.id);
@@ -83,14 +84,16 @@ class UserStore {
           this.setEmail(userData.email);
           this.setField(userData.field);
           console.log("Loaded user data:", userData);
-
+    
           return axios.get(`/mypage/selfprofile?id=${userData.id}`);
         })
-        .then((selfProfileResponse) => {
+        .then(async (selfProfileResponse) => {
+          console.log("User data in second then block:", userData); // userData가 잘 전달되는지 확인
+    
           if (selfProfileResponse.data.length === 0) {
-            return axios
-              .post(`/mypage/selfprofileinsert?u_idx=${userData.u_idx}`)
-              .then(() => null);
+            await axios
+              .post(`/mypage/selfprofileinsert?u_idx=${userData.u_idx}`);
+            return null;
           } else {
             const selfProfileData = selfProfileResponse.data[0];
             this.setAddr(selfProfileData.addr);
@@ -102,11 +105,11 @@ class UserStore {
           }
         })
         .catch((error) => {
-          console.error("Error loading user data", error);
+          console.error("Error loading user data:", error);
         });
-      }
+          }
+        }
     }
-}
 
 
 const userStore = new UserStore();
