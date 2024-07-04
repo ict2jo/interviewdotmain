@@ -1,7 +1,6 @@
 "use client"
 
-import dynamic from "next/dynamic"
-import { useEffect, useState } from "react"
+import { useEffect, useRef, useState } from "react"
 import 'react-quill/dist/quill.snow.css'; // Quill의 snow 테마 CSS를 import
 import "./review_list_write.css"
 import {
@@ -9,11 +8,10 @@ import {
     Container,
     Snackbar
 } from "@mui/material";
-import { useRouter } from "next/navigation"
 import axios from "axios";
 import userStore from "@/stores/UserStore";
 import menuStore from "@/stores/MenuStore";
-import Clipboard from "quill/modules/clipboard";
+import dynamic from "next/dynamic";
 
 const ReactQuill = dynamic(() => import('react-quill'), { ssr: false });
 
@@ -23,15 +21,15 @@ export default function Review_List_Write() {
     const [r_content, setContent] = useState('');
     const [snackbarOpen, setSnackbarOpen] = useState(false);
     const [snackbarMessage, setSnackbarMessage] = useState('');
-    const router = useRouter();
 
     const name = userStore.name;
-
 
     /* useEffect(() => {
 
 
     }, [name]); */
+
+    const typingTimeoutRef = useRef(null); // 타이핑 디바운스를 위한 타이머 참조
 
     // 리뷰 작성 API 호출 함수
     const handleSubmitReview = async () => {
@@ -43,50 +41,56 @@ export default function Review_List_Write() {
                 r_title: r_title,
                 r_company: r_company,
                 r_content: r_content,
-                
             });
             console.log("리뷰 작성 완료:", response.data);
             setTitle(response.data);
-            setContent(response.data);
             setCompany(response.data);
+            setContent(response.data);
 
-            
             // 작성 완료 후 스낵바 열기
             setSnackbarMessage('리뷰가 성공적으로 작성되었습니다.');
             setSnackbarOpen(true);
 
             menuStore.setSelectedMenu("review/reviewList");
-            /* if (response.status === 200) {
-                alert("리뷰작성 성공@@@@");
-                const response2 = await axios.get("/review/reviewlist");
-                setReviewList(response2.data);
-            } */
-
-            // 작성 완료 후 홈페이지로 이동
-            //router.push("/review/reviewList");
         } catch (error) {
             console.error("리뷰 작성 중 에러 발생:", error);
             // 실패 시 스낵바 열기
             setSnackbarMessage('리뷰 작성 중 오류가 발생했습니다.');
             setSnackbarOpen(true);
-            setTitle('');
-            setContent('');
-            setCompany('');
+            setTitle([]);
+            setContent([]);
+            setCompany([]);
         }
     };
 
-    const handleContentChange = (content) => {
-        setContent(content);
+    // Quill Editor의 변경 이벤트를 처리하는 핸들러 (Debounce 적용)
+    const handleContentChange = (content, delta, source, editor) => {
+        // 이전에 설정된 타이머가 있으면 클리어
+        if (typingTimeoutRef.current) {
+            clearTimeout(typingTimeoutRef.current);
+        }
+
+        // 새로운 타이머 설정
+        typingTimeoutRef.current = setTimeout(() => {
+            const deltaOps = editor.getContents().ops; // Quill Editor의 Delta 객체를 가져옵니다.
+            const plainText = deltaOps.reduce((text, op) => {
+                if (typeof op.insert === 'string') {
+                    text += op.insert.trim(); // 텍스트만 추출하고 앞뒤 공백 제거
+                }
+                return text;
+            }, '');
+            setContent(plainText);
+        }, 1000); // 500ms 타이머 설정 (원하는 시간으로 변경 가능)
     };
-    
+
+    // 스낵바 닫기 핸들러
     const handleSnackbarClose = () => {
         setSnackbarOpen(false);
     };
 
-
     useEffect(() => {
         console.log('입력 : ', r_content);
-    }, [r_content])
+    }, [r_content]);
 
     return (
         <>
@@ -111,16 +115,28 @@ export default function Review_List_Write() {
                             onChange={handleContentChange}
                             modules={{
                                 toolbar: [
-                                    [{ 'header': '1'}, {'header': '2'}, { 'font': [] }],
-                                    [{size: []}],
+                                    [{ 'header': '1' }, { 'header': '2' }, { 'font': [] }],
+                                    [{ size: [] }],
                                     ['bold', 'italic', 'underline', 'strike', 'blockquote'],
-                                    [{'list': 'ordered'}, {'list': 'bullet'}, 
-                                     {'indent': '-1'}, {'indent': '+1'}],['clean']
-                                    /* ['link', 'image', 'video'], */
-                                  ], 
+                                    [{ 'list': 'ordered' }, { 'list': 'bullet' }, { 'indent': '-1' }, { 'indent': '+1' }],
+                                    ['clean']
+                                ],
                             }}
+                            formats={[
+                                'header', 'font', 'size',
+                                'bold', 'italic', 'underline', 'strike', 'blockquote',
+                                'list', 'bullet', 'indent',
+                                'link', 'image', 'video'
+                            ]}
                             placeholder="내용을 입력해주세요..."
-                            style={{ width: '100%', height: '90%', padding: '10px', fontSize: '16px' }}
+                            style={{
+                                width: '100%',
+                                height: '90%',
+                                padding: '10px',
+                                fontSize: '16px',
+                                fontFamily: 'Nanum Gothic, sans-serif'
+                            }}
+                            theme="snow"
                         />
                     </div>
                     <div>

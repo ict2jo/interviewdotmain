@@ -70,3 +70,11 @@
     
 } */
 
+.ql-editor {
+    font-family: 'Nanum Gothic', sans-serif; /* 폰트 설정 */
+    font-size: 16px;
+    height: 90%;
+    padding: 10px;
+    width: 100%;
+}
+
