@@ -32,15 +32,13 @@ const worklist = [
 export default function Worklist({ uvo, handleWorklistChange }) {
     const [p_job, setP_job] = React.useState([]);
 
-    // 페이지 로드 시 uvo.p_job 값을 기본 선택 값으로 설정
     React.useEffect(() => {
-        setP_job(uvo.p_job ? uvo.p_job.split(',') : []); // 초기 값 설정을 수정
+        setP_job(uvo.p_job ? uvo.p_job.split(',') : []);
     }, [uvo.p_job]);
 
     const handleChange = (event) => {
         const { value } = event.target;
 
-        // 여러 개의 선택 항목을 배열로 설정하고, 값을 쉼표로 구분된 문자열로 변환하여 부모 컴포넌트에 전달
         setP_job(value);
         handleWorklistChange(value.join(','));
     };

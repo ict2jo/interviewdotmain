@@ -21,10 +21,14 @@ const Calendar = () => {
   const API_URL = `/mypage/selectCalendar?u_idx=${userStore.u_idx}`;
   const [scheduleData, setScheduleData] = useState([]);
   const [modalOpen, setModalOpen] = useState(false);
+  const [modal2Open, setModal2Open] = useState(false);
   const [newEventTitle, setNewEventTitle] = useState("");
+  const [c_idx, setC_idx] = useState("");
+  const [recrutPbancTtl, setRecrutPbancTtl] = useState("");
   const [newEventStart, setNewEventStart] = useState(null);
   const [newEventEnd, setNewEventEnd] = useState(null);
   const [list, setList] = useState([]);
+  const [newEventColor, setNewEventColor] = useState("#E0FFFF");
 
   const fetchData = async () => {
     try {
@@ -64,10 +68,12 @@ const Calendar = () => {
     }
 };
 const handleRecruitChange = (event) => {
-  const selectedRecruitInfo = list.find(item => item.recrutPbancTtl === event.target.value);
-  setNewEventTitle(selectedRecruitInfo ? selectedRecruitInfo.recrutPbancTtl : '');
-  setNewEventStart(selectedRecruitInfo ? formatDate(selectedRecruitInfo.pbancBgngYmd) : null);
-  setNewEventEnd(selectedRecruitInfo ? formatDate(selectedRecruitInfo.pbancEndYmd) : null);
+  const selectedValue = event.target.value; // 선택된 값
+    const selectedRecruitInfo = list.find(item => item.recrutPbancTtl === selectedValue); // 선택된 채용 공고 정보 찾기
+    setNewEventTitle(selectedRecruitInfo ? selectedRecruitInfo.recrutPbancTtl : ''); // 선택된 공고 제목 설정
+    setRecrutPbancTtl(selectedRecruitInfo ? selectedRecruitInfo.recrutPbancTtl : ''); // 선택된 공고의 c_idx 설정
+    setNewEventStart(selectedRecruitInfo ? formatDate(selectedRecruitInfo.pbancBgngYmd) : null);
+    setNewEventEnd(selectedRecruitInfo ? formatDate(selectedRecruitInfo.pbancEndYmd) : null);
 };
 const formatDate = (dateString) => {
     if (!dateString) return null;
@@ -78,6 +84,7 @@ const formatDate = (dateString) => {
   };
   useEffect(() => {
     fetchData();
+    console.log(scheduleData);
   }, []);
   
   const handleAddEventButtonClick = () => {
@@ -91,19 +98,66 @@ const formatDate = (dateString) => {
   };
 
   const handleSelect = (info) => {
-    console.log('Date selected:', info.startStr, info.endStr);
+    console.log('Date selected:', info);
     setModalOpen(true);
     setNewEventStart(info.startStr);
     setNewEventEnd(info.endStr);
+    setNewEventColor(info.event.backgroundColor);
+  };
+  const handleEventClick = (info) => {
+    console.log('Date selected:', info);
+    setModal2Open(true);
+    setNewEventStart(info.event.startStr);
+    setNewEventEnd(info.event.endStr);
+    setNewEventTitle(info.event._def.title);
+    setC_idx(info.event._def.extendedProps.c_idx);
+    setNewEventColor(info.event.backgroundColor);
   };
 
   const handleCloseModal = () => {
     setModalOpen(false);
+    setModal2Open(false);
     setNewEventTitle("");
     setNewEventStart(null);
     setNewEventEnd(null);
+    setNewEventColor("#a0c5ff");
   };
 
+  const handleModalEdit = (info) => {
+    if (!newEventTitle) {
+      alert('일정 제목을 입력하세요.');
+      return;
+    }
+    if (!newEventStart || !newEventEnd) {
+      alert('날짜를 입력하세요.');
+      return;
+    }
+    if (new Date(newEventEnd) < new Date(newEventStart)) {
+      alert('종료일이 시작일보다 빠릅니다.');
+      return;
+    }
+
+    const newEvent = {
+      c_idx: c_idx,
+      title: newEventTitle,
+      start: newEventStart,
+      end: newEventEnd,
+      color: newEventColor,
+      allDay: false // 예시에서는 allDay를 false로 설정합니다.
+    };
+
+    axios
+      .post('/mypage/updateCalendar', newEvent)
+      .then((response) => {
+        console.log('일정 추가 성공:', response.data);
+        //handleCloseModal();
+        location.reload();
+      })
+      .catch((error) => {
+        alert('일정 추가 중 오류가 발생했습니다.');
+        console.error('일정 추가 오류:', error);
+      });
+  };
   const handleModalSubmit = () => {
     if (!newEventTitle) {
       alert('일정 제목을 입력하세요.');
@@ -123,6 +177,7 @@ const formatDate = (dateString) => {
       title: newEventTitle,
       start: newEventStart,
       end: newEventEnd,
+      color: newEventColor,
       allDay: false // 예시에서는 allDay를 false로 설정합니다.
     };
 
@@ -188,24 +243,23 @@ const formatDate = (dateString) => {
       location.reload(); // 확인하지 않았을 경우 페이지 새로고침
     }
   };
-  const handleEventDelete = (info) => {
-   
-    if (confirm(`'${info.event.title}' 일정을 삭제하시겠습니까?`)) {
-      info.event.remove();
-
-      const deletedEvent = {
-        c_idx: info.event._def.extendedProps.c_idx,
-      };
-
-      // DELETE 요청으로 이벤트 삭제
-      axios.post('/mypage/deleteCalendar', deletedEvent)
-        .then(response => {
-          console.log('이벤트 삭제 성공:', response.data);
+  const handleEventDelete = () => {
+    if (confirm(`'${newEventTitle}' 일정을 삭제하시겠습니까?`)) {
+      axios
+        .post('/mypage/deleteCalendar', { c_idx: c_idx })
+        .then((response) => {
+          console.log('일정 삭제 성공:', response.data);
+          location.reload();
         })
-        .catch(error => {
-          console.error('이벤트 삭제 실패:', error);
+        .catch((error) => {
+          alert('일정 삭제 중 오류가 발생했습니다.');
+          console.error('일정 삭제 오류:', error);
         });
     }
+  };
+  
+  const handleColorChange = (event) => {
+    setNewEventColor(event.target.value);
   };
   return (
     <div className="calendar">
@@ -249,7 +303,7 @@ const formatDate = (dateString) => {
       eventDrop={handleEventDrop} // 이벤트 드롭 시
       eventRemove={() => console.log("eventRemove")} // 이벤트 제거 시
       eventResize={handleEventResize}
-      eventClick={handleEventDelete}
+      eventClick={handleEventClick}
       locale='ko'
       />
 
@@ -301,21 +355,125 @@ const formatDate = (dateString) => {
               shrink: true,
             }}
           />
+           <InputLabel>색상 선택</InputLabel>
+          <div>
+                <label>
+                  <input type="radio" name="color" value="#E0FFFF" checked={newEventColor === "#E0FFFF"} onChange={handleColorChange} />
+                  <div className="color-box" style={{backgroundColor: '#E0FFFF'}}></div>
+                </label>
+                <label>
+                  <input type="radio" name="color" value="#a0c5ff" checked={newEventColor === "#a0c5ff"} onChange={handleColorChange} />
+                  <div className="color-box" style={{backgroundColor: '#a0c5ff'}}></div>
+                </label>
+                <label>
+                  <input type="radio" name="color" value="#98FB" checked={newEventColor === "#98FB"} onChange={handleColorChange} />
+                  <div className="color-box" style={{backgroundColor: '#98FB'}}></div>
+                </label>
+              </div>
           <InputLabel id="demo-simple-select-label">채용공고추가</InputLabel>
       <Select
         labelId="demo-simple-select-label"
         id="demo-simple-select"
         label="즐겨찾는 공고"
         fullWidth
-        value={newEventTitle}
+        value={recrutPbancTtl}
         onChange={handleRecruitChange}
       >{list.map((item, index) => (
-        <MenuItem value={item.recrutPbancTtl}>{item.recrutPbancTtl}</MenuItem>
+        <MenuItem key={index} value={item.recrutPbancTtl}>{item.recrutPbancTtl}</MenuItem>
       ))}
       </Select>
           <div>
             <Button onClick={handleModalSubmit} variant="contained" color="primary" sx={{ mr: 2 }}>
               추가
+            </Button>
+            <Button onClick={handleCloseModal} variant="contained" color="secondary">
+              닫기
+            </Button>
+          </div>
+        </div>
+      </Fade>
+    </Modal>
+<Modal
+      open={modal2Open}
+      onClose={handleCloseModal}
+      aria-labelledby="modal-title"
+      aria-describedby="modal-description"
+      closeAfterTransition
+      sx={{
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+
+      }}
+    >
+      <Fade in={modal2Open}>
+        <div className="modalbox">
+          <h2>일정 수정</h2>
+          <TextField
+            id="event-title"
+            label="제목"
+            value={newEventTitle}
+            onChange={(e) => setNewEventTitle(e.target.value)}
+            fullWidth
+            sx={{ mb: 2, mt: 3 }}
+          />
+          <TextField
+            id="event-start"
+            label="시작날짜"
+            type="date"
+            value={newEventStart}
+            onChange={(e) => setNewEventStart(e.target.value)}
+            fullWidth
+            sx={{ mb: 2 }}
+            InputLabelProps={{
+              shrink: true,
+            }}
+          />
+          <TextField
+            id="event-end"
+            label="끝날짜"
+            type="date"
+            value={newEventEnd}
+            onChange={(e) => setNewEventEnd(e.target.value)}
+            fullWidth
+            sx={{ mb: 2 }}
+            InputLabelProps={{
+              shrink: true,
+            }}
+          />
+          <InputLabel>색상 선택</InputLabel>
+          <div>
+                <label>
+                  <input type="radio" name="color" value="#E0FFFF" checked={newEventColor === "#E0FFFF"} onChange={handleColorChange} />
+                  <div className="color-box" style={{backgroundColor: '#E0FFFF'}}></div>
+                </label>
+                <label>
+                  <input type="radio" name="color" value="#a0c5ff" checked={newEventColor === "#a0c5ff"} onChange={handleColorChange} />
+                  <div className="color-box" style={{backgroundColor: '#a0c5ff'}}></div>
+                </label>
+                <label>
+                  <input type="radio" name="color" value="#98FB" checked={newEventColor === "#98FB"} onChange={handleColorChange} />
+                  <div className="color-box" style={{backgroundColor: '#98FB'}}></div>
+                </label>
+              </div>
+          <InputLabel id="demo-simple-select-label">채용공고수정</InputLabel>
+      <Select
+        labelId="demo-simple-select-label"
+        id="demo-simple-select"
+        label="즐겨찾는 공고"
+        fullWidth
+        value={recrutPbancTtl}
+        onChange={handleRecruitChange}
+      >{list.map((item, index) => (
+        <MenuItem key={index} value={item.recrutPbancTtl}>{item.recrutPbancTtl}</MenuItem>
+      ))}
+      </Select>
+          <div>
+            <Button onClick={handleModalEdit} variant="contained" color="primary" sx={{ mr: 2 }}>
+              수정
+            </Button>
+            <Button onClick={handleEventDelete} variant="contained" color="secondary">
+              삭제
             </Button>
             <Button onClick={handleCloseModal} variant="contained" color="secondary">
               닫기

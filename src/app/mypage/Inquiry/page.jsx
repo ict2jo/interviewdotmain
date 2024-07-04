@@ -44,16 +44,13 @@ export default function Inquiry() {
   const calculateIndex = (pageIndex, rowIndex) => {
     return (pageIndex - 1) * rowsPerPage + rowIndex + 1;
   };
-
-  // Pagination logic
-  const rows = menuStore.inquiryList || []; // Initialize as empty array if inquiryList is undefined
-  const emptyRows = rowsPerPage - Math.min(rowsPerPage, rows.length - (page - 1) * rowsPerPage);
-  const displayedRows = rows.slice((page - 1) * rowsPerPage, (page - 1) * rowsPerPage + rowsPerPage);
-  const pageCount = Math.ceil(rows.length / rowsPerPage); // Total pages
-
   const router = useRouter();
 
-  // Handle page change
+  const rows = menuStore.inquiryList || []; 
+  const emptyRows = rowsPerPage - Math.min(rowsPerPage, rows.length - (page - 1) * rowsPerPage);
+  const displayedRows = rows.slice((page - 1) * rowsPerPage, (page - 1) * rowsPerPage + rowsPerPage);
+  const pageCount = Math.ceil(rows.length / rowsPerPage); 
+
   const handleChangePage = (event, newPage) => {
     setPage(newPage);
   };
@@ -80,10 +77,11 @@ export default function Inquiry() {
           </TableRow>
         </TableHead>
         <TableBody>
-          {/* Map displayed rows and render */}
           {displayedRows.map((row, index) => (
             <TableRow key={row.i_idx}>
-            <TableCell sx={{ width: '100px', textAlign:'center'}}>{calculateIndex(page, index)}</TableCell>
+            <TableCell sx={{ width: '100px', textAlign:'center'}}>
+              {calculateIndex(page, index)}
+            </TableCell>
             <TableCell sx={{ width: '200px', textAlign:'center' }}
             onClick={() => handleMenuClick(`inquirydetail/${row.i_idx}`)}>
                 <p className="ellipsis-cell">{row.i_subject}</p>
@@ -109,13 +107,13 @@ export default function Inquiry() {
     <TableCell colSpan={4} sx={{ border: 0, textAlign: 'center' }}>
       <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
         <Pagination
-          count={pageCount} // Total pages
-          page={page} // Current page index (1-based)
+          count={pageCount}
+          page={page} 
           color="primary"
-          onChange={handleChangePage} // Page change handler
-          size="large" // Pagination size
+          onChange={handleChangePage} 
+          size="large"
           className='pagination'
-          style={{ marginLeft: 'auto',marginRight: 'auto' }} // Pagination을 왼쪽 끝에서 중앙으로 이동
+          style={{ marginLeft: 'auto',marginRight: 'auto' }}
         />
         <Button variant='contained' onClick={() => handleMenuClick("inquirywrite")}>Write</Button>
       </div>
