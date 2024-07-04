@@ -22,7 +22,7 @@ class QuestionStore {
             if (this.selectedQuestions.length < 3) {
                 this.selectedQuestions.push(question);
             } else {
-                alert("3개 이상 선택할 수 없습니다.");
+                alert("3개 까지만 선택할 수 있습니다.");
             }
         }
     }
