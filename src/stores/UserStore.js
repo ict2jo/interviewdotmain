@@ -115,7 +115,7 @@ if (token) {
     });
       }
     }
-
+  }
 
 const userStore = new UserStore();
 export default userStore;
