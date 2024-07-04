@@ -334,7 +334,7 @@ export default function ReviewList() {
             </Container>
 
             <Dialog open={openDialog} onClose={handleCloseDialog}>
-                <DialogTitle>면접 후기 상세 정보 및 댓글</DialogTitle>
+                <DialogTitle>면접 후기 상세 정보 및 댓글</DialogTitle>        
                 <DialogContent >
                     {selectedReview && (
                         <>
