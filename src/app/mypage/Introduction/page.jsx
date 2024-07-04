@@ -44,6 +44,7 @@ export default function Introduction() {
                     <tr><th>주소</th><td colspan="3">{userStore.addr}</td></tr>
                 </tbody>
             </table>
+
         </div>
     
 

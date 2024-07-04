@@ -52,6 +52,7 @@ export default function Selfprofile() {
         try {
             await axios.post('/mypage/editprofile', uvo);
             alert('프로필 수정 완료');
+            location.reload();
         } catch (error) {
             alert("수정 실패");
             console.error("작성 실패:", error);

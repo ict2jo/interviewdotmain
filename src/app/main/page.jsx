@@ -1,34 +1,27 @@
-'use client'
 import Image from "next/image";
 import bg from "../../../public/images/bg.png"
 import menuStore from "@/stores/MenuStore";
 import { Typography } from "@mui/material";
 import userStore from "@/stores/UserStore";
-import {useEffect} from "react";
 import AuthStore from "@/stores/AuthStore";
 
 export default function Main() {
-
     const id = userStore.id;
-
-/*    useEffect(() => {
-        if (id) {
-            openPopup();
-        }
-    }, [id]);*/
-
 
     const handleMenuClick = (menu) => {
         menuStore.setSelectedMenu(menu);
     };
 
     const openPopup = async () => {
-        if (!AuthStore.token) {
-            alert("로그인 후 이용해 주시길 바랍니다.");
-            return handleMenuClick("login");
-        }
-
         try {
+            const stream = await navigator.mediaDevices.getUserMedia({ video: true, audio: true });
+            stream.getTracks().forEach(track => track.stop());
+
+            if (!AuthStore.token) {
+                alert("로그인 후 이용해 주시길 바랍니다.");
+                return handleMenuClick("login");
+            }
+
             const response = await fetch(`http://localhost:8080/interview/checkpay?id=${id}`);
             const data = await response.json();
             console.log(data);
@@ -57,7 +50,7 @@ export default function Main() {
                 return handleMenuClick("payments");
             }
         } catch (error) {
-            console.error("이용권 확인 및 차감 중 오류 발생:", error);
+            alert("카메라 또는 마이크 장치를 확인할 수 없습니다.");
         }
     };
 
@@ -71,7 +64,7 @@ export default function Main() {
                     인터뷰 닷으로 취업하자
                 </p>
                 <Typography onClick={openPopup}
-                    className="bg-primary-500 text-white py-2 w-48 h-12 rounded-full font-bold hover:opacity-95 cursor-pointer text-center leading-8"
+                            className="bg-primary-500 text-white py-2 w-48 h-12 rounded-full font-bold hover:opacity-95 cursor-pointer text-center leading-8"
                 >
                     바로 시작하기
                 </Typography>
