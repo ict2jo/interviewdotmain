@@ -1,7 +1,7 @@
 "use client"
 
-import { Button, Checkbox } from "@mui/material";
-import { useState } from "react";
+import {Button, Checkbox} from "@mui/material";
+import {useState} from "react";
 import './select.css'
 
 export default function Select() {
@@ -18,12 +18,12 @@ export default function Select() {
         }
     };
 
-    const CustomCheckbox = ({ index }) => {
+    const CustomCheckbox = ({index}) => {
         const isChecked = selectedCheckbox === index;
 
         return (
             <div className="custom_checkbox">
-                <Checkbox checked={isChecked} />
+                <Checkbox checked={isChecked}/>
             </div>
         );
     };
@@ -34,14 +34,14 @@ export default function Select() {
         } else if (selectedCheckbox === 2) {
             window.location.href = '/interview/choose';
             localStorage.setItem("rand", category);
-        } else if (selectedCheckbox === 3){
+        } else if (selectedCheckbox === 3) {
             window.location.href = '/interview/history'
         }
     };
 
     const handleClose = () => {
-        if(confirm("면접 연습을 종료하시겠습니까? \n 만약 종료 하시게 된다면 환불은 불가능합니다."))
-        window.close();
+        if (confirm("면접 연습을 종료하시겠습니까? \n만약 종료 하시게 된다면 환불은 불가능합니다."))
+            window.close();
     };
 
     return (
@@ -94,7 +94,7 @@ export default function Select() {
                         </tbody>
                     </table>
                 </div>
-                
+
                 <div className={`selectBox ${selectedCheckbox === 3 ? 'checkedBox' : ''}`}
                      onClick={() => handleCheckboxChange(3)}>
                     <table className="select_table">
