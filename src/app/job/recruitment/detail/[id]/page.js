@@ -12,7 +12,8 @@ export default function Recruitmentdetail({recrutPblntSn} ) {
     const [loading, setLoading] = React.useState(true);
     const [files, setFiles] = useState([]);
     const id = recrutPblntSn ;
-    const API_URL = `/recruitment/detail?serviceKey=B6imLe%2BFf%2B3fVWotgO%2BhgAihHyVI%2F7tlmTiqrvZifWgzl94sf9U4VL3GuwTIkEkjW3MsF%2BtQ3OnUHkqwMRmuMA%3D%3D&sn=${id}`;
+    const employKey = process.env.NEXT_PUBLIC_EMPOLY_KEY;
+    const API_URL = `/recruitment/detail?serviceKey=${employKey}&sn=${id}`;
     const getData = () => {
         axios
             .get(API_URL)
