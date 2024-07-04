@@ -14,6 +14,7 @@ class UserStore {
   p_location = "";
   field = "";
   addr = "";
+  birth = "";
 
   constructor() {
     makeAutoObservable(this);
@@ -64,6 +65,9 @@ class UserStore {
   setAddr(addr) {
     this.addr = addr;
   }
+  setBirth(birth) {
+    this.birth = birth;
+  }
 
   setPhonenumber(phonenumber) {
     this.phonenumber = phonenumber;
@@ -84,6 +88,7 @@ if (token) {
       this.setU_idx(userData.u_idx);
       this.setEmail(userData.email);
       this.setField(userData.field);
+      this.setBirth(userData.birth);
       console.log("Loaded user data:", userData);
 
       return axios.get(`/mypage/selfprofile?id=${userData.id}`);
