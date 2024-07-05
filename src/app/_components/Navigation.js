@@ -10,6 +10,7 @@ import { observer } from "mobx-react-lite";
 import AI_submenu from "./AI_submenu";
 import userStore from "@/stores/UserStore";
 import ReviewSubmenu from "./reviewSub";
+import Pay_submenu from "./pay_submenu";
 const Navigation = observer(() => {
   const [activeMenu, setActiveMenu] = useState(null);
   const submenuTimeoutRef = useRef(null);
@@ -98,17 +99,17 @@ const Navigation = observer(() => {
         
         <li className="relative whitespace-nowrap cursor-pointer">
           <div
-            onMouseEnter={() => handleMouseEnter("airesult")}
+            onMouseEnter={() => handleMouseEnter("pay")}
             onMouseLeave={() => handleMouseLeave()}
           >
             <Typography
               className="block"
-              onClick={() => handleMenuClick("airesult")}
+              onClick={() => handleMenuClick("pay")}
             >
               이용권
             </Typography>
-            {activeMenu === "airesult" && (
-              <Interview_result_submenu handleMenuClick={handleMenuClick} />
+            {activeMenu === "pay" && (
+              <Pay_submenu handleMenuClick={handleMenuClick} />
             )}
           </div>
         </li>

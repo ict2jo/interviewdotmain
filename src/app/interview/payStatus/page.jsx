@@ -1,42 +1,45 @@
 "use client"
 
 import userStore from '@/stores/UserStore';
-import './payStatus.css'
-import { useParams } from 'next/navigation';
 import { useEffect, useState } from 'react';
+import menuStore from '@/stores/MenuStore';
+import './payStatus.css'
 
 export default function PayStatus() {
     const [payments, setPayments] = useState([]);
     const [loading, setLoading] = useState(true);
-    const params = useParams();
-    const id = params.id;
 
-    console.log("222idddd"+userStore.id);
-
-    const fetchData = async () => {
-        try {
-            const response = await fetch(
-                `http://localhost:8080/payments/userPay?id=${userStore.id}`);
-            const data = await response.json();
-
-            // t_idx 값 기준으로 내림차순 정렬
-            data.sort((a, b) => b.t_idx - a.t_idx);
-            
-            setPayments(data);
-            setLoading(false);
-        } catch (error) {
-            console.error('데이터를 가져오는 중 오류가 발생하였습니다.', error);
-            setLoading(false);
-        }
-    };
-    
     useEffect(() => {
+        if (!userStore.id) {
+            alert("로그인 후 이용 가능합니다.");
+            menuStore.setSelectedMenu("login");
+            return;
+        }
+
+        const fetchData = async () => {
+            try {
+                const response = await fetch(
+                    `http://localhost:8080/payments/userPay?id=${userStore.id}`);
+                const data = await response.json();
+
+                // t_idx 값 기준으로 내림차순 정렬
+                data.sort((a, b) => b.t_idx - a.t_idx);
+                
+                setPayments(data);
+                setLoading(false);
+            } catch (error) {
+                console.error('데이터를 가져오는 중 오류가 발생하였습니다.', error);
+                setLoading(false);
+            }
+        };
+        
         fetchData();
     },[]);
 
+    // css 클래스이름 설정
     function getBackgroundClass(orderName, payStatus) {
         if (payStatus === "취소완료" || payStatus === "취소중") {
-            return "transparent-black"; // 스타일 클래스 이름
+            return "transparent-black";
         }
     
         switch (orderName) {
@@ -56,8 +59,6 @@ export default function PayStatus() {
     for (let i = 0; i < payments.length; i += 3) {
         rows.push(payments.slice(i, i + 3));
     }
-
-
 
     return (
     <div className='pay_container'>

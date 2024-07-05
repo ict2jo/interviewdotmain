@@ -17,12 +17,6 @@ const SuccessPage = observer(() => {
     const encodedKey = btoa(secretKey + ':');
 
     const confirmPayment = async () => {
-
-        const token = localStorage.getItem('token');
-        console.log("token"+token);
-
-        console.log("SSSSSid"+userStore.id);
-
         try {
             const response = await axios.post(
                 'http://localhost:8080/payments/confirm',
@@ -39,7 +33,7 @@ const SuccessPage = observer(() => {
                     },
                 }
             );
-
+            
             if (response.status === 200) {
                 setIsConfirmed(true);
             } else {
@@ -67,7 +61,7 @@ const SuccessPage = observer(() => {
                         width="120"
                         height="120"
                     />
-                    <h2 className="title">결제를 완료했어요</h2>
+                    <h2 className="title">결제를 완료했어요.</h2>
                     <div className="response-section w-100">
                         <div className="flex justify-between">
                             <span className="response-label">결제 금액</span>
@@ -83,7 +77,7 @@ const SuccessPage = observer(() => {
                         </div>
                         <button className="btn primary w-100" onClick={closeWindow} style={{marginTop:"15px"}}>닫기</button>
                     </div>
-
+                    
                     
                 </div>
             ) : (
