@@ -71,14 +71,15 @@
     background-color: #fefefe;
     padding: 20px;
     border: 1px solid #888;
-    width: 40%;
+    width: 30%;
     border-radius: 5px;
     text-align: center;
-    height: 200px;
+    height: 300px;
 }
 
 .modal-content h2 {
     font-weight: bold;
+    margin-top: 20px;
 }
 
 .modal-content select {
@@ -99,7 +100,7 @@
     font-size: 16px;
     border-radius: 4px;
     cursor: pointer;
-    margin: 0 5px;
+    margin: 50px 5px 5px;
 }
 
 .modal-content button:hover {

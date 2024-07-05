@@ -15,7 +15,6 @@ const CheckoutPage = observer(() => {
     const agreementWidgetRef = useRef(null);
     const [price, setPrice] = useState(null);
     const clientKey = process.env.NEXT_PUBLIC_TOSS_CLIENT_KEY;
-
     
     useEffect(() => {
         // URL에서 query parameter를 추출하여 price 상태 업데이트
@@ -45,7 +44,6 @@ const CheckoutPage = observer(() => {
                         { variantKey: 'DEFAULT' }
                     );
                     paymentMethodsWidgetRef.current = paymentMethodsWidget;
-                    
                     // 약관 렌더링
                     agreementWidgetRef.current = paymentWidgetRef.current.renderAgreement('#agreement', {
                         variantKey: 'DEFAULT',
@@ -63,8 +61,7 @@ const CheckoutPage = observer(() => {
     // 구매하기
     const handlePaymentRequest = async () => {
         const paymentWidget = paymentWidgetRef.current;
-
-        console.log("id11111 "+userStore.id);
+        
         const id = userStore.id
         try {
             // 결제 요청

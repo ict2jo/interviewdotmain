@@ -8,6 +8,7 @@ export default function Payments() {
     const [count, setCount] = useState(1);
     const basePrice = 0;
 
+    // 구매 버튼 클릭 시 팝업창
     const handlePurchaseClick = (price) => {
         const purchaseUrl = `toss/?price=${price}`;
         const width = 600;
@@ -34,7 +35,7 @@ export default function Payments() {
 
     return (
         <>      
-        <div className='pay_container'>
+        <div className='pay_container' style={{height: "730px", margin: "35px auto"}}>
             <h1>인터뷰닷 이용권</h1>
             <div className='tickets-container'>
                 <div className='ticket'>
@@ -62,7 +63,8 @@ export default function Payments() {
                             <input type="number" value={count} onChange={handleCountChange} min="1" max="100" />
                             <p>회</p>
                         </div>
-                        <p style={{fontSize: "25px", fontWeight:"bold", marginTop:"20px"}}>₩ {(basePrice + (count * 1000)).toLocaleString()}</p>
+                            <p style={{ fontSize: "25px", fontWeight: "bold", marginTop: "20px" }}>
+                                ₩ {(basePrice + (count * 1000)).toLocaleString()}</p>
                         <p>{count}회 면접 연습 + 분석</p>
                         <button onClick={() => handlePurchaseClick(basePrice + (count * 1000))}>구매</button>
                     </div>
