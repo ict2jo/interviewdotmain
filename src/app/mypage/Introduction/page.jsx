@@ -51,8 +51,7 @@ export default function Introduction() {
         async function fetchData() {
             try {
                 const selfProfileResponse = await axios.get(`/mypage/selfprofile?id=${userStore.id}`);
-                console.log("User data in second then block:", selfProfileResponse.data); // userData가 잘 전달되는지 확인
-
+                
                 if (selfProfileResponse.data.length === 0) {
                     await axios.post(`/mypage/selfprofileinsert?u_idx=${userStore.u_idx}`);
                 } else {
@@ -67,11 +66,10 @@ export default function Introduction() {
                 setLoading(false);
             } catch (error) {
                 alert("데이터를 가져오는 중 오류가 발생했습니다.");
-                console.error("데이터를 가져오는 중 오류가 발생했습니다:", error);
                 setLoading(false);
             }
         }
-
+        
         fetchData();
     }, [userStore]);
 
@@ -93,11 +91,6 @@ export default function Introduction() {
 
     const handleSaveChanges = async () => {
         try {
-            console.log("아이디디디" + location)
-            console.log("아이디디디222" + job)
-            console.log("아이디디디" + classInfo)
-            console.log("아이디디디222" + career)
-            console.log("아이디디디222" + selfIntroduction)
             // 서버에 수정된 데이터 저장 로직
             const response = await axios.post(
                 'http://localhost:8080/introduce/update',

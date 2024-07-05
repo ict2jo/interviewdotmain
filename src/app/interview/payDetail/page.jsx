@@ -13,7 +13,7 @@ export default function PayDetail() {
     const [showModal, setShowModal] = useState(false);
     const [selectedPayment, setSelectedPayment] = useState(null);
     const [page, setPage] = useState(1); 
-    const payPerPage = 7;
+    const payPerPage = 7; 
 
     const fetchData = async () => {
         try {
@@ -49,11 +49,6 @@ export default function PayDetail() {
                     t_idx: selectedPayment.t_idx,
                     cancelReason: cancelReason,
                     id: userStore.id
-                },
-                {
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
                 }
             );
             

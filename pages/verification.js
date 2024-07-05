@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import './verification.css'; 
 import userStore from '@/stores/UserStore';
 import axios from 'axios';
@@ -95,6 +95,10 @@ export default function Verification() {
   const handleMenuClick = (menu) => {
     menuStore.setSelectedMenu(menu);
   };
+
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, [])
 
   return (
     <div className="chat-container">

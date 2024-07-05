@@ -62,7 +62,6 @@ const CheckoutPage = observer(() => {
     const handlePaymentRequest = async () => {
         const paymentWidget = paymentWidgetRef.current;
         
-        const id = userStore.id
         try {
             // 결제 요청
             const orderId = generateRandomString();
@@ -76,13 +75,6 @@ const CheckoutPage = observer(() => {
                 failUrl: window.location.origin + '/sandbox/fail' + window.location.search,
             });
             
-            // 결제 성공 시 서버로 u_idx와 orderId 전송
-            await axios.post('/payments/confirm', {
-                orderId,
-                orderName,
-                price,
-                id: userStore.id
-            });
             
         } catch (error) {
             console.error('Payment request failed:', error);
