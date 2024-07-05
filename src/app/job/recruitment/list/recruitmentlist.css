@@ -64,6 +64,7 @@
     display: flex;
     justify-content: center;
     margin-top: 20px;
+    margin-bottom: 100px;
 }
 .ingselect{
     margin-right: 10px;

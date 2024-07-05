@@ -135,7 +135,12 @@ export default function Myrecruitment() {
     return (
         <div>
             <TableContainer sx={{ width: 1500 }} className='tablewrap'>
-                <h1>나의 채용공고</h1>
+            <h1>나의 채용공고</h1>
+                {list.length === 0 ? (
+                    <Typography variant="h6" align="center" sx={{ marginTop: 4 }}>
+                        등록된 채용공고가 없습니다
+                    </Typography>
+                ) : (
                 <Table sx={{ minWidth: 600 }}>
                     <TableHead sx={{ borderBottom: '3px solid blue' }}>
                         <TableRow>
@@ -205,6 +210,7 @@ export default function Myrecruitment() {
                         </TableRow>
                     </TableFooter>
                 </Table>
+                )}
             </TableContainer>
         </div>
     );

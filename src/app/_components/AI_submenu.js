@@ -59,29 +59,35 @@ export default function AI_submenu({handleMenuClick}) {
                 </Typography>
             </li>
             <li className="whitespace-nowrap">
+                <Typography className="block px-4 py-2 hover:bg-primary-100"
+                    onClick={() => handleMenuClick("airesult_history")}>
+                    면접 기록
+                </Typography>
+            </li>
+            {/* <li className="whitespace-nowrap">
                 <Typography
                     className="block px-4 py-2 hover:bg-primary-100"
                     onClick={() => handleMenuClick("payments")}
                 >
                     이용권 구매
                 </Typography>
-            </li>
-            <li className="whitespace-nowrap">
+            </li> */}
+            {/* <li className="whitespace-nowrap">
                 <Typography
                     className="block px-4 py-2 hover:bg-primary-100"
                     onClick={() => handleMenuClick("payStatus")}
                 >
                     나의 이용현황
                 </Typography>
-            </li>
-            <li className="whitespace-nowrap">
+            </li> */}
+            {/* <li className="whitespace-nowrap">
                 <Typography
                     className="block px-4 py-2 hover:bg-primary-100"
                     onClick={() => handleMenuClick("payDetail")}
                 >
                     결제내역
                 </Typography>
-            </li>
+            </li> */}
         </ul>
     );
 }
