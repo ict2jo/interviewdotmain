@@ -37,8 +37,8 @@ export default function PayStatus() {
     },[]);
 
     // css 클래스이름 설정
-    function getBackgroundClass(orderName, payStatus) {
-        if (payStatus === "취소완료" || payStatus === "취소중") {
+    function getBackgroundClass(orderName, payStatus, remainCount) {
+        if (payStatus === "취소완료" || payStatus === "취소중" ||  remainCount === 0) {
             return "transparent-black";
         }
     
@@ -61,7 +61,7 @@ export default function PayStatus() {
     }
 
     return (
-    <div className='pay_container'>
+    <div className='pay_container' style={{minHeight: "730px", margin: "35px auto"}}>
         <h1>나의 이용권 현황</h1>
         <div className='payStatus'>
             {loading ? (
@@ -75,7 +75,7 @@ export default function PayStatus() {
                             const payment = row[index];
                             return payment ? (
                                 <div className='payStatus_t' key={index}>
-                                    <div className={`${getBackgroundClass(payment.orderName, payment.payStatus)}`}>{payment.orderName}</div>
+                                    <div className={`${getBackgroundClass(payment.orderName, payment.payStatus, payment.remainCount)}`}>{payment.orderName}</div>
                                     <div className='payStatus_inner'>
                                         <p style={{ fontSize: "25px", fontWeight: "bold" }}>₩ {payment.amount.toLocaleString()}</p>
                                         <p>{payment.amount / 1000}회 면접 연습 + 분석</p>

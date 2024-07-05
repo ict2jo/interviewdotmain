@@ -21,10 +21,7 @@ export default function PayDetail() {
                 `http://localhost:8080/payments/userPay?id=${userStore.id}`
             );
             const data = response.data;
-
-            // t_idx 값 기준으로 내림차순 정렬
-            data.sort((a, b) => b.t_idx - a.t_idx);
-
+            
             setPayments(data);
             setLoading(false);
         } catch (error) {
@@ -136,7 +133,7 @@ export default function PayDetail() {
                                             <td rowSpan="2">
                                                 {payment.payStatus === "결제완료" ? (
                                                     payment.statusCount > payment.remainCount ? (
-                                                        <span>사용 중인 상품은 환불 불가합니다</span>
+                                                        <span>이용한 상품은 환불 불가합니다</span>
                                                     ) : (
                                                         <button onClick={() => openModal(payment)}>
                                                             취소
