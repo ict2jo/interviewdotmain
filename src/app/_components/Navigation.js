@@ -36,14 +36,13 @@ const Navigation = observer(() => {
   return (
     <nav className="z-10 text-xl">
       <ul className="flex gap-16 items-center">
-        <li className="relative whitespace-nowrap cursor-pointer">
+        <li className="relative whitespace-nowrap">
           <div
               onMouseEnter={() => handleMouseEnter("ai")}
               onMouseLeave={() => handleMouseLeave()}
             >
             <Typography
               className="block"
-              onClick={() => handleMenuClick("ai")}
             >
             AI면접
             </Typography>
@@ -53,14 +52,13 @@ const Navigation = observer(() => {
             </div>
         </li>
 
-        <li className="relative whitespace-nowrap cursor-pointer">
+        <li className="relative whitespace-nowrap">
           <div
             onMouseEnter={() => handleMouseEnter("airesult")}
             onMouseLeave={() => handleMouseLeave()}
           >
             <Typography
               className="block"
-              onClick={() => handleMenuClick("airesult")}
             >
               면접 결과 관리
             </Typography>
@@ -70,7 +68,7 @@ const Navigation = observer(() => {
           </div>
         </li>
 
-        <li className="relative whitespace-nowrap cursor-pointer">
+        <li className="relative whitespace-nowrap">
           <div
             onMouseEnter={() => handleMouseEnter("self")}
             onMouseLeave={() => handleMouseLeave()}
@@ -99,7 +97,7 @@ const Navigation = observer(() => {
           </div>
         </li>
 
-        <li className="relative whitespace-nowrap cursor-pointer">
+        <li className="relative whitespace-nowrap">
           <div
             onMouseEnter={() => handleMouseEnter("jobTest")}
             onMouseLeave={() => handleMouseLeave()}
@@ -114,7 +112,7 @@ const Navigation = observer(() => {
           </div>
         </li>
 
-        <li className="whitespace-nowrap cursor-pointer">
+        <li className="whitespace-nowrap">
           <Typography
             className="hover:bg-primary-100 transition-colors"
             onClick={() => handleMenuClick("review")}
