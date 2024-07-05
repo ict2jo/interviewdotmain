@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import './verification.css'; 
 import userStore from '@/stores/UserStore';
 import axios from 'axios';
+import menuStore from '@/stores/MenuStore';
 
 export default function Verification() {
   const [question, setQuestion] = useState('');
@@ -91,12 +92,18 @@ export default function Verification() {
       alert('자기소개서 저장 중 오류가 발생했습니다.');
     }
   };
+
+  const handleMenuClick = (menu) => {
+    menuStore.setSelectedMenu(menu);
+};
+
   
 
   return (
     <div className="chat-container">
+      <h1>자기소개서</h1>
       <div className="input-output-section">
-        <div className="top-section">
+
           <div className="input-box">
             <div className="header">사용자</div>
             <form className="input-section" onSubmit={(e) => e.preventDefault()}>
@@ -105,7 +112,7 @@ export default function Verification() {
                 onChange={(e) => setQuestion(e.target.value)}
                 placeholder="자기소개서 내용을 입력하세요."
                 disabled={inputDisabled || loading}
-                rows="15"
+                rows="10"
                 style={{ resize: 'none', margin: '0px' }}
               />
               <div className="button-wrapper">
@@ -118,6 +125,22 @@ export default function Verification() {
               </div>
             </form>
           </div>
+
+        <div className="feedback-box">
+          <div className="header">피드백</div>
+          <div className="feedback-section">
+            {loading && <p>Loading...</p>}
+            <textarea
+              value={feedback}
+              onChange={(e) => setFeedback(e.target.value)}
+              placeholder="피드백이 여기에 표시됩니다."
+              disabled={loading}
+              rows="15"
+              style={{ width: '100%', resize: 'none', margin: '0px' }}
+            />
+          </div>
+        </div>
+        
           <div className="output-box">
             <div className="header">예시 (자기소개서 수정)</div>
             <div className="output-section">
@@ -136,21 +159,10 @@ export default function Verification() {
                 </button>
               </div>
             </div>
-          </div>
         </div>
-        <div className="feedback-box">
-          <div className="header">피드백</div>
-          <div className="feedback-section">
-            {loading && <p>Loading...</p>}
-            <textarea
-              value={feedback}
-              onChange={(e) => setFeedback(e.target.value)}
-              placeholder="피드백이 여기에 표시됩니다."
-              disabled={loading}
-              rows="10"
-              style={{ width: '100%', resize: 'none', margin: '0px' }}
-            />
-          </div>
+        
+        <div className="button-back">
+          <button type="button" onClick={() => handleMenuClick("intoduction")}>뒤로가기</button>
         </div>
       </div>
     </div>
