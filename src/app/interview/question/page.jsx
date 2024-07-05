@@ -22,15 +22,16 @@ const Question = observer(() => {
     const router = useRouter();
     const searchParams = useSearchParams();
     const category = searchParams.get('category');
+    const q_idx = searchParams.get('q_idx');
 
     const {currentPage, itemsPerPage, questions} = questionStore;
 
     useEffect(() => {
         fetchQuestions();
-    }, [category]);
+    }, [category, q_idx]);
 
     const fetchQuestions = () => {
-        fetch(`http://localhost:8080/interview/choose?category=${category}`)
+        fetch(`http://localhost:8080/interview/choose?category=${category}&q_idx=${q_idx}`)
             .then(response => response.json())
             .then(data => questionStore.setQuestions(data))
             .catch(error => console.error('질문을 가져오지 못했습니다.:', error));
@@ -48,7 +49,7 @@ const Question = observer(() => {
 
         const selectedQuestions = questionStore.selectedQuestions.map(q => q.question).join('\n\n');
         if (confirm(`선택하신 문항은 총 ${questionStore.selectedCount}개 입니다:\n\n${selectedQuestions}\n\n맞으면 확인 틀리면 취소를 눌러주세요.`)) {
-            router.push(`/interview/start?category=${category}&q_idx=${question.q_idx}`);
+            router.push(`/interview/start?category=${category}&q_idx=${q_idx}`);
         }
     };
     const go_before_page = () => {
@@ -98,7 +99,7 @@ const Question = observer(() => {
                             key={question.id}
                             className={`question_box ${questionStore.selectedQuestions.includes(question) ? 'selected' : ''}`}
                             onClick={() => handleClick(question)}
-                        >   {question.q_idx}
+                        >
                             {question.question}
                         </div>
                     ))}

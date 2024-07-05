@@ -6,7 +6,6 @@ import questionStore from '@/stores/questionStore';
 import CircularProgress from '@mui/material/CircularProgress';
 import { Button } from '@mui/material';
 import Webcam from 'react-webcam';
-import UserStore from "@/stores/UserStore";
 
 const Start = () => {
     const router = useRouter();
@@ -16,7 +15,9 @@ const Start = () => {
     const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
     const [isRecording, setIsRecording] = useState(false);
     const [recordedChunks, setRecordedChunks] = useState([]);
-    const [uploadPromises, setUploadPromises] = useState([]);
+    const [isStartButtonVisible, setIsStartButtonVisible] = useState(true);
+    const [isNextButtonDisabled, setIsNextButtonDisabled] = useState(true);
+    const [resultsReceived, setResultsReceived] = useState(false);
     const webcamRef = useRef(null);
     const mediaRecorderRef = useRef(null);
 
@@ -33,7 +34,7 @@ const Start = () => {
             }).toString();
             router.replace(`/interview/start?${query}`);
             console.log('parsedQuestions:', parsedQuestions);
-            console.log('queryquery',query);
+            console.log('queryquery', query);
         }
     }, [parsedQuestions, currentQuestionIndex, router]);
 
@@ -54,6 +55,7 @@ const Start = () => {
             console.error('질문 데이터를 가져오지 못했습니다.');
         }
     }, []);
+
     const startRecording = async () => {
         const stream = webcamRef.current.video.srcObject;
         if (stream) {
@@ -71,16 +73,16 @@ const Start = () => {
                 setRecordedChunks((prev) => [...prev, { question: parsedQuestions[currentQuestionIndex], blob }]);
                 setIsRecording(false);
 
-                const uploadPromise = uploadVideo(blob, parsedQuestions[currentQuestionIndex]);
-                setUploadPromises((prev) => [...prev, uploadPromise]);
+                // 비디오 업로드, 결과 기다리지 않음
+                uploadVideo(blob, parsedQuestions[currentQuestionIndex]);
 
                 if (currentQuestionIndex >= parsedQuestions.length - 1) {
                     setLoading(true); // 마지막 질문 후 로딩 표시
-                    await Promise.all(uploadPromises);
-                    router.push('/interview/finish');
+                    await waitForAllResults();
                 } else {
                     setCurrentQuestionIndex((prev) => prev + 1);
                     setTime(60);
+                    setIsStartButtonVisible(true); // 다음 질문으로 넘어갈 때 시작 버튼 다시 보이게 설정
                 }
             };
 
@@ -99,6 +101,8 @@ const Start = () => {
     };
 
     const handleRecordButtonClick = async () => {
+        setIsStartButtonVisible(false); // 시작 버튼 숨기기
+        setIsNextButtonDisabled(false); // 녹화 시작 시 다음 질문 버튼 활성화
         await startRecording();
     };
 
@@ -129,9 +133,26 @@ const Start = () => {
             storedResults.push(result);
             localStorage.setItem('interviewResults', JSON.stringify(storedResults));
 
-        }catch (error){
+        } catch (error) {
             console.log(error);
         }
+    };
+
+    const waitForAllResults = async () => {
+        const checkResults = async () => {
+            const storedResults = JSON.parse(localStorage.getItem('interviewResults')) || [];
+            return storedResults.length >= 3;
+        };
+
+        const intervalId = setInterval(async () => {
+            const allResultsReceived = await checkResults();
+            if (allResultsReceived) {
+                clearInterval(intervalId);
+                setResultsReceived(true);
+                setLoading(false);
+                router.push('/interview/finish');
+            }
+        }, 1000); // 1초마다 체크
     };
 
     useEffect(() => {
@@ -170,12 +191,12 @@ const Start = () => {
                         <div className="my_camera">
                             <Webcam width={'900vh'} audio={true} ref={webcamRef} screenshotFormat="image/jpeg" />
                         </div>
-                        {!isRecording && (
+                        {isStartButtonVisible && (
                             <Button onClick={handleRecordButtonClick} variant="outlined" className="record_button">
                                 시작
                             </Button>
                         )}
-                        <Button onClick={handleNextQuestionClick} variant="outlined" className="next_button">
+                        <Button onClick={handleNextQuestionClick} variant="outlined" className="next_button" disabled={isStartButtonVisible}>
                             다음질문
                         </Button>
                     </>
