@@ -22,13 +22,13 @@ export default function Verification() {
         },
         body: JSON.stringify({ question: userStore.field, type: 'correction' }),
       });
-
+      
       const data = await response.json();
-
+      
       if (!response.ok) {
         throw new Error(data.error || `Request failed with status ${response.status}`);
       }
-
+      
       setFeedback(data.answer);
     } catch (error) {
       console.error('Error:', error);
@@ -47,15 +47,15 @@ export default function Verification() {
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ question: userStore.field, feedback, type: 'rewrite' }), // feedback도 함께 전송
+        body: JSON.stringify({ question: userStore.field, feedback, type: 'rewrite' }),
       });
-
+      
       const data = await response.json();
-
+      
       if (!response.ok) {
         throw new Error(data.error || `Request failed with status ${response.status}`);
       }
-
+      
       setCorrectedEssay(data.answer);
     } catch (error) {
       console.error('Error:', error);
@@ -66,7 +66,6 @@ export default function Verification() {
     }
   };
 
-  console.log("유저유저"+userStore.id)
   const handleSave = async () => {
     try {
       const response = await axios.post(
@@ -95,15 +94,12 @@ export default function Verification() {
 
   const handleMenuClick = (menu) => {
     menuStore.setSelectedMenu(menu);
-};
-
-  
+  };
 
   return (
     <div className="chat-container">
       <h1>자기소개서</h1>
       <div className="input-output-section">
-
           <div className="input-box">
             <div className="header">사용자</div>
             <form className="input-section" onSubmit={(e) => e.preventDefault()}>
@@ -112,7 +108,7 @@ export default function Verification() {
                 onChange={(e) => setQuestion(e.target.value)}
                 placeholder="자기소개서 내용을 입력하세요."
                 disabled={inputDisabled || loading}
-                rows="10"
+                rows="12"
                 style={{ resize: 'none', margin: '0px' }}
               />
               <div className="button-wrapper">

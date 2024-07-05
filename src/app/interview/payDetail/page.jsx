@@ -1,11 +1,10 @@
 "use client"
 
 import userStore from '@/stores/UserStore';
-import { useParams } from 'next/navigation';
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
-import "./payDetail.css";
 import { Box, Pagination } from '@mui/material';
+import "./payDetail.css";
 
 export default function PayDetail() {
     const [payments, setPayments] = useState([]);
@@ -13,12 +12,8 @@ export default function PayDetail() {
     const [loading, setLoading] = useState(true);
     const [showModal, setShowModal] = useState(false);
     const [selectedPayment, setSelectedPayment] = useState(null);
-    const [page, setPage] = useState(1); // 현재 페이지 상태 추가
-    const payPerPage = 7; // 한 페이지당 보일 리뷰 개수
-    const secretKey = process.env.NEXT_PUBLIC_TOSS_SECRET_KEY;
-    const encodedKey = btoa(secretKey + ':');
-    const params = useParams();
-    const id = params.id;
+    const [page, setPage] = useState(1); 
+    const payPerPage = 7;
 
     const fetchData = async () => {
         try {
@@ -45,7 +40,6 @@ export default function PayDetail() {
     // 결제취소
     const handleCancel = async () => {
         try {
-            console.log("취소시작 " + userStore.id);
             const cancelReason = cancelReasons[selectedPayment.t_idx];
             if (!cancelReason) {
                 alert("결제 취소 사유를 선택해 주세요.");
@@ -66,7 +60,6 @@ export default function PayDetail() {
                 }
             );
             
-
             if (response.status === 200) {
                 alert("취소 요청이 접수되었습니다.\n영업일 기준 7일 내로 처리될 예정입니다.");
                 fetchData();

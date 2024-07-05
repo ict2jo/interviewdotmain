@@ -42,6 +42,14 @@ export default function MySubmenu({handleMenuClick}) {
           내 채용공고 보기
         </div>
       </li>
+      <li className="whitespace-nowrap">
+        <div
+          onClick={() => handleMenuClick("payDetail")}
+          className="block px-4 py-2 hover:bg-primary-100"
+        >
+          결제내역
+        </div>
+      </li>
     </ul>
   );
 }

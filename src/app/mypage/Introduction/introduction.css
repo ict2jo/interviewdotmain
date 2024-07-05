@@ -50,13 +50,10 @@
 
 .styled-table th{
     width: 10%;
-    padding-left: 15px;
-
 }
 
 .styled-table td{
     width: 30%;
-    padding-left: 20px;
 }
 
 .styled-table textarea {
