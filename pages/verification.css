@@ -1,30 +1,24 @@
 .chat-container {
-  display: flex;
-  flex-direction: column;
   align-items: center;
-  padding: 20px;
+  padding: 50px;
+  width: 60%;
+  margin: 0 auto; /* 가운데 정렬 */
+  max-width: 1200px; 
+  height: auto; 
 }
 
-.input-output-section {
-  display: flex;
-  flex-direction: column;
-  width: 100%;
-}
-
-.top-section {
-  display: flex;
-  justify-content: center;
-  width: 100%;
-  margin-bottom: 20px;
+.chat-container h1 {
+  font-size: 30px;
+  font-weight: bold;
+  margin-bottom: 30px;
+  text-align: center;
 }
 
 .input-box,
-.output-box {
-  flex: 1;
-  display: flex;
-  flex-direction: column;
+.output-box,
+.feedback-box  {
   align-items: center;
-  margin: 0 20px; /* 입력창과 답변창 사이의 간격을 설정합니다 */
+  margin: 20px auto; /* 입력창과 답변창 사이의 간격을 설정합니다 */
   background-color: white;
   border-radius: 10px;
   border: 1px solid lightgray;
@@ -35,21 +29,30 @@
   text-align: left;
   width: 100%; /* 부모 요소의 너비를 차지하도록 설정 */
   padding: 10px;
+  background-color: #1400FF;
+  color: white;
+  border-top-left-radius: 10px;
+  border-top-right-radius: 10px;
 }
 
-.input-section {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  width: 100%;
-  height: 100%;
-}
-
-.input-section textarea {
+.output-section,
+.feedback-section,
+.input-section  {
   width: 100%;
   padding: 10px;
-  height: 93%;
   box-sizing: border-box;
+  background-color: white; /* 배경색 명시적으로 설정 */
+}
+
+.input-box textarea,
+.feedback-box textarea,
+.output-box textarea {
+  width: 100%;
+  padding: 10px;
+  box-sizing: border-box;
+  min-height: 100px; /* 최소 높이 설정 */
+  height: auto; /* 내용에 따라 자동으로 높이 조정 */
+  overflow: visible; /* 스크롤바 대신 내용이 넘칠 경우 자동으로 높이 조정 */
 }
 
 .button-wrapper {
@@ -68,53 +71,19 @@
   margin: 5px 10px;
 }
 
-.output-section {
-  display: flex;
-  flex-direction: column; /* 세로로 나열되도록 설정 */
-  align-items: flex-start; /* 왼쪽 정렬 */
-  justify-content: flex-start; /* 위쪽 정렬 */
-  width: 100%;
-  height: 100%;
-  box-sizing: border-box;
-  background-color: white; /* 배경색 명시적으로 설정 */
+.button-back {
+  text-align: center;
+  margin: 50px auto;
+  width: 60%;
 }
 
-.answer {
-  width: 100%; /* 부모 요소의 너비를 차지하도록 설정 */
-  padding: 0px;
-  margin: 0px;
-  box-sizing: border-box;
-  background-color: white;
-}
-
-.output-box textarea {
-  width: 100%;
-  padding: 10px;
-  box-sizing: border-box;
-}
-
-.feedback-box {
-  width: calc(100% - 40px); /* 좌우 마진 합산 */
-  margin: 0 20px; /* 입력창과 답변창 사이의 간격을 설정합니다 */
-  background-color: white;
+.button-back button {
+  background-color: #1400FF;
   border-radius: 10px;
-  border: 1px solid lightgray;
-  margin-top: 20px;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-}
-
-.feedback-section {
-  width: 100%;
-  padding: 10px;
-  box-sizing: border-box;
-  background-color: white;
-}
-
-.feedback-box textarea {
-  width: 100%;
-  padding: 10px;
-  box-sizing: border-box;
-  margin: 0px;
+  color: white;
+  padding: 10px 20px;
+  cursor: pointer;
+  border: none;
+  width: 100%; /* 버튼이 div 영역 전체를 차지하도록 설정 */
+  box-sizing: border-box; /* padding 포함 너비 설정 */
 }
