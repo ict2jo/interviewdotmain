@@ -3,8 +3,15 @@
 import { useState } from 'react';
 import './payments.css'
 import userStore from '@/stores/UserStore';
+import menuStore from '@/stores/MenuStore';
 
 export default function Payments() {
+    if (!userStore.id) {
+            alert("로그인 후 이용 가능합니다.");
+            menuStore.setSelectedMenu("login");
+            return;
+    }
+    
     const [count, setCount] = useState(1);
     const basePrice = 0;
 
