@@ -23,7 +23,9 @@
     margin: 0px auto;
 }
 
-
+.dialogcotent{
+    margin-bottom: 30px;
+}
 .review_list {
     display: flex;
     border-radius: 10px;
@@ -57,10 +59,8 @@
 
 .review_box_1 h2, .review_box_2 h2, .review_box_3 h2 , .review_box_4 h2{ 
     font-size: 10px;
-    color: gray;
 }
 .review_box_1sub, .review_box_2sub, .review_box_3sub, .review_box_4sub {
-    background-color: lightgray;
     width: 250px;
     height: 200px;
     border-radius: 10px 10px 0px 0px;
