@@ -9,7 +9,7 @@ import Worklist2 from './worklist/page';
 import Schoollist2 from './school/page';
 import Experience2 from './experience/page';
 
-export default function Introduction() {
+export default function Resume_insert() {
     const menuStore = useContext(MenuContext);
     const [loading, setLoading] = useState(true);
     const [location, setLocation] = useState('');
@@ -88,14 +88,15 @@ export default function Introduction() {
         try {
             // 서버에 수정된 데이터 저장 로직
             const response = await axios.post(
-                'http://localhost:8080/introduce/update',
+                'http://localhost:8080/introduce/insert',
                 {
                     u_idx: userStore.u_idx,
-                    p_location: location,
-                    p_job: job,
-                    p_class: classInfo,
-                    p_career: career,
-                    selfIntroduction: selfIntroduction
+                    location: location,
+                    job: job,
+                    class: classInfo,
+                    career: career,
+                    content: selfIntroduction,
+                    title: title
                 });
 
             if (response.status === 200) {
@@ -116,7 +117,8 @@ export default function Introduction() {
     return (
         <>
             <div className='profile_con'>
-                <h2 className='mymaintext'>이력서</h2>
+                <h2 className='mymaintext'>이력서 작성</h2>
+                <p><input type="text"  style={{border:"1px solid blue"}}/></p>
                 <div className='profile'>
                     <h3>인적사항</h3>
                     <table className='profile_t'>
@@ -153,7 +155,6 @@ export default function Introduction() {
                     <Button variant="outlined" onClick={() => handleMenuClick("resume")}>뒤로가기</Button>
                     <Button variant="contained" onClick={handleSaveChanges}>저장하기</Button>
                     <Button variant="contained" onClick={() => handleMenuClick("verification")}>자기소개서 피드백 받기</Button>
-
                 </div>
             </div>
         </>

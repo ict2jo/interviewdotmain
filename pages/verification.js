@@ -3,6 +3,7 @@ import './verification.css';
 import userStore from '@/stores/UserStore';
 import axios from 'axios';
 import menuStore from '@/stores/MenuStore';
+import { Button } from '@mui/material';
 
 export default function Verification() {
   const [question, setQuestion] = useState('');
@@ -104,67 +105,75 @@ export default function Verification() {
     <div className="chat-container">
       <h1>자기소개서</h1>
       <div className="input-output-section">
-          <div className="input-box">
-            <div className="header">사용자</div>
-            <form className="input-section" onSubmit={(e) => e.preventDefault()}>
-              <textarea
-                value={userStore.field}
-                onChange={(e) => setQuestion(e.target.value)}
-                placeholder="자기소개서 내용을 입력하세요."
-                disabled={inputDisabled || loading}
-                rows="12"
-                style={{ resize: 'none', margin: '0px' }}
-              />
-              <div className="button-wrapper">
-                <button type="button" onClick={handleCorrection} disabled={loading}>
-                  검증하기
-                </button>
-                <button type="button" onClick={handleRewrite} disabled={loading2}>
-                  예시보기
-                </button>
-              </div>
-            </form>
-          </div>
-
-        <div className="feedback-box">
-          <div className="header">피드백</div>
-          <div className="feedback-section">
-            {loading && <p>Loading...</p>}
+        {/* 사용자 입력 부분 */}
+        <div className="input-box">
+          <div className="header">자기소개서</div>
+          <form className="input-section" onSubmit={(e) => e.preventDefault()}>
             <textarea
-              value={feedback}
-              onChange={(e) => setFeedback(e.target.value)}
-              placeholder="피드백이 여기에 표시됩니다."
-              disabled={loading}
-              rows="15"
-              style={{ width: '100%', resize: 'none', margin: '0px' }}
+              value={userStore.field}
+              onChange={(e) => setQuestion(e.target.value)}
+
+              disabled={inputDisabled || loading}
+              rows="12"
+              style={{ resize: 'none', margin: '0px' }}
             />
+            <div className="button-wrapper">
+              <Button onClick={handleCorrection} disabled={loading} variant="contained">
+                AI 피드백
+              </Button>
+            </div>
+          </form>
+
+          <br /><br />
+          <div className="header">예시 (자기소개서 수정)</div>
+          <div className="output-section">
+            {loading2 && <p>Loading...</p>}
+            <textarea
+              value={correctedEssay}
+              onChange={(e) => setCorrectedEssay(e.target.value)}
+              placeholder="자기소개서 예시가 여기에 표시됩니다."
+              disabled={loading2}
+              rows="15"
+              style={{ resize: 'none', margin: '0px' }}
+            />
+            <div className="button-wrapper">
+              <Button onClick={handleSave} disabled={!correctedEssay} variant="contained">
+                저장하기
+              </Button>
+            </div>
           </div>
         </div>
         
-          <div className="output-box">
-            <div className="header">예시 (자기소개서 수정)</div>
-            <div className="output-section">
-              {loading2 && <p>Loading...</p>}
-              <textarea
-                value={correctedEssay}
-                onChange={(e) => setCorrectedEssay(e.target.value)}
-                placeholder="자기소개서 예시가 여기에 표시됩니다."
-                disabled={loading2}
-                rows="15"
-                style={{ resize: 'none', margin: '0px' }}
-              />
-              <div className="button-wrapper">
-                <button type="button" onClick={handleSave} disabled={!correctedEssay}>
-                  저장하기
-                </button>
-              </div>
-            </div>
+
+
+  
+      {/* 피드백 부분 */}
+      <div className="feedback-box">
+        <div className="header">피드백</div>
+        <div className="feedback-section">
+          {loading && <p>Loading...</p>}
+          <textarea
+            value={feedback}
+            onChange={(e) => setFeedback(e.target.value)}
+            placeholder="피드백이 여기에 표시됩니다."
+            disabled={inputDisabled || loading}
+            rows="34"
+            style={{ width: '100%', resize: 'none', margin: '0px' }}
+          />
         </div>
-        
-        <div className="button-back">
-          <button type="button" onClick={() => handleMenuClick("intoduction")}>뒤로가기</button>
+        <div className="button-wrapper">
+          <Button onClick={handleRewrite} disabled={loading2} variant="contained" style={{marginTop: "27px"}}>
+            AI 예시
+          </Button>
         </div>
       </div>
     </div>
+      
+      {/* 뒤로가기 버튼 */}
+      <div className="button-back">
+        <Button onClick={() => handleMenuClick("introduction")} variant="outlined">뒤로가기</Button>
+      </div>
+    </div>
   );
+  
 }
