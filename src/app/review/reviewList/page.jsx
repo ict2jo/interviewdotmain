@@ -38,7 +38,7 @@ export default function ReviewList() {
     const [commentContent, setCommentContent] = useState(""); // 댓글 내용 상태 추가
     const [page, setPage] = useState(1); // 현재 페이지 상태 추가
     const [totalPages, setTotalPages] = useState(""); // 전체 페이지 수 상태 추가
-    const reviewsPerPage = 9; // 한 페이지당 보일 리뷰 개수
+    const reviewsPerPage = 5; // 한 페이지당 보일 리뷰 개수
     const [editingCommentContent, setEditingCommentContent] = useState("");
     const [editingCommentId, setEditingCommentId] = useState("");
 
@@ -78,8 +78,8 @@ export default function ReviewList() {
 
     const handleReviewClick = (review) => {
         if (!userStore.id) {
-            alert("로그인 후에 작성할 수 있습니다.");
-            router.push("/signin/login"); 
+            alert("로그인 후에 볼 수 있습니다.");
+            menuStore.setSelectedMenu("login"); 
             return;
         }
         setSelectedReview(review);
@@ -231,17 +231,17 @@ export default function ReviewList() {
 
     const handleCloseDialog = () => {
         setOpenDialog(false);
-        setSelectedReview(null); // 선택된 리뷰 초기화
-        setEditingContent(""); // 수정할 내용 초기화
+        // setSelectedReview(null); // 선택된 리뷰 초기화
+        // setEditingContent("");  // 수정할 내용 초기화 
         setCommentContent("");
-        setComments([]); // 댓글 목록 초기화
+        // setComments([]); // 댓글 목록 초기화
     };
 
     const handleMenuClick = async (menu) => {
         menuStore.setSelectedMenu(menu);
         if (!userStore.id) {
             alert("로그인 후에 작성할 수 있습니다.");
-            router.push("/signin/login");
+            menuStore.setSelectedMenu("login");
         }
         handleCloseDialog();
     };
@@ -279,10 +279,10 @@ export default function ReviewList() {
                 <Table sx={{ minWidth: 600, marginBottom: '20px' }} >
                     <TableHead sx={{ borderTop: '3px solid blue' }} className="tablehead">
                         <TableRow>
-                            <TableCell sx={{ width: '100px', textAlign: 'center' }}>NO</TableCell>
+                            {/* <TableCell sx={{ width: '100px', textAlign: 'center' }}>NO</TableCell> */}
                             <TableCell sx={{ width: '100px', textAlign: 'center' }}>작성자</TableCell>
                             <TableCell sx={{ width: '100px', textAlign: 'center' }}>제목</TableCell>
-                            <TableCell sx={{ width: '400px', textAlign: 'center' }}>내용</TableCell>
+                            {/* <TableCell sx={{ width: '400px', textAlign: 'center' }}>내용</TableCell> */}
                             <TableCell sx={{ width: '100px', textAlign: 'center' }}>회사</TableCell>
                             <TableCell sx={{ width: '200px', textAlign: 'center' }}>작성일</TableCell>
                         </TableRow>
@@ -299,24 +299,24 @@ export default function ReviewList() {
                                 }}
                                 style={{ cursor: review.active === '1' ? 'default' : 'pointer' }}
                             >
-                                <TableCell sx={{ width: '100px', textAlign: 'center' }}>{review.active === '1' ? '' : review.r_idx}</TableCell>
+                                {/* <TableCell sx={{ width: '100px', textAlign: 'center' }}>{review.active === '1' ? '' : review.r_idx}</TableCell> */}
                                 <TableCell sx={{ width: '100px', textAlign: 'center' }}>{review.active === '1' ? '' : review.r_id}</TableCell>
                                 <TableCell sx={{ width: '100px', textAlign: 'center' }}>{review.active === '1' ? '' : review.r_title}</TableCell>
                                 <TableCell colSpan={1} sx={{ textAlign: 'center' }}>
                                     {review.active === '1' ? (
                                         <span style={{ color: 'red', marginLeft: '10px', width: '400px' }}>삭제된 게시물 입니다.</span>
                                     ) : (
-                                        review.r_content
+                                        review.r_company
                                     )}
                                 </TableCell>
-                                <TableCell sx={{ width: '100px', textAlign: 'center' }}>{review.active === '1' ? '' : review.r_company}</TableCell>
+                                {/* <TableCell colSpan={1} sx={{ width: '100px', textAlign: 'center' }}>{review.active === '1' ? '' : review.r_company}</TableCell> */}
                                 <TableCell sx={{ width: '200px', textAlign: 'center' }}>{review.active === '1' ? '' : review.r_regdate.substring(0, 10)}</TableCell>
                             </TableRow>
                         ))}
                     </TableBody>
                 </Table>
                 <Box sx={{ display: 'flex', justifyContent: 'flex-end' }}>
-                    <Button onClick={() => handleMenuClick(`review/review_list_write`)} color="primary" style={{ textAlign: "center" }}>
+                    <Button onClick={() => handleMenuClick(`review/review_list_write`)} color="primary" variant="contained" style={{ textAlign: "center" }}>
                         작성하기
                     </Button>
                 </Box>
@@ -378,7 +378,7 @@ export default function ReviewList() {
                                     value={commentContent}
                                     onChange={handleCommentChange}
                                 />
-                                <Button onClick={handlePostComment} color="primary" style={{ marginTop: "10px", fontSize: "13px", marginLeft: "385px", backgroundColor: "blue", color: "white" }}>
+                                <Button onClick={handlePostComment} variant="contained" color="primary" style={{ marginTop: "10px", fontSize: "13px", marginLeft: "385px"}}>
                                     댓글 작성
                                 </Button>
                             </Box>

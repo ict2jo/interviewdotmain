@@ -36,7 +36,7 @@ export default function SuccessList() {
     const [commentContent, setCommentContent] = useState(""); // 댓글 내용 상태 추가
     const [page, setPage] = useState(1); // 현재 페이지 상태 추가
     const [totalPages, setTotalPages] = useState(""); // 전체 페이지 수 상태 추가
-    const successPerPage = 9; // 한 페이지당 보일 후기 개수
+    const successPerPage = 5; // 한 페이지당 보일 후기 개수
     const [editingCommentContent, setEditingCommentContent] = useState("");
     const [editingCommentId, setEditingCommentId] = useState("");
 
@@ -78,8 +78,8 @@ export default function SuccessList() {
 
     const handleSuccessClick = (success) => {
         if (!userStore.id) {
-            alert("로그인 후에 작성할 수 있습니다.");
-            router.push("/signin/login");
+            alert("로그인 후에 볼 수 있습니다.");
+            menuStore.setSelectedMenu("login");
             return;
         }
         setSelectedSuccess(success);
@@ -221,7 +221,7 @@ export default function SuccessList() {
     const handleCloseDialog = () => {
         setOpenDialog(false);
         /* setSelectedSuccess(null); // 선택된 후기 초기화 */
-        setEditingContent(""); // 수정할 내용 초기화
+        // setEditingContent(""); // 수정할 내용 초기화
         setCommentContent(""); // 댓글 내용 초기화
         /* setComments([]); // 댓글 목록 초기화 */
     };
@@ -230,6 +230,7 @@ export default function SuccessList() {
         menuStore.setSelectedMenu(menu);
         if (!userStore.id) {
             alert("로그인 후에 작성할 수 있습니다.");
+            menuStore.setSelectedMenu("login");
             return;
         }
         handleCloseDialog();
@@ -270,10 +271,10 @@ export default function SuccessList() {
                 <Table sx={{ minWidth: 600 }} className="review_box">
                     <TableHead sx={{ borderTop: '3px solid blue' }}>
                         <TableRow>
-                            <TableCell sx={{ width: '100px', textAlign: 'center' }}>NO</TableCell>
+                            {/* <TableCell sx={{ width: '100px', textAlign: 'center' }}>NO</TableCell> */}
                             <TableCell sx={{ width: '100px', textAlign: 'center' }}>작성자</TableCell>
                             <TableCell sx={{ width: '100px', textAlign: 'center' }}>제목</TableCell>
-                            <TableCell sx={{ width: '300px', textAlign: 'center' }}>내용</TableCell>
+                            {/* <TableCell sx={{ width: '300px', textAlign: 'center' }}>내용</TableCell> */}
                             <TableCell sx={{ width: '100px', textAlign: 'center' }}>회사</TableCell>
                             <TableCell sx={{ width: '200px', textAlign: 'center' }}>작성일</TableCell>
                         </TableRow>
@@ -290,24 +291,24 @@ export default function SuccessList() {
                                 }}
                                 style={{ cursor: success.active === '1' ? 'default' : 'pointer' }}
                             >
-                                <TableCell sx={{ width: '100px', textAlign: 'center' }}>{success.active === '1' ? '' : success.s_idx}</TableCell>
+                                {/* <TableCell sx={{ width: '100px', textAlign: 'center' }}>{success.active === '1' ? '' : success.s_idx}</TableCell> */}
                                 <TableCell sx={{ width: '100px', textAlign: 'center' }}>{success.active === '1' ? '' : success.s_id}</TableCell>
                                 <TableCell sx={{ width: '100px', textAlign: 'center' }}>{success.active === '1' ? '' : success.s_title}</TableCell>
                                 <TableCell colSpan={1} sx={{ textAlign: 'center' }}>
                                     {success.active === '1' ? (
                                         <span style={{ color: 'red', marginLeft: '10px', width: '300px' }}>삭제된 게시물입니다.</span>
                                     ) : (
-                                        success.s_content
+                                        success.s_company
                                     )}
                                 </TableCell>
-                                <TableCell sx={{ width: '100px', textAlign: 'center' }}>{success.active === '1' ? '' : success.s_company}</TableCell>
+                                {/* <TableCell sx={{ width: '100px', textAlign: 'center' }}>{success.active === '1' ? '' : success.s_company}</TableCell> */}
                                 <TableCell sx={{ width: '200px', textAlign: 'center' }}>{success.active === '1' ? '' : success.s_regdate.substring(0, 10)}</TableCell>
                             </TableRow>
                         ))}
                     </TableBody>
                 </Table>
                 <Box sx={{ display: 'flex', justifyContent: 'flex-end' }}>
-                    <Button variant='outlined' onClick={() => handleMenuClick(`review/review_success_write`)} color="primary" style={{ textAlign: "center" }}>
+                    <Button variant='contained' onClick={() => handleMenuClick(`review/review_success_write`)} color="primary"  style={{ textAlign: "center" }}>
                         작성하기
                     </Button>
                 </Box>
@@ -368,7 +369,7 @@ export default function SuccessList() {
                                 value={commentContent}
                                 onChange={handleCommentChange}
                             />
-                            <Button onClick={handlePostComment} color="primary" style={{ marginTop: "10px", fontSize: "13px", marginLeft: "385px", backgroundColor: "blue", color: "white" }}>
+                            <Button onClick={handlePostComment} color="primary" variant='contained' style={{ marginTop: "10px", fontSize: "13px", marginLeft: "385px"}}>
                                 댓글 작성
                             </Button>
                             {/* 댓글 목록 표시 */}
