@@ -121,9 +121,9 @@ function Home() {
         return <Review_Community />; //면접후기
       case "success":
         return <Review_Community />; //면접후기
-      case "review_list_write":
+      case "ReviewList":
         return <ReviewList />; //면접후기
-      case "reivew_success_write":
+      case "SuccessList":
         return <SuccessList/>; //면접후기
       case "profile":
         return <Selfprofile />;

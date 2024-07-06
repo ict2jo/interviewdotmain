@@ -107,18 +107,17 @@ export default function Review_Success_Write() {
                     <h1>합격 후기 작성</h1>
                     <div className="write_list">
                         <div className="write_area">
-                            <div className="write_box">
+                            <div className="write_box" >
                                 <h2>면접 후기</h2>
                                 작성자 : <input type="text" value={name} disabled /><br />
-                                제목   : <input type="text" value={s_title} onChange={(e) => setTitle(e.target.value)} />
-                            </div>
-                            <div className="write_sub">
+                                제목   : <input type="text" value={s_title} onChange={(e) => setTitle(e.target.value)} /><br />
                                 회사명 : <input type="text" value={s_company} onChange={(e) => setCompany(e.target.value)} />
                             </div>
+                           
                         </div>
                     </div>
                     <div className="write_content" style={{ height: '500px' }}>
-                    <ReactQuill
+                    <ReactQuill 
                             value={s_content}
                             onChange={handleContentChange}
                             modules={{
@@ -148,8 +147,8 @@ export default function Review_Success_Write() {
                         />
                     </div>
                     <div>
-                        <Button className="write_btn1" variant="contained" onClick={() => window.history.back()}>목록</Button>
-                        <Button className="write_btn1" variant="contained" onClick={handleSubmitReview}>작성 완료</Button>
+                        <Button className="write_btn1" variant="contained" sx={{marginBottom:'80px'}} onClick={() => window.history.back()}>목록</Button>
+                        <Button className="write_btn1" variant="contained" sx={{marginBottom:'80px'}} onClick={handleSubmitReview}>작성 완료</Button>
                     </div>
                 </div>
             </Container>
