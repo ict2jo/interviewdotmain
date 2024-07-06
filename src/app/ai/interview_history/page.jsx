@@ -14,6 +14,7 @@ import Stack from '@mui/material/Stack';
 import {Button, Checkbox} from "@mui/material";
 import userStore from "@/stores/UserStore";
 import menuStore from "@/stores/MenuStore";
+import AuthStore from "@/stores/AuthStore";
 
 export default function InterviewHistory() {
     const [history, setHistory] = useState([]);
@@ -22,10 +23,15 @@ export default function InterviewHistory() {
     const itemsPerPage = 5;
 
     useEffect(() => {
+        if (!AuthStore.token) {
+            alert("로그인 후 이용 부탁드립니다.");
+            menuStore.setSelectedMenu("login");
+            return;
+        }
         if (userStore.id) {
             getHistory();
         }
-    }, [userStore.id]);
+    }, [userStore.id, AuthStore.token]);
 
     const getHistory = () => {
         fetch(`http://localhost:8080/interview/history?id=${userStore.id}`)
