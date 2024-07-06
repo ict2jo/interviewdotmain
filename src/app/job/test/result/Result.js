@@ -44,15 +44,15 @@ function PageContent() {
     index,
   }) => {
     const RADIAN = Math.PI / 180;
-    const radius = innerRadius + (outerRadius - innerRadius) * 0.3;
-    const x = cx + radius * Math.cos(-midAngle * RADIAN);
+    const radius = innerRadius + (outerRadius - innerRadius) * 0.6;
+    const x = cx + radius * Math.cos(-midAngle * RADIAN) -50;
     const y = cy + radius * Math.sin(-midAngle * RADIAN);
     return (
       <text
         x={x}
         y={y}
         fill="white"
-        textAnchor={x > cx ? "start" : "end"}
+        //textAnchor={x > cx ? "start" : "end"}
         dominantBaseline="central"
       >
         {`${chartData[index].name}: ${(percent * 100).toFixed(0)}%`}
@@ -124,7 +124,7 @@ function PageContent() {
   return (
     <div className="w-full bg-white py-10">
       <div className="m-auto">
-        {storedAnswers  ? (
+        {answers.length > 0 ? (
           <>
             <div className="flex justify-center gap-3">
               <div className="h-[90vh]">
