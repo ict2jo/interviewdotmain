@@ -1,6 +1,5 @@
 "use client"
 
-import menuStore from "@/stores/MenuStore";
 import userStore from "@/stores/UserStore";
 import { Typography } from "@mui/material";
 import AuthStore from "@/stores/AuthStore";
@@ -64,30 +63,6 @@ export default function AI_submenu({handleMenuClick}) {
                     면접 기록
                 </Typography>
             </li>
-            {/* <li className="whitespace-nowrap">
-                <Typography
-                    className="block px-4 py-2 hover:bg-primary-100"
-                    onClick={() => handleMenuClick("payments")}
-                >
-                    이용권 구매
-                </Typography>
-            </li> */}
-            {/* <li className="whitespace-nowrap">
-                <Typography
-                    className="block px-4 py-2 hover:bg-primary-100"
-                    onClick={() => handleMenuClick("payStatus")}
-                >
-                    나의 이용현황
-                </Typography>
-            </li> */}
-            {/* <li className="whitespace-nowrap">
-                <Typography
-                    className="block px-4 py-2 hover:bg-primary-100"
-                    onClick={() => handleMenuClick("payDetail")}
-                >
-                    결제내역
-                </Typography>
-            </li> */}
         </ul>
     );
 }
