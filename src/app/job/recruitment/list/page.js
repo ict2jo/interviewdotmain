@@ -26,9 +26,9 @@ export default function list() {
     useEffect(() => {
         fetchData();
     }, [pageNo, numOfRows, acbgCondLst, recrutSe, workRgnLst, searchQuery, ongoingYn]); 
-
+    const employKey = process.env.NEXT_PUBLIC_EMPOLY_KEY;
     const fetchData = async () => {
-        let queryParams = `serviceKey=B6imLe%2BFf%2B3fVWotgO%2BhgAihHyVI%2F7tlmTiqrvZifWgzl94sf9U4VL3GuwTIkEkjW3MsF%2BtQ3OnUHkqwMRmuMA%3D%3D&pageNo=${pageNo}&acbgCondLst=${acbgCondLst}&recrutSe=${recrutSe}&workRgnLst=${workRgnLst}&recrutPbancTtl=${searchQuery}&ongoingYn=${ongoingYn}`;
+        let queryParams = `serviceKey=${employKey}&pageNo=${pageNo}&acbgCondLst=${acbgCondLst}&recrutSe=${recrutSe}&workRgnLst=${workRgnLst}&recrutPbancTtl=${searchQuery}&ongoingYn=${ongoingYn}`;
         const API_URL = `/recruitment/list?${queryParams}`;
 
         try {

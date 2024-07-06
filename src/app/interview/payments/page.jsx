@@ -3,13 +3,19 @@
 import { useState } from 'react';
 import './payments.css'
 import userStore from '@/stores/UserStore';
+import menuStore from '@/stores/MenuStore';
 
 export default function Payments() {
+    if (!userStore.id) {
+            alert("로그인 후 이용 가능합니다.");
+            menuStore.setSelectedMenu("login");
+            return;
+    }
+    
     const [count, setCount] = useState(1);
     const basePrice = 0;
 
-    console.log("ppppppppid"+userStore.id);
-
+    // 구매 버튼 클릭 시 팝업창
     const handlePurchaseClick = (price) => {
         const purchaseUrl = `toss/?price=${price}`;
         const width = 600;
@@ -36,7 +42,7 @@ export default function Payments() {
 
     return (
         <>      
-        <div className='pay_container'>
+        <div className='pay_container' style={{height: "730px", margin: "35px auto"}}>
             <h1>인터뷰닷 이용권</h1>
             <div className='tickets-container'>
                 <div className='ticket'>
@@ -61,19 +67,13 @@ export default function Payments() {
                     <div className='ticket-op' style={{backgroundColor: "lightpink"}}>내맘대로 이용권 <br /></div>
                     <div className='ticket-inner'>
                         <div className='ticket-input'>
-                            <input 
-                                type="number" 
-                                value={count} 
-                                onChange={handleCountChange} 
-                                min="1"
-                                max="100"
-                            />
+                            <input type="number" value={count} onChange={handleCountChange} min="1" max="100" />
                             <p>회</p>
                         </div>
-                        <p style={{fontSize: "25px", fontWeight:"bold", marginTop:"20px"}}>₩ {(basePrice + (count * 1000)).toLocaleString()}</p>
+                            <p style={{ fontSize: "25px", fontWeight: "bold", marginTop: "20px" }}>
+                                ₩ {(basePrice + (count * 1000)).toLocaleString()}</p>
                         <p>{count}회 면접 연습 + 분석</p>
                         <button onClick={() => handlePurchaseClick(basePrice + (count * 1000))}>구매</button>
-                        
                     </div>
                 </div>
             </div>

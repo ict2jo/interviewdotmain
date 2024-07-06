@@ -45,21 +45,14 @@ import Review_Success_Write from "./review/review_success_write/page";
 
 
 function Home() {
-  // useContext 훅으로 MobX Store 가져오기
   const menuStore = useContext(MenuContext);
-
   const router = useRouter();
-
-  // 로컬 스토리지에서 상태 불러오기
   useEffect(() => {
     localStorage.getItem("selectedMenu");
   }, [menuStore]);
-
-  // 선택된 메뉴가 변경될 때마다 로컬 스토리지에 저장
   useEffect(() => {
     localStorage.setItem("selectedMenu", menuStore.selectedMenu);
   }, []);
-
   const renderContent = () => {
     if (menuStore.selectedMenu.startsWith('detail/')) {
       const recrutPblntSn = menuStore.selectedMenu.split('/')[1];
@@ -89,8 +82,6 @@ function Home() {
     if (menuStore.selectedMenu.startsWith('review/review_success_write')) {
       return <Review_Success_Write/>;
     }
-    
-    
     switch (menuStore.selectedMenu) {
       case "main":
         return <Main />;

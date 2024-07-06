@@ -52,7 +52,7 @@ export default function Innerlist({ list }) {
     };
     const handleFavoritenoneClick = async (recrutPblntSn) => {
         const updatedUvo = {
-            id: userStore.u_idx,
+            u_idx: userStore.u_idx,
             f_num: recrutPblntSn,
         };
         try {

@@ -30,7 +30,7 @@ export default async function handler(req, res) {
 
     await openai.beta.threads.messages.create(thread.id, {
       role: 'user',
-      content: question, feedback
+      content: `${question} ${feedback}`
     });
 
     const run = await openai.beta.threads.runs.create(thread.id, {

@@ -9,6 +9,8 @@ import Resume_submenu from "./Resume_submenu";
 import { observer } from "mobx-react-lite";
 import AI_submenu from "./AI_submenu";
 import userStore from "@/stores/UserStore";
+import ReviewSubmenu from "./reviewSub";
+import Pay_submenu from "./pay_submenu";
 const Navigation = observer(() => {
   const [activeMenu, setActiveMenu] = useState(null);
   const submenuTimeoutRef = useRef(null);
@@ -60,37 +62,6 @@ const Navigation = observer(() => {
             <Typography
               className="block"
             >
-              면접 결과 관리
-            </Typography>
-            {activeMenu === "airesult" && (
-              <Interview_result_submenu handleMenuClick={handleMenuClick} />
-            )}
-          </div>
-        </li>
-
-        <li className="relative whitespace-nowrap">
-          <div
-            onMouseEnter={() => handleMouseEnter("self")}
-            onMouseLeave={() => handleMouseLeave()}
-          >
-            <Typography
-              className="hover:bg-primary-100 transition-colors"
-              onClick={() => handleMenuClick("self")}
-            >
-              자기소개서
-            </Typography>
-            {activeMenu === "self" && (
-              <Resume_submenu handleMenuClick={handleMenuClick} />
-            )}
-          </div>
-        </li>
-
-        <li className="relative whitespace-nowrap cursor-pointer">
-          <div>
-            <Typography
-              className="block hover:bg-primary-100 transition-colors"
-              onClick={() => handleMenuClick("recruitment")}
-            >
               채용공고
             </Typography>
 
@@ -112,15 +83,35 @@ const Navigation = observer(() => {
           </div>
         </li>
 
-        <li className="whitespace-nowrap">
-          <Typography
-            className="hover:bg-primary-100 transition-colors"
-            onClick={() => handleMenuClick("review")}
+        <li className="relative whitespace-nowrap cursor-pointer">
+        <div
             onMouseEnter={() => handleMouseEnter("review")}
             onMouseLeave={() => handleMouseLeave()}
           >
-            면접후기
-          </Typography>
+            <Typography
+              className="block"
+              onClick={() => handleMenuClick("review")}
+            >
+              게시판
+            </Typography>
+            {activeMenu === "review" && <ReviewSubmenu handleMenuClick={handleMenuClick} />}
+          </div>
+        </li>
+        <li className="relative whitespace-nowrap">
+          <div
+            onMouseEnter={() => handleMouseEnter("pay")}
+            onMouseLeave={() => handleMouseLeave()}
+          >
+            <Typography
+              className="block"
+              onClick={() => handleMenuClick("pay")}
+            >
+              이용권
+            </Typography>
+            {activeMenu === "pay" && (
+              <Pay_submenu handleMenuClick={handleMenuClick} />
+            )}
+          </div>
         </li>
       </ul>
     </nav>

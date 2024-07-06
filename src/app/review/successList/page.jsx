@@ -22,7 +22,7 @@ import {
     IconButton
 } from "@mui/material";
 import userStore from "@/stores/UserStore";
-import { Box } from "@mui/system";
+import { Box, width } from "@mui/system";
 import { useRouter } from "next/navigation";
 import menuStore from "@/stores/MenuStore";
 
@@ -248,7 +248,7 @@ export default function SuccessList() {
                 rep_active: "1"
             });
             console.log("리뷰리스트_idx", selectedSuccess.u_idx),
-            console.log("Review reported:", response.data);
+                console.log("Review reported:", response.data);
             handleCloseDialog();
         } catch (error) {
             console.error("Error reporting review:", error);
@@ -266,106 +266,113 @@ export default function SuccessList() {
     return (
         <>
             <Container className="reviewwrap" sx={{ width: 1000 }}>
-                   <h1>합격 후기 게시판</h1>
-                    <Table sx={{ minWidth: 600 }} className="review_box">
-                        <TableHead sx={{borderTop: '3px solid blue'}}>
-                            <TableRow>
-                                <TableCell sx={{ width: '100px', textAlign: 'center' }}>NO</TableCell>
-                                <TableCell sx={{ width: '100px', textAlign: 'center' }}>작성자</TableCell>
-                                <TableCell sx={{ width: '100px', textAlign: 'center' }}>제목</TableCell>
-                                <TableCell sx={{ width: '300px', textAlign: 'center' }}>내용</TableCell>
-                                <TableCell sx={{ width: '100px', textAlign: 'center' }}>회사</TableCell>
-                                <TableCell sx={{ width: '200px', textAlign: 'center' }}>작성일</TableCell>
-                            </TableRow>
-                        </TableHead>
-                        <TableBody>
-                            {currentSuccess.map((success) => (
-                                <TableRow
-                                    key={success.s_idx}
-                                    onClick={() => {
-                                        if (success.active !== '1') {
-                                            handleSuccessClick(success)
+                <h1>합격 후기 게시판</h1>
+                <Table sx={{ minWidth: 600 }} className="review_box">
+                    <TableHead sx={{ borderTop: '3px solid blue' }}>
+                        <TableRow>
+                            <TableCell sx={{ width: '100px', textAlign: 'center' }}>NO</TableCell>
+                            <TableCell sx={{ width: '100px', textAlign: 'center' }}>작성자</TableCell>
+                            <TableCell sx={{ width: '100px', textAlign: 'center' }}>제목</TableCell>
+                            <TableCell sx={{ width: '300px', textAlign: 'center' }}>내용</TableCell>
+                            <TableCell sx={{ width: '100px', textAlign: 'center' }}>회사</TableCell>
+                            <TableCell sx={{ width: '200px', textAlign: 'center' }}>작성일</TableCell>
+                        </TableRow>
+                    </TableHead>
+                    <TableBody>
+                        {currentSuccess.map((success) => (
+                            <TableRow
+                                key={success.s_idx}
+                                onClick={() => {
+                                    if (success.active !== '1') {
+                                        handleSuccessClick(success)
 
-                                        }
-                                    }}
-                                    style={{ cursor: success.active === '1' ? 'default' : 'pointer' }}
-                                >
-                                    <TableCell sx={{ width: '100px', textAlign: 'center' }}>{success.active === '1' ? '' : success.s_idx}</TableCell>
-                                    <TableCell sx={{ width: '100px', textAlign: 'center' }}>{success.active === '1' ? '' : success.s_id}</TableCell>
-                                    <TableCell sx={{ width: '100px', textAlign: 'center' }}>{success.active === '1' ? '' : success.s_title}</TableCell>
-                                    <TableCell colSpan={1} sx={{ textAlign: 'center' }}>
-                                        {success.active === '1' ? (
-                                            <span style={{ color: 'red', marginLeft: '10px', width: '300px' }}>삭제된 게시물입니다.</span>
-                                        ) : (
-                                            success.s_content
-                                        )}
-                                    </TableCell>
-                                    <TableCell sx={{ width: '100px', textAlign: 'center' }}>{success.active === '1' ? '' : success.s_company}</TableCell>
-                                    <TableCell sx={{ width: '200px', textAlign: 'center' }}>{success.active === '1' ? '' : success.s_regdate.substring(0, 10)}</TableCell>
-                                </TableRow>
-                            ))}
-                        </TableBody>
-                    </Table>
-                    <Box sx={{ display: 'flex', justifyContent: 'flex-end' }}>
-                        <Button variant='outlined' onClick={() => handleMenuClick(`review/review_success_write`)} color="primary" style={{ textAlign: "center" }}>
-                            작성하기
-                        </Button>
+                                    }
+                                }}
+                                style={{ cursor: success.active === '1' ? 'default' : 'pointer' }}
+                            >
+                                <TableCell sx={{ width: '100px', textAlign: 'center' }}>{success.active === '1' ? '' : success.s_idx}</TableCell>
+                                <TableCell sx={{ width: '100px', textAlign: 'center' }}>{success.active === '1' ? '' : success.s_id}</TableCell>
+                                <TableCell sx={{ width: '100px', textAlign: 'center' }}>{success.active === '1' ? '' : success.s_title}</TableCell>
+                                <TableCell colSpan={1} sx={{ textAlign: 'center' }}>
+                                    {success.active === '1' ? (
+                                        <span style={{ color: 'red', marginLeft: '10px', width: '300px' }}>삭제된 게시물입니다.</span>
+                                    ) : (
+                                        success.s_content
+                                    )}
+                                </TableCell>
+                                <TableCell sx={{ width: '100px', textAlign: 'center' }}>{success.active === '1' ? '' : success.s_company}</TableCell>
+                                <TableCell sx={{ width: '200px', textAlign: 'center' }}>{success.active === '1' ? '' : success.s_regdate.substring(0, 10)}</TableCell>
+                            </TableRow>
+                        ))}
+                    </TableBody>
+                </Table>
+                <Box sx={{ display: 'flex', justifyContent: 'flex-end' }}>
+                    <Button variant='outlined' onClick={() => handleMenuClick(`review/review_success_write`)} color="primary" style={{ textAlign: "center" }}>
+                        작성하기
+                    </Button>
+                </Box>
+                <div style={{ display: 'flex', justifyContent: 'center', margin: '10px 0 25px 0' }}>
+                    <Box sx={{ display: 'flex', justifyContent: 'center', marginBottom: '20px' }}>
+                        <Pagination
+                            /* count={totalPages} */
+                            count={Math.ceil(successList.length / successPerPage)}
+                            page={page}
+                            onChange={handlePageChange}
+                            defaultPage={1}
+                            color="primary"
+                        /* size="large"
+                        showFirstButton
+                        showLastButton */
+                        />
                     </Box>
-                    <div style={{ display: 'flex', justifyContent: 'center', margin: '10px 0 25px 0' }}>
-                        <Box sx={{ display: 'flex', justifyContent: 'center', marginBottom: '20px' }}>
-                            <Pagination
-                                /* count={totalPages} */
-                                count={Math.ceil(successList.length / successPerPage)}
-                                page={page}
-                                onChange={handlePageChange}
-                                defaultPage={1}
-                                color="primary"
-                            /* size="large"
-                            showFirstButton
-                            showLastButton */
-                            />
-                        </Box>
-                    </div>
+                </div>
             </Container>
-            <Dialog open={openDialog} onClose={handleCloseDialog}>
-                <DialogTitle>합격 후기 상세보기 및 댓글</DialogTitle>
+            <Dialog open={openDialog} onClose={handleCloseDialog} PaperProps={{
+                style: {
+                    width: '32%', // 원하는 너비로 설정
+                    maxWidth: 'none', // 최대 너비 설정을 해제하여 필요한 만큼 넓힐 수 있도록 함
+                },
+            }}>
+                <DialogTitle sx={{ fontSize: "20px", borderBottom: "2px solid blue" }}>합격 후기 상세보기 및 댓글</DialogTitle>
                 <DialogContent>
                     {selectedSuccess && (
                         <>
-                            <Typography variant="h6" >제목: {selectedSuccess.s_title}</Typography>
-                            <Typography>작성자 : {selectedSuccess.s_id}</Typography>
-                            <Typography>
-                                내용:
-                            </Typography>
-                            <TextField
-                                multiline
-                                rows={6}
-                                variant="outlined"
-                                fullWidth
-                                value={editingContent}
-                                onChange={handleContentChange}
-                                disabled={selectedSuccess.s_id !== userStore.id}
-                            />
-                            <Typography>회사: {selectedSuccess.s_company}</Typography>
-                            <Typography>작성일 : {selectedSuccess.s_regdate}</Typography>
-                            <Typography variant="h6" style={{ marginTop: 20 }}>
+                            <Typography sx={{ fontSize: "20px", marginTop: "10px", color: "blue" }}>제목: {selectedSuccess.s_title}</Typography>
+                            <Typography sx={{ fontSize: "15px", marginTop: "5px" }}>작성자 : {selectedSuccess.s_id}</Typography>
+                            <Typography sx={{ fontSize: "13px" }}>회사: {selectedSuccess.s_company}</Typography>
+                            <Typography sx={{ color: "gray", fontSize: "12px", marginBottom: "5px" }}>작성일 : {selectedSuccess.s_regdate}</Typography>
+                            <Typography sx={{ fontSize: "18px", marginTop: "8px" }}>내용</Typography>
+                            {selectedSuccess.s_id !== userStore.id ?
+                                (<Typography
+                                    multiline
+                                    fullWidth
+                                    sx={{ marginTop: 1 }}
+                                    value={editingContent}
+                                    onChange={handleContentChange}
+                                />) : (<TextField
+                                    multiline
+                                    fullWidth
+                                    sx={{ backgroundColor: "white", marginTop: 1 }}
+                                    value={editingContent}
+                                    onChange={handleContentChange}
+                                />)}
+
+                            <Typography variant="h6" style={{ marginTop: 20, fontSize: "18px", display: 'flex', justifyContent: 'space-between' }}>
                                 댓글 작성
                             </Typography>
                             <TextField
                                 fullWidth
                                 multiline
-                                rows={4}
                                 variant="outlined"
                                 placeholder="댓글을 입력하세요"
                                 value={commentContent}
                                 onChange={handleCommentChange}
-                                style={{ marginTop: 10 }}
                             />
-                            <Button onClick={handlePostComment} color="primary" style={{ marginTop: 10 }}>
+                            <Button onClick={handlePostComment} color="primary" style={{ marginTop: "10px", fontSize: "13px", marginLeft: "385px", backgroundColor: "blue", color: "white" }}>
                                 댓글 작성
                             </Button>
                             {/* 댓글 목록 표시 */}
-                            <Typography variant="h6" style={{ marginTop: 20 }}>
+                            <Typography variant="h6" style={{ marginTop: "5px" }}>
                                 댓글 목록
                             </Typography>
 
@@ -378,7 +385,7 @@ export default function SuccessList() {
                                             <TableRow key={comments.su_idx}>
                                                 <TableCell>{comments.su_idx}</TableCell>
                                                 <TableCell>{comments.id}</TableCell>
-                                                <TableCell>
+                                                <TableCell style={{ whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis', maxWidth: '300px', fontSize: '12px' }}>
                                                     {editingCommentId === comments.su_idx ? (
                                                         <TextField
                                                             fullWidth
@@ -395,21 +402,20 @@ export default function SuccessList() {
                                                 <TableCell>{comments.su_regdate}</TableCell>
                                                 <TableCell>
                                                     {comments.id === userStore.id && (
-                                                        <>
+                                                        <Box sx={{ display: 'flex', marginTop: 1, fontSize: '10px' }}>
                                                             {editingCommentId === comments.su_idx ? (
-                                                                <Button onClick={() => handleUpdateComment(comments.su_idx)} color="primary">
+                                                                <Button onClick={() => handleUpdateComment(comments.su_idx)} color="primary" sx={{ whiteSpace: 'nowrap', fontSize: '13px', minWidth: 'auto', marginRight: 1 }}>
                                                                     저장
                                                                 </Button>
                                                             ) : (
-                                                                <Button onClick={() => handleEditComment(comments.su_idx, comments.su_content)} color="primary">
+                                                                <Button onClick={() => handleEditComment(comments.su_idx, comments.su_content)} color="primary" sx={{ whiteSpace: 'nowrap', fontSize: '13px' }}>
                                                                     수정
                                                                 </Button>
                                                             )}
-                                                            <Button onClick={() => handleDeleteComment(comments.su_idx)} color="primary">
+                                                            <Button onClick={() => handleDeleteComment(comments.su_idx)} color="primary" sx={{ whiteSpace: 'nowrap', fontSize: '13px' }}>
                                                                 삭제
                                                             </Button>
-
-                                                        </>
+                                                        </Box>
 
                                                     )}
                                                 </TableCell>
@@ -422,21 +428,21 @@ export default function SuccessList() {
 
                     )}
                 </DialogContent>
-                <DialogActions>
+                <DialogActions sx={{ display: 'flex', flexDirection: 'row', justifyContent: 'flex-end', gap: 1 }}>
                     {userStore.id === selectedSuccess?.s_id && (
                         <>
-                            <Button onClick={handleUpdate} color="primary">
+                            <Button onClick={handleUpdate} color="primary" sx={{ whiteSpace: 'nowrap' }}>
                                 수정
                             </Button>
-                            <Button onClick={handleDelete} color="secondary">
+                            <Button onClick={handleDelete} color="primary" sx={{ whiteSpace: 'nowrap' }}>
                                 삭제
                             </Button>
                         </>
                     )}
-                    <Button onClick={handleReportReview} color="primary">
+                    <Button onClick={handleReportReview} color="primary" sx={{ whiteSpace: 'nowrap' }}>
                         신고하기
                     </Button>
-                    <Button onClick={handleCloseDialog} color="primary">
+                    <Button onClick={handleCloseDialog} color="primary" sx={{ whiteSpace: 'nowrap' }}>
                         닫기
                     </Button>
                 </DialogActions>

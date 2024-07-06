@@ -1,11 +1,10 @@
 "use client"
 
 import userStore from '@/stores/UserStore';
-import { useParams } from 'next/navigation';
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
-import "./payDetail.css";
 import { Box, Pagination } from '@mui/material';
+import "./payDetail.css";
 
 export default function PayDetail() {
     const [payments, setPayments] = useState([]);
@@ -13,26 +12,16 @@ export default function PayDetail() {
     const [loading, setLoading] = useState(true);
     const [showModal, setShowModal] = useState(false);
     const [selectedPayment, setSelectedPayment] = useState(null);
-    const [page, setPage] = useState(1); // 현재 페이지 상태 추가
-    const payPerPage = 5; // 한 페이지당 보일 리뷰 개수
-    const secretKey = process.env.NEXT_PUBLIC_TOSS_SECRET_KEY;
-    const encodedKey = btoa(secretKey + ':');
-    const params = useParams();
-    const id = params.id;
+    const [page, setPage] = useState(1); 
+    const payPerPage = 7; 
 
-    console.log("결제취소창" + userStore.id);
-    console.log("인증키" + encodedKey)
-    console.log("인증키22" + secretKey)
     const fetchData = async () => {
         try {
             const response = await axios.get(
                 `http://localhost:8080/payments/userPay?id=${userStore.id}`
             );
             const data = response.data;
-
-            // t_idx 값 기준으로 내림차순 정렬
-            data.sort((a, b) => b.t_idx - a.t_idx);
-
+            
             setPayments(data);
             setLoading(false);
         } catch (error) {
@@ -48,47 +37,23 @@ export default function PayDetail() {
     // 결제취소
     const handleCancel = async () => {
         try {
-            console.log("취소시작 " + userStore.id);
-
             const cancelReason = cancelReasons[selectedPayment.t_idx];
             if (!cancelReason) {
                 alert("결제 취소 사유를 선택해 주세요.");
                 return;
             }
             
-            // const response = await axios.post(
-            //     `http://localhost:8080/payments/cancel`,
-            //     {
-            //         t_idx: selectedPayment.t_idx,
-            //         paymentKey: selectedPayment.paymentKey,
-            //         cancelReason: cancelReason,
-            //         id: userStore.id
-            //     },
-            //     {
-            //         headers: {
-            //             'Content-Type': 'application/json',
-            //             Authorization: `Basic ${encodedKey}`
-            //         },
-            //     }
-            // );
-
             const response = await axios.post(
                 `http://localhost:8080/payments/cancel`,
                 {
                     t_idx: selectedPayment.t_idx,
                     cancelReason: cancelReason,
                     id: userStore.id
-                },
-                {
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
                 }
             );
             
-
             if (response.status === 200) {
-                alert("취소 요청이 접수되었습니다.\n영업일 기준 1~3일 내로 처리될 예정입니다.");
+                alert("취소 요청이 접수되었습니다.\n영업일 기준 7일 내로 처리될 예정입니다.");
                 fetchData();
                 setShowModal(false);
             } else {
@@ -142,7 +107,7 @@ export default function PayDetail() {
                         <tr>
                             <th>취소일자</th>
                         </tr>
-
+                            
                             {loading ? (
                                 <tr>
                                     <td colSpan="6">로딩중...</td>
@@ -163,7 +128,7 @@ export default function PayDetail() {
                                             <td rowSpan="2">
                                                 {payment.payStatus === "결제완료" ? (
                                                     payment.statusCount > payment.remainCount ? (
-                                                        <span>사용 중인 상품은 환불 불가합니다</span>
+                                                        <span>이용한 상품은 환불 불가합니다</span>
                                                     ) : (
                                                         <button onClick={() => openModal(payment)}>
                                                             취소

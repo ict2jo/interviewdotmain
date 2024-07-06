@@ -6,13 +6,20 @@ import './recruitmentlist.css';
 import userStore from "@/stores/UserStore";
 import { CircularProgress, Table, TableBody, TableCell, TableContainer, TableFooter, TableHead, TableRow, Pagination, Button } from "@mui/material";
 import menuStore from "@/stores/MenuStore";
+import StarBorderIcon from '@mui/icons-material/StarBorder';
+import StarIcon from '@mui/icons-material/Star';
 
 export default function Myrecruitment() {
     const [list, setList] = useState([]); // 채용공고 리스트 상태
     const [loading, setLoading] = useState(true); // 데이터 로딩 상태
     const [page, setPage] = useState(1); // 현재 페이지
     const rowsPerPage = 5; // 페이지 당 보여줄 항목 수
-
+    const employKey = process.env.NEXT_PUBLIC_EMPOLY_KEY;
+    const [uvo, setUvo] = useState({
+        u_idx: userStore.u_idx,
+        f_num: '', // 클릭한 recrutPblntSn이 들어갈 자리입니다.
+    });
+    const [favorites, setFavorites] = useState([]);
     useEffect(() => {
         const fetchData = async () => {
             try {
@@ -28,11 +35,12 @@ export default function Myrecruitment() {
                     }
                 });
                 const favoriteSnList = getStarResponse.data.map(item => item.f_num);
+                setFavorites(favoriteSnList);
                 console.log("getstar22", favoriteSnList);
 
                 const results = [];
                 for (const sn of favoriteSnList) {
-                    const queryParams = `serviceKey=B6imLe%2BFf%2B3fVWotgO%2BhgAihHyVI%2F7tlmTiqrvZifWgzl94sf9U4VL3GuwTIkEkjW3MsF%2BtQ3OnUHkqwMRmuMA%3D%3D&sn=${sn}`;
+                    const queryParams = `serviceKey=${employKey}&sn=${sn}`;
                     const API_URL = `/recruitment/detail?${queryParams}`;
                     const response = await axios.get(API_URL);
                     results.push(response.data.result);
@@ -72,10 +80,67 @@ export default function Myrecruitment() {
     const handleMenuClick = (menu) => {
         menuStore.setSelectedMenu(menu);
     };
+    const handleFavoriteClick = async (recrutPblntSn) => {
+        const updatedUvo = {
+            u_idx: userStore.u_idx,
+            f_num: recrutPblntSn,
+        };
+        try {
+            await axios.post('/mypage/favorites', updatedUvo);
+            if (updatedUvo.u_idx) {
+                alert("즐겨찾기 저장", recrutPblntSn, updatedUvo.u_idx);
+            } else {
+                alert("로그인 후 이용해주세요");
+                menuStore.setSelectedMenu("login");
+            }
+            setFavorites(prevFavorites => [...prevFavorites, recrutPblntSn.toString()]);
+            setUvo(updatedUvo);
+        } catch (error) {
+            console.error("즐겨찾기 저장 중 오류가 발생했습니다:", error);
+        }
+    };
+    const handleFavoritenoneClick = async (recrutPblntSn) => {
+        const updatedUvo = {
+            u_idx: userStore.u_idx,
+            f_num: recrutPblntSn,
+        };
+        try {
+            await axios.post('/mypage/nonefavorites', updatedUvo);
+            alert("즐겨찾기 해제", updatedUvo.id, recrutPblntSn);
+            setFavorites(prevFavorites => prevFavorites.filter(sn => sn !== recrutPblntSn.toString())); 
+            setUvo(updatedUvo);
+        } catch (error) {
+            alert("즐겨찾기 해제 중 오류가 발생했습니다:", updatedUvo.u_idx, recrutPblntSn, error);
+        }
+    };
+    const renderStarIcon = (recrutPblntSn) => {
+        if (loading) return null; 
+        const isFavorite = favorites.some(item => item === recrutPblntSn.toString()); 
+        console.log(isFavorite);
+        const handleStarClick = () => {
+            if (isFavorite) {
+                handleFavoritenoneClick(recrutPblntSn);
+            } else {
+                handleFavoriteClick(recrutPblntSn);
+            }
+        };
+        
+        return (
+            isFavorite ? 
+                <StarIcon onClick={handleStarClick} />
+                :
+                <StarBorderIcon onClick={handleStarClick} />
+        );
+    };
     return (
         <div>
             <TableContainer sx={{ width: 1500 }} className='tablewrap'>
-                <h1>나의 채용공고</h1>
+            <h1>나의 채용공고</h1>
+                {list.length === 0 ? (
+                    <Typography variant="h6" align="center" sx={{ marginTop: 4 }}>
+                        등록된 채용공고가 없습니다
+                    </Typography>
+                ) : (
                 <Table sx={{ minWidth: 600 }}>
                     <TableHead sx={{ borderBottom: '3px solid blue' }}>
                         <TableRow>
@@ -94,8 +159,12 @@ export default function Myrecruitment() {
                         {list.slice((page - 1) * rowsPerPage, (page - 1) * rowsPerPage + rowsPerPage).map((item, index) => (
                             <TableRow key={index}>
                                 <TableCell sx={{ width: '10px', textAlign: 'center' }}>{calculateIndex(page, index)}</TableCell>
-                                <TableCell sx={{ width: '300px', textAlign: 'center' }} onClick={() => handleMenuClick(`detail/${item.recrutPblntSn}`)}>
-                                    <p>{item.recrutPbancTtl}</p>
+                                <TableCell sx={{ width: '300px', textAlign: 'center' }}>
+                                    <div style={{display:'flex', itemAlign: 'center'}}>
+                                    <p  onClick={() => handleMenuClick(`detail/${item.recrutPblntSn}`)}>{item.recrutPbancTtl}
+                                    </p>
+                                    {renderStarIcon(item.recrutPblntSn)}
+                                        </div>
                                 </TableCell>
                                 <TableCell sx={{ width: '70px', textAlign: 'center' }}>
                                     <p>{item.instNm}</p>
@@ -141,6 +210,7 @@ export default function Myrecruitment() {
                         </TableRow>
                     </TableFooter>
                 </Table>
+                )}
             </TableContainer>
         </div>
     );

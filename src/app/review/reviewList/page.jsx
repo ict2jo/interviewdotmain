@@ -27,7 +27,6 @@ import {
 } from "@mui/material";
 import { Box } from "@mui/system";
 import { useRouter } from "next/navigation";
-import { menu } from "@nextui-org/react";
 import menuStore from "@/stores/MenuStore";
 
 export default function ReviewList() {
@@ -80,12 +79,12 @@ export default function ReviewList() {
     const handleReviewClick = (review) => {
         if (!userStore.id) {
             alert("로그인 후에 작성할 수 있습니다.");
-            router.push("/signin/login"); // 로그인 페이지로 이동
+            router.push("/signin/login"); 
             return;
         }
         setSelectedReview(review);
-        setEditingContent(review.r_content); // 선택된 리뷰의 내용을 수정할 내용 상태에 설정
-        fetchComments(review.r_idx); // 해당 리뷰의 댓글 목록 불러오기
+        setEditingContent(review.r_content); 
+        fetchComments(review.r_idx); 
         setOpenDialog(true);
     };
 
@@ -97,6 +96,56 @@ export default function ReviewList() {
         console.log("comments", comments);
     }, [commentContent])
 
+    const handleContentChange = (event) => {
+        setEditingContent(event.target.value); // 수정할 내용 업데이트
+    };
+
+    const handleUpdate = async () => {
+        try {
+            // 서버에 수정할 내용 전송
+            const response = await axios.post("http://localhost:8080/review/updatereview", {
+                r_idx: selectedReview.r_idx,
+                r_content: editingContent // 수정된 내용
+            });
+            console.log("Review updated:", response.data);
+
+            // 수정 후 리뷰 목록 다시 불러오기
+            const updatedList = await fetchReviewListFromServer(); // 서버에서 업데이트된 목록을 다시 가져오기
+            setReviewList(updatedList);
+
+            handleCloseDialog(); // 팝업 창 닫기
+
+        } catch (error) {
+            console.error("Error updating review:", error);
+        }
+    };
+
+    const fetchReviewListFromServer = async () => {
+        try {
+            const response = await axios.get("/review/reviewlist");
+            return response.data;
+        } catch (error) {
+            console.error("Error fetching review data:", error);
+            return [];
+        }
+    };
+
+    const handleDelete = async () => {
+        try {
+            // 서버에 삭제할 리뷰 정보 전송
+            const response = await axios.post("http://localhost:8080/review/deletereview", {
+                r_idx: selectedReview.r_idx,
+            });
+            console.log("Review deleted:", response.data);
+
+            // 삭제 후 리뷰 목록 다시 불러오기
+            await fetchReviewList();
+            handleCloseDialog(); // 팝업 창 닫기
+
+        } catch (error) {
+            console.error("Error deleting review:", error);
+        }
+    };
 
     const fetchComments = async (r_idx) => {
         try {
@@ -132,65 +181,6 @@ export default function ReviewList() {
             console.error("Error posting comment:", error);
         }
     };
-
-
-
-    const handleUpdate = async () => {
-        try {
-            // 서버에 수정할 내용 전송
-            const response = await axios.post("http://localhost:8080/review/updatereview", {
-                r_idx: selectedReview.r_idx,
-                r_content: editingContent // 수정된 내용
-            });
-            console.log("Review updated:", response.data);
-
-            // 수정 후 리뷰 목록 다시 불러오기
-            const updatedList = await fetchReviewListFromServer(); // 서버에서 업데이트된 목록을 다시 가져오기
-            setReviewList(updatedList); // 업데이트된 목록을 상태에 반영
-            handleCloseDialog(); // 팝업 창 닫기
-
-        } catch (error) {
-            console.error("Error updating review:", error);
-        }
-    };
-
-
-
-
-    const fetchReviewListFromServer = async () => {
-        try {
-            const response = await axios.get("/review/reviewlist");
-            return response.data;
-        } catch (error) {
-            console.error("Error fetching review data:", error);
-            return [];
-        }
-    };
-
-
-
-
-    const handleDelete = async () => {
-        try {
-            // 서버에 삭제할 리뷰 정보 전송
-            const response = await axios.post("http://localhost:8080/review/deletereview", {
-                r_idx: selectedReview.r_idx,
-            });
-            console.log("Review deleted:", response.data);
-
-            // 삭제 후 리뷰 목록 다시 불러오기
-            await fetchReviewList();
-            handleCloseDialog(); // 팝업 창 닫기
-
-        } catch (error) {
-            console.error("Error deleting review:", error);
-        }
-    };
-
-    /* const handleTitleChange = (event) => {
-      setEditingTitle(event.target.value);
-    } */
-
 
 
 
@@ -235,13 +225,6 @@ export default function ReviewList() {
     };
 
 
-
-
-
-    const handleContentChange = (event) => {
-        setEditingContent(event.target.value); // 수정할 내용 업데이트
-    };
-
     const handleCommentChange = (event) => {
         setCommentContent(event.target.value);
     }
@@ -254,22 +237,11 @@ export default function ReviewList() {
         setComments([]); // 댓글 목록 초기화
     };
 
-    /* const handleWriteReview = () => {
-        if (!userStore.id) {
-            alert("로그인 후에 작성할 수 있습니다.");
-            return;
-        }
-        menuStore.setSelectedMenu(menu);
-        handleCloseDialog();
-         router.push("/review/review_list_write"); 
-         console.log("idx가 있니?",selectedReview.r_idx); 
-    } */
-    
     const handleMenuClick = async (menu) => {
         menuStore.setSelectedMenu(menu);
         if (!userStore.id) {
             alert("로그인 후에 작성할 수 있습니다.");
-            return;
+            router.push("/signin/login");
         }
         handleCloseDialog();
     };
@@ -283,7 +255,7 @@ export default function ReviewList() {
                 rep_active: "1"
             });
             console.log("리뷰리스트_idx", selectedReview.u_idx),
-            console.log("Review reported:", response.data);
+                console.log("Review reported:", response.data);
             handleCloseDialog();
         } catch (error) {
             console.error("Error reporting review:", error);
@@ -303,154 +275,158 @@ export default function ReviewList() {
     return (
         <>
             <Container className="reviewwrap" sx={{ width: 1000 }}>
-                    <h1>면접 후기 게시판</h1>
-                    <Table sx={{ minWidth: 600, marginBottom:'20px' }} >
-                        <TableHead sx={{borderTop: '3px solid blue'}} className="tablehead">
-                            <TableRow>
-                                <TableCell sx={{ width: '100px', textAlign: 'center' }}>NO</TableCell>
-                                <TableCell sx={{ width: '100px', textAlign: 'center' }}>작성자</TableCell>
-                                <TableCell sx={{ width: '100px', textAlign: 'center' }}>제목</TableCell>
-                                <TableCell sx={{ width: '300px', textAlign: 'center' }}>내용</TableCell>
-                                <TableCell sx={{ width: '100px', textAlign: 'center' }}>회사</TableCell>
-                                <TableCell sx={{ width: '200px', textAlign: 'center' }}>작성일</TableCell>
-                            </TableRow>
-                        </TableHead>
-                        <TableBody>
-                            {currentReview.map((review) => (
-                                <TableRow
-                                    key={review.r_idx}
-                                    onClick={() => {
-                                        if (review.active !== '1') {
-                                            handleReviewClick(review)
+                <h1>면접 후기 게시판</h1>
+                <Table sx={{ minWidth: 600, marginBottom: '20px' }} >
+                    <TableHead sx={{ borderTop: '3px solid blue' }} className="tablehead">
+                        <TableRow>
+                            <TableCell sx={{ width: '100px', textAlign: 'center' }}>NO</TableCell>
+                            <TableCell sx={{ width: '100px', textAlign: 'center' }}>작성자</TableCell>
+                            <TableCell sx={{ width: '100px', textAlign: 'center' }}>제목</TableCell>
+                            <TableCell sx={{ width: '400px', textAlign: 'center' }}>내용</TableCell>
+                            <TableCell sx={{ width: '100px', textAlign: 'center' }}>회사</TableCell>
+                            <TableCell sx={{ width: '200px', textAlign: 'center' }}>작성일</TableCell>
+                        </TableRow>
+                    </TableHead>
+                    <TableBody>
+                        {currentReview.map((review) => (
+                            <TableRow
+                                key={review.r_idx}
+                                onClick={() => {
+                                    if (review.active !== '1') {
+                                        handleReviewClick(review)
 
-                                        }
-                                    }}
-                                    style={{ cursor: review.active === '1' ? 'default' : 'pointer' }}
-                                >
-                                    <TableCell sx={{ width: '100px', textAlign: 'center' }}>{review.active === '1' ? '' : review.r_idx}</TableCell>
-                                    <TableCell sx={{ width: '100px', textAlign: 'center' }}>{review.active === '1' ? '' : review.r_id}</TableCell>
-                                    <TableCell sx={{ width: '100px', textAlign: 'center' }}>{review.active === '1' ? '' : review.r_title}</TableCell>
-                                    <TableCell colSpan={1} sx={{ textAlign: 'center' }}>
-                                        {review.active === '1' ? (
-                                            <span style={{ color: 'red', marginLeft: '10px', width: '300px' }}>삭제된 게시물 입니다.</span>
-                                        ) : (
-                                            review.r_content
-                                        )}
-                                    </TableCell>
-                                    <TableCell sx={{ width: '100px', textAlign: 'center' }}>{review.active === '1' ? '' : review.r_company}</TableCell>
-                                    <TableCell sx={{ width: '200px', textAlign: 'center' }}>{review.active === '1' ? '' : review.r_regdate.substring(0, 10)}</TableCell>
-                                </TableRow>
-                            ))}
-                        </TableBody>
-                    </Table>
-                    <Box sx={{ display: 'flex', justifyContent: 'flex-end' }}>
-                        <Button  onClick={() => handleMenuClick(`review/review_list_write`)} color="primary" style={{ textAlign: "center" }}>
-                            작성하기
-                        </Button>
+                                    }
+                                }}
+                                style={{ cursor: review.active === '1' ? 'default' : 'pointer' }}
+                            >
+                                <TableCell sx={{ width: '100px', textAlign: 'center' }}>{review.active === '1' ? '' : review.r_idx}</TableCell>
+                                <TableCell sx={{ width: '100px', textAlign: 'center' }}>{review.active === '1' ? '' : review.r_id}</TableCell>
+                                <TableCell sx={{ width: '100px', textAlign: 'center' }}>{review.active === '1' ? '' : review.r_title}</TableCell>
+                                <TableCell colSpan={1} sx={{ textAlign: 'center' }}>
+                                    {review.active === '1' ? (
+                                        <span style={{ color: 'red', marginLeft: '10px', width: '400px' }}>삭제된 게시물 입니다.</span>
+                                    ) : (
+                                        review.r_content
+                                    )}
+                                </TableCell>
+                                <TableCell sx={{ width: '100px', textAlign: 'center' }}>{review.active === '1' ? '' : review.r_company}</TableCell>
+                                <TableCell sx={{ width: '200px', textAlign: 'center' }}>{review.active === '1' ? '' : review.r_regdate.substring(0, 10)}</TableCell>
+                            </TableRow>
+                        ))}
+                    </TableBody>
+                </Table>
+                <Box sx={{ display: 'flex', justifyContent: 'flex-end' }}>
+                    <Button onClick={() => handleMenuClick(`review/review_list_write`)} color="primary" style={{ textAlign: "center" }}>
+                        작성하기
+                    </Button>
+                </Box>
+                {/* 페이지네이션 */}
+                <div style={{ display: 'flex', justifyContent: 'center', margin: '10px 0 25px 0' }}>
+                    <Box sx={{ display: 'flex', justifyContent: 'center', marginBottom: '20px' }}>
+                        <Pagination
+                            count={Math.ceil(reviewList.length / reviewsPerPage)}
+                            page={page}
+                            onChange={handlePageChange}
+                            color="primary"
+                        />
                     </Box>
-                    {/* 페이지네이션 */}
-                    <div style={{ display: 'flex', justifyContent: 'center', margin: '10px 0 25px 0' }}>
-                        <Box sx={{ display: 'flex', justifyContent: 'center', marginBottom: '20px' }}>
-                            <Pagination
-                                /* count={totalPages} */
-                                count={Math.ceil(reviewList.length / reviewsPerPage)}
-                                page={page}
-                                onChange={handlePageChange}
-                                color="primary"
-                            />
-                        </Box>
-                    </div>
-                    {/* <Box sx={{display: "flex", justifyContent: "center", margin: '20px 0 20px 0'}}>
-                    <Pagination
-                        count={totalPages}
-                        page={page}
-                        onChange={(event, value) => setPage(value)}
-                        
-                    />
-                    </Box> */}
+                </div>
             </Container>
 
-            <Dialog open={openDialog} onClose={handleCloseDialog}>
-                <DialogTitle>면접 후기 상세 정보 및 댓글</DialogTitle>
-                <DialogContent>
+            <Dialog open={openDialog} onClose={handleCloseDialog} PaperProps={{
+                style: {
+                    width: '32%', 
+                    maxWidth: 'none', 
+                },
+            }}>
+                <DialogTitle sx={{ fontSize: "20px", borderBottom: "2px solid blue" }}>면접 후기 상세 정보 및 댓글</DialogTitle>
+                <DialogContent >
                     {selectedReview && (
                         <>
-                            <Typography variant="h6">제목: {selectedReview.r_title}</Typography>
-                            <Typography>작성자: {selectedReview.r_id}</Typography>
-                            <Typography>내용:</Typography>
-                            <TextField
-                                multiline
-                                fullWidth
-                                rows={6}
-                                variant="filled"
-                                value={editingContent}
-                                onChange={handleContentChange}
-                                disabled={selectedReview.r_id !== userStore.id}
-                            />
-                            <Typography>회사: {selectedReview.r_company}</Typography>
-                            <Typography>작성일: {selectedReview.r_regdate}</Typography>
-                            <Typography variant="h6" style={{ marginTop: 20 }}>
-                                댓글 작성
-                            </Typography>
-                            <TextField
-                                fullWidth
-                                multiline
-                                rows={4}
-                                variant="outlined"
-                                placeholder="댓글을 입력하세요"
-                                value={commentContent}
-                                onChange={handleCommentChange}
-                                style={{ marginTop: 10 }}
-                            />
-                            <Button onClick={handlePostComment} color="primary" style={{ marginTop: 10 }}>
-                                댓글 작성
-                            </Button>
+                            <Typography sx={{ fontSize: "20px", marginTop: "10px", color: "blue" }}>제목: {selectedReview.r_title}</Typography>
+                            <Typography sx={{ fontSize: "15px", marginTop: "5px" }}>작성자: {selectedReview.r_id}</Typography>
+                            <Typography sx={{ fontSize: "13px" }}>회사: {selectedReview.r_company}</Typography>
+                            <Typography sx={{ color: "gray", fontSize: "12px", marginBottom: "5px" }}>작성일: {selectedReview.r_regdate}</Typography>
+
+                            <Box >
+                                <Typography sx={{ fontSize: "18px", marginTop: "8px" }}>내용</Typography>
+                                {selectedReview.r_id !== userStore.id ?
+                                    (<Typography className="dialogcotent"
+                                        multiline
+                                        fullWidth
+                                        sx={{ marginTop: 1 }}
+                                        value={editingContent}
+                                        onChange={handleContentChange}
+                                    >{editingContent}</Typography>) :
+                                    (<TextField
+                                        multiline
+                                        fullWidth
+                                        sx={{ backgroundColor: "white", marginTop: 1 }}
+                                        value={editingContent}
+                                        onChange={handleContentChange}
+                                    />)}
+                            </Box>
+                            <Box >
+                                <Typography variant="h6" style={{ marginTop: 20, fontSize: "18px", display: 'flex', justifyContent: 'space-between' }}>
+                                    댓글 작성
+                                </Typography>
+                                <TextField
+                                    fullWidth
+                                    multiline
+                                    variant="outlined"
+                                    placeholder="댓글을 입력하세요"
+                                    value={commentContent}
+                                    onChange={handleCommentChange}
+                                />
+                                <Button onClick={handlePostComment} color="primary" style={{ marginTop: "10px", fontSize: "13px", marginLeft: "385px", backgroundColor: "blue", color: "white" }}>
+                                    댓글 작성
+                                </Button>
+                            </Box>
                             {/* 댓글 목록 표시 */}
-                            <Typography variant="h6" style={{ marginTop: 20 }}>
+                            <Typography variant="h6" style={{ marginTop: "5px" }}>
                                 댓글 목록
                             </Typography>
-                            {comments.length === 0 ? (
+                            {/* comments 배열의 길이가 0인 경우 또는 모든 댓글이 삭제된 경우 */}
+                            {comments.length === 0 || comments.every(comment => comment.active === '1') ? (
                                 <Typography>댓글이 없습니다.</Typography>
                             ) : (
                                 <Table>
                                     <TableBody>
-                                        {comments.filter(comments => comments.active !== '1').map((comments) => (
-                                            <TableRow key={comments.re_idx}>
-                                                <TableCell>{comments.re_idx}</TableCell>
-                                                <TableCell>{comments.id}</TableCell>
-                                                <TableCell>
-                                                    {editingCommentId === comments.re_idx ? (
+                                        {comments.filter(comment => comment.active !== '1').map((comment) => (
+                                            <TableRow key={comment.re_idx}>
+                                                <TableCell>{comment.re_idx}</TableCell>
+                                                <TableCell>{comment.id}</TableCell>
+                                                <TableCell style={{ whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis', maxWidth: '300px', fontSize: '12px' }}>
+                                                    {editingCommentId === comment.re_idx ? (
                                                         <TextField
                                                             fullWidth
                                                             multiline
-                                                            rows={4}
                                                             variant="outlined"
                                                             value={editingCommentContent}
+                                                            sx={{ whiteSpace: 'normal', minWidth: '70px' }}
                                                             onChange={(e) => setEditingCommentContent(e.target.value)}
                                                         />
                                                     ) : (
-                                                        comments.re_content
+                                                        comment.re_content
                                                     )}
                                                 </TableCell>
-                                                <TableCell>{comments.re_regdate}</TableCell>
+                                                <TableCell>{comment.re_regdate}</TableCell>
                                                 <TableCell>
-                                                    {comments.id === userStore.id && (
-                                                        <>
-                                                            {editingCommentId === comments.re_idx ? (
-                                                                <Button onClick={() => handleUpdateComment(comments.re_idx)} color="primary">
+                                                    {comment.id === userStore.id && (
+                                                        <Box sx={{ display: 'flex', marginTop: 1, fontSize: '10px' }}>
+                                                            {editingCommentId === comment.re_idx ? (
+                                                                <Button onClick={() => handleUpdateComment(comment.re_idx)} color="primary" sx={{ whiteSpace: 'nowrap', fontSize: '13px', minWidth: 'auto', marginRight: 1 }}>
                                                                     저장
                                                                 </Button>
                                                             ) : (
-                                                                <Button onClick={() => handleEditComment(comments.re_idx, comments.re_content)} color="primary">
+                                                                <Button onClick={() => handleEditComment(comment.re_idx, comment.re_content)} color="primary" sx={{ whiteSpace: 'nowrap', fontSize: '13px' }}>
                                                                     수정
                                                                 </Button>
                                                             )}
-                                                            <Button onClick={() => handleDeleteComment(comments.re_idx)} color="primary">
+                                                            <Button onClick={() => handleDeleteComment(comment.re_idx)} color="primary" sx={{ whiteSpace: 'nowrap', fontSize: '13px' }}>
                                                                 삭제
                                                             </Button>
-
-                                                        </>
-
+                                                        </Box>
                                                     )}
                                                 </TableCell>
                                             </TableRow>
@@ -461,21 +437,21 @@ export default function ReviewList() {
                         </>
                     )}
                 </DialogContent>
-                <DialogActions>
+                <DialogActions sx={{ display: 'flex', flexDirection: 'row', justifyContent: 'flex-end', gap: 1 }}>
                     {userStore.id === selectedReview?.r_id && (
                         <>
-                            <Button onClick={handleUpdate} color="primary">
+                            <Button onClick={handleUpdate} color="primary" sx={{ whiteSpace: 'nowrap' }}>
                                 수정
                             </Button>
-                            <Button onClick={handleDelete} color="primary">
+                            <Button onClick={handleDelete} color="primary" sx={{ whiteSpace: 'nowrap' }}>
                                 삭제
                             </Button>
                         </>
                     )}
-                    <Button onClick={handleReportReview} color="primary">
+                    <Button onClick={handleReportReview} color="primary" sx={{ whiteSpace: 'nowrap' }}>
                         신고하기
                     </Button>
-                    <Button onClick={handleCloseDialog} color="primary">
+                    <Button onClick={handleCloseDialog} color="primary" sx={{ whiteSpace: 'nowrap' }}>
                         닫기
                     </Button>
                 </DialogActions>

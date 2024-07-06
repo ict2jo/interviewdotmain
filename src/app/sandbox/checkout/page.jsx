@@ -15,7 +15,6 @@ const CheckoutPage = observer(() => {
     const agreementWidgetRef = useRef(null);
     const [price, setPrice] = useState(null);
     const clientKey = process.env.NEXT_PUBLIC_TOSS_CLIENT_KEY;
-
     
     useEffect(() => {
         // URL에서 query parameter를 추출하여 price 상태 업데이트
@@ -25,19 +24,16 @@ const CheckoutPage = observer(() => {
             return priceParam ? parseInt(priceParam, 10) : null; // null로 초기화
         };
         
-        // 페이지 로드 시 price 상태 업데이트
         setPrice(getPriceFromUrl());
-        
     }, []);
     
     useEffect(() => {
-        console.log("CCCCCCid"+userStore.id);
         if (price !== null) {
             // Toss Payments SDK 로드 및 초기화
             const loadPayment = async () => {
                 try {
                     const paymentWidget = await loadPaymentWidget(clientKey, ANONYMOUS);
-
+                    
                     if (paymentWidgetRef.current == null) {
                         paymentWidgetRef.current = paymentWidget;
                     }
@@ -48,7 +44,6 @@ const CheckoutPage = observer(() => {
                         { variantKey: 'DEFAULT' }
                     );
                     paymentMethodsWidgetRef.current = paymentMethodsWidget;
-
                     // 약관 렌더링
                     agreementWidgetRef.current = paymentWidgetRef.current.renderAgreement('#agreement', {
                         variantKey: 'DEFAULT',
@@ -66,14 +61,12 @@ const CheckoutPage = observer(() => {
     // 구매하기
     const handlePaymentRequest = async () => {
         const paymentWidget = paymentWidgetRef.current;
-
-        console.log("id11111 "+userStore.id);
-        const id = userStore.id
+        
         try {
             // 결제 요청
             const orderId = generateRandomString();
             const orderName = '인터뷰닷 이용권';
-
+            
             await paymentWidget?.requestPayment({
                 orderId,
                 orderName,
@@ -81,15 +74,8 @@ const CheckoutPage = observer(() => {
                 successUrl: window.location.origin + '/sandbox/success' + window.location.search,
                 failUrl: window.location.origin + '/sandbox/fail' + window.location.search,
             });
-
-            // 결제 성공 시 서버로 u_idx와 orderId 전송
-            await axios.post('/payments/confirm', {
-                orderId,
-                orderName,
-                price,
-                id: userStore.id
-            });
-
+            
+            
         } catch (error) {
             console.error('Payment request failed:', error);
         }
