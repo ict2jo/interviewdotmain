@@ -48,10 +48,15 @@ height: 300px;
 }
 .inqwritefield2{
     width: 95%;
-    height: 90%;
+    height: 80%;
     margin: 10px;
     outline: none;
 }
 .inqwrite{
     margin-left: 30px;
 }
+textarea {
+    width: 100%;
+    border: none;
+    resize: none;
+  }
