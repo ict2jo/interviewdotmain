@@ -41,6 +41,8 @@ import ReviewList from "./review/reviewList/page";
 import SuccessList from "./review/successList/page";
 import Review_List_Write from "./review/review_list_write/page";
 import Review_Success_Write from "./review/review_success_write/page";
+import Resume from "./mypage/Resume/page";
+import Resume_insert from "./mypage/Resume_insert/page";
 
 
 
@@ -151,6 +153,10 @@ function Home() {
         return <FindPwContent />;
       case "myrecruitment":
         return <Myrecruitment />;
+      case "resume":
+        return <Resume />;
+      case "resume_insert":
+        return <Resume_insert />;
       default:
         return <Loading />;
     }
