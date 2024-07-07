@@ -1,3 +1,4 @@
+"use client"
 import React, { useContext, useEffect, useState } from 'react';
 import './introduction.css';
 import { Button, CircularProgress } from '@mui/material';
@@ -9,7 +10,7 @@ import Worklist2 from './worklist/page';
 import Schoollist2 from './school/page';
 import Experience2 from './experience/page';
 
-export default function Introduction() {
+export default function Resume_insert() {
     const menuStore = useContext(MenuContext);
     const [loading, setLoading] = useState(true);
     const [location, setLocation] = useState('');
@@ -17,18 +18,8 @@ export default function Introduction() {
     const [classInfo, setClassInfo] = useState('');
     const [career, setCareer] = useState('');
     const [selfIntroduction, setSelfIntroduction] = useState('');
-    const [uvo, setUvo] = useState({
-        u_idx: userStore.u_idx,
-        id: userStore.id,
-        name: userStore.name,
-        phonenumber: userStore.phonenumber,
-        email: userStore.email,
-        p_job: userStore.p_job,
-        p_class: userStore.p_class,
-        p_career: userStore.p_career,
-        p_location: userStore.p_location,
-        addr: userStore.addr
-    });
+    const [title, setTitle] = useState('');
+
 
     const handleWorklistChange = (selectedJob) => {
         setJob(selectedJob);
@@ -48,6 +39,8 @@ export default function Introduction() {
 
     useEffect(() => {
         async function fetchData() {
+            console.log("현재아이디"+userStore.u_idx)
+    console.log("현재아이디"+userStore.id)
             try {
                 const selfProfileResponse = await axios.get(`/mypage/selfprofile?id=${userStore.id}`);
                 
@@ -56,11 +49,6 @@ export default function Introduction() {
                 } else {
                     const selfProfileData = selfProfileResponse.data[0];
                     userStore.setAddr(selfProfileData.addr);
-                    userStore.setP_job(selfProfileData.p_job);
-                    userStore.setP_class(selfProfileData.p_class);
-                    userStore.setP_career(selfProfileData.p_career);
-                    userStore.setP_location(selfProfileData.p_location);
-                    setDefaultValues(selfProfileData);
                 }
                 setLoading(false);
             } catch (error) {
@@ -72,13 +60,7 @@ export default function Introduction() {
         fetchData();
     }, [userStore]);
 
-    const setDefaultValues = (selfProfileData) => {
-        setLocation(selfProfileData.p_location);
-        setJob(selfProfileData.p_job);
-        setClassInfo(selfProfileData.p_class);
-        setCareer(selfProfileData.p_career);
-        setSelfIntroduction(selfProfileData.field);
-    };
+    
 
     const handleMenuClick = (menu) => {
         menuStore.setSelectedMenu(menu);
@@ -86,16 +68,18 @@ export default function Introduction() {
 
     const handleSaveChanges = async () => {
         try {
+            
             // 서버에 수정된 데이터 저장 로직
             const response = await axios.post(
-                'http://localhost:8080/introduce/update',
+                'http://localhost:8080/introduce/insert',
                 {
-                    u_idx: userStore.u_idx,
-                    p_location: location,
-                    p_job: job,
-                    p_class: classInfo,
-                    p_career: career,
-                    selfIntroduction: selfIntroduction
+                    id: userStore.id,
+                    location: location,
+                    job: job,
+                    class: classInfo,
+                    career: career,
+                    content: selfIntroduction,
+                    title: title
                 });
 
             if (response.status === 200) {
@@ -116,7 +100,13 @@ export default function Introduction() {
     return (
         <>
             <div className='profile_con'>
-                <h2 className='mymaintext'>이력서</h2>
+                <h2 className='mymaintext'>이력서 작성</h2>
+                <p><input 
+                    type="text" 
+                    style={{border:"1px solid blue"}}
+                    value={title} // 상태 변수와 바인딩
+                    onChange={(e) => setTitle(e.target.value)} // 변경 이벤트 핸들러 추가
+                /></p>
                 <div className='profile'>
                     <h3>인적사항</h3>
                     <table className='profile_t'>
@@ -132,10 +122,10 @@ export default function Introduction() {
                 <h3>희망 근무조건</h3>
                     <table className='profile_t'>
                         <tbody>
-                                <tr><th>근무지</th><td><Local2 uvo={uvo} handleLocationlistChange={handleLocationlistChange} /></td></tr>
-                                <tr><th>업종</th><td><Worklist2 uvo={uvo} handleWorklistChange={handleWorklistChange} /></td></tr>
-                                <tr><th>학력</th><td><Schoollist2 uvo={uvo} handleSchoollistChange={handleSchoollistChange} /></td></tr>
-                                <tr><th>경력</th><td><Experience2 uvo={uvo} handleCareerlistChange={handleCareerlistChange} /></td></tr>
+                                <tr><th>근무지</th><td><Local2  handleLocationlistChange={handleLocationlistChange} /></td></tr>
+                                <tr><th>업종</th><td><Worklist2  handleWorklistChange={handleWorklistChange} /></td></tr>
+                                <tr><th>학력</th><td><Schoollist2 handleSchoollistChange={handleSchoollistChange} /></td></tr>
+                                <tr><th>경력</th><td><Experience2 handleCareerlistChange={handleCareerlistChange} /></td></tr>
                         </tbody>
                     </table>
                 </div>
@@ -153,7 +143,6 @@ export default function Introduction() {
                     <Button variant="outlined" onClick={() => handleMenuClick("resume")}>뒤로가기</Button>
                     <Button variant="contained" onClick={handleSaveChanges}>저장하기</Button>
                     <Button variant="contained" onClick={() => handleMenuClick("verification")}>자기소개서 피드백 받기</Button>
-
                 </div>
             </div>
         </>

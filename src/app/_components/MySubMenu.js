@@ -20,10 +20,10 @@ export default function MySubmenu({handleMenuClick}) {
       </li>
       <li className="whitespace-nowrap">
         <div
-          onClick={() => handleMenuClick("intoduction")}
+          onClick={() => handleMenuClick("resume")}
           className="block px-4 py-2 hover:bg-primary-100"
         >
-          자기소개서
+          이력서
         </div>
       </li>
       <li className="whitespace-nowrap">

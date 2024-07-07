@@ -8,8 +8,8 @@
 .write_container h1{
     font-size: 30px;
     text-align: center;
-    margin-bottom: 20px;
-    margin-top: 20px;
+    font-weight: bold;
+    margin-top: 60px;
 }
 
 .write_list{
@@ -22,17 +22,17 @@
 .write_area{
     display: flex;
     flex-direction: row;
-    max-width: 1000px;
+    max-width: 1300px;
     margin-bottom: 20px;
 }
 .write_box {
     background-color: white;
-    width: 700px;
+    width: 680px;
     padding: 20px;
     border-top: 5px solid blue;
     text-align: left;
     margin-top: 50px;
-    margin-right: 10px;
+    margin-right: 320px;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* 그림자 효과 추가 */
 }
 .write_box input{

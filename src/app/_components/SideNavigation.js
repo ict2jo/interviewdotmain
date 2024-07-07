@@ -37,6 +37,7 @@ const SideNavigation = observer(() => {
 
   function handleLogout() {
     authStore.logout();
+    
     router.push("/");
   };
 

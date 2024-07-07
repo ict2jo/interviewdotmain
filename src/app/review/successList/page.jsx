@@ -36,7 +36,7 @@ export default function SuccessList() {
     const [commentContent, setCommentContent] = useState(""); // 댓글 내용 상태 추가
     const [page, setPage] = useState(1); // 현재 페이지 상태 추가
     const [totalPages, setTotalPages] = useState(""); // 전체 페이지 수 상태 추가
-    const successPerPage = 9; // 한 페이지당 보일 후기 개수
+    const successPerPage = 5; // 한 페이지당 보일 후기 개수
     const [editingCommentContent, setEditingCommentContent] = useState("");
     const [editingCommentId, setEditingCommentId] = useState("");
 
@@ -78,8 +78,8 @@ export default function SuccessList() {
 
     const handleSuccessClick = (success) => {
         if (!userStore.id) {
-            alert("로그인 후에 작성할 수 있습니다.");
-            router.push("/signin/login");
+            alert("로그인 후에 볼 수 있습니다.");
+            menuStore.setSelectedMenu("login");
             return;
         }
         setSelectedSuccess(success);
@@ -110,6 +110,12 @@ export default function SuccessList() {
 
     const handlePostComment = async () => {
         try {
+
+            // 사용자의 active 상태 확인
+            if(userStore.active === '1'){
+                alert('신고된 사용자는 권한이 없습니다.');
+                return;
+            }
             const response = await axios.post("http://localhost:8080/commentsucc/postcomment", {
                 s_idx: selectedSuccess.s_idx,
                 id: userStore.id,
@@ -128,6 +134,15 @@ export default function SuccessList() {
 
     const handleUpdate = async () => {
         try {
+
+            if(userStore.id !== selectedSuccess.s_id){
+                alert('해당 게시글의 작성자만 수정할 수 있습니다.');
+                return;
+            }
+            if(userStore.active === '1'){
+                alert('신고된 사용자는 수정할 수 없습니다.');
+                return;
+            }
             // 서버에 수정할 내용 전송
             const response = await axios.post("http://localhost:8080/success/updatesuccess", {
                 s_idx: selectedSuccess.s_idx,
@@ -157,6 +172,16 @@ export default function SuccessList() {
 
     const handleDelete = async () => {
         try {
+            // 게시글 작성자인지 확인
+            if(userStore.id !== selectedSuccess.s_id){
+                alert('해당 게시글의 작성자만 삭제할 수 있습니다.');
+                return;
+            }
+            // 사용자의 active 상태 확인
+            if(userStore.active === '1'){
+                alert('신고된 사용자는 삭제할 수 없습니다.');
+                return;
+            }
             // 서버에 삭제할 후기 정보 전송
             const response = await axios.post("http://localhost:8080/success/deletesuccess", {
                 s_idx: selectedSuccess.s_idx,
@@ -197,6 +222,18 @@ export default function SuccessList() {
 
     const handleDeleteComment = async (su_idx) => {
         try {
+            const commentToDelete = comments.find(comment => comment.su_idx === su_idx);
+            if (commentToDelete.id !== userStore.id) {
+                alert('해당 댓글의 작성자만 삭제할 수 있습니다.');
+                return;
+            }
+    
+            // 사용자의 active 상태 확인
+            if (userStore.active === '1') {
+                alert('신고된 사용자는 댓글을 삭제할 수 없습니다.');
+                return;
+            }
+
             const response = await axios.post("http://localhost:8080/commentsucc/deletecomment", {
                 su_idx: su_idx,
             })
@@ -221,17 +258,22 @@ export default function SuccessList() {
     const handleCloseDialog = () => {
         setOpenDialog(false);
         /* setSelectedSuccess(null); // 선택된 후기 초기화 */
-        setEditingContent(""); // 수정할 내용 초기화
+        // setEditingContent(""); // 수정할 내용 초기화
         setCommentContent(""); // 댓글 내용 초기화
         /* setComments([]); // 댓글 목록 초기화 */
     };
 
     const handleMenuClick = async (menu) => {
-        menuStore.setSelectedMenu(menu);
         if (!userStore.id) {
             alert("로그인 후에 작성할 수 있습니다.");
+            menuStore.setSelectedMenu("login");
             return;
         }
+        if(userStore.active === '1'){
+            alert('신고된 사용자는 권한이 없습니다.');
+            return;
+        }
+        menuStore.setSelectedMenu(menu);
         handleCloseDialog();
     };
 
@@ -241,6 +283,10 @@ export default function SuccessList() {
 
     const handleReportReview = async () => {
         try {
+            if(userStore.active === '1'){
+                alert("신고된 사용자는 권한이 없습니다.");
+                return;
+            }
             const response = await axios.post("http://localhost:8080/reportsucc/reportinsert", {
                 u_idx: selectedSuccess.u_idx,
                 u2_idx: userStore.u_idx,
@@ -270,10 +316,10 @@ export default function SuccessList() {
                 <Table sx={{ minWidth: 600 }} className="review_box">
                     <TableHead sx={{ borderTop: '3px solid blue' }}>
                         <TableRow>
-                            <TableCell sx={{ width: '100px', textAlign: 'center' }}>NO</TableCell>
+                            {/* <TableCell sx={{ width: '100px', textAlign: 'center' }}>NO</TableCell> */}
                             <TableCell sx={{ width: '100px', textAlign: 'center' }}>작성자</TableCell>
                             <TableCell sx={{ width: '100px', textAlign: 'center' }}>제목</TableCell>
-                            <TableCell sx={{ width: '300px', textAlign: 'center' }}>내용</TableCell>
+                            {/* <TableCell sx={{ width: '300px', textAlign: 'center' }}>내용</TableCell> */}
                             <TableCell sx={{ width: '100px', textAlign: 'center' }}>회사</TableCell>
                             <TableCell sx={{ width: '200px', textAlign: 'center' }}>작성일</TableCell>
                         </TableRow>
@@ -290,24 +336,24 @@ export default function SuccessList() {
                                 }}
                                 style={{ cursor: success.active === '1' ? 'default' : 'pointer' }}
                             >
-                                <TableCell sx={{ width: '100px', textAlign: 'center' }}>{success.active === '1' ? '' : success.s_idx}</TableCell>
+                                {/* <TableCell sx={{ width: '100px', textAlign: 'center' }}>{success.active === '1' ? '' : success.s_idx}</TableCell> */}
                                 <TableCell sx={{ width: '100px', textAlign: 'center' }}>{success.active === '1' ? '' : success.s_id}</TableCell>
                                 <TableCell sx={{ width: '100px', textAlign: 'center' }}>{success.active === '1' ? '' : success.s_title}</TableCell>
                                 <TableCell colSpan={1} sx={{ textAlign: 'center' }}>
                                     {success.active === '1' ? (
                                         <span style={{ color: 'red', marginLeft: '10px', width: '300px' }}>삭제된 게시물입니다.</span>
                                     ) : (
-                                        success.s_content
+                                        success.s_company
                                     )}
                                 </TableCell>
-                                <TableCell sx={{ width: '100px', textAlign: 'center' }}>{success.active === '1' ? '' : success.s_company}</TableCell>
+                                {/* <TableCell sx={{ width: '100px', textAlign: 'center' }}>{success.active === '1' ? '' : success.s_company}</TableCell> */}
                                 <TableCell sx={{ width: '200px', textAlign: 'center' }}>{success.active === '1' ? '' : success.s_regdate.substring(0, 10)}</TableCell>
                             </TableRow>
                         ))}
                     </TableBody>
                 </Table>
                 <Box sx={{ display: 'flex', justifyContent: 'flex-end' }}>
-                    <Button variant='outlined' onClick={() => handleMenuClick(`review/review_success_write`)} color="primary" style={{ textAlign: "center" }}>
+                    <Button variant='contained' onClick={() => handleMenuClick(`review/review_success_write`)} color="primary"  style={{ textAlign: "center" }}>
                         작성하기
                     </Button>
                 </Box>
@@ -368,7 +414,7 @@ export default function SuccessList() {
                                 value={commentContent}
                                 onChange={handleCommentChange}
                             />
-                            <Button onClick={handlePostComment} color="primary" style={{ marginTop: "10px", fontSize: "13px", marginLeft: "385px", backgroundColor: "blue", color: "white" }}>
+                            <Button onClick={handlePostComment} color="primary" variant='contained' style={{ marginTop: "10px", fontSize: "13px", marginLeft: "385px"}}>
                                 댓글 작성
                             </Button>
                             {/* 댓글 목록 표시 */}

@@ -9,7 +9,7 @@ import { observer } from "mobx-react-lite";
 import AI_submenu from "./AI_submenu";
 import userStore from "@/stores/UserStore";
 import ReviewSubmenu from "./reviewSub";
-import Pay_submenu from "./pay_submenu";
+import Pay_submenu from "./Pay_submenu";
 import AuthStore from "@/stores/AuthStore";
 const Navigation = observer(() => {
   const [activeMenu, setActiveMenu] = useState(null);
@@ -136,7 +136,7 @@ const Navigation = observer(() => {
           >
             <Typography
               className="block"
-              onClick={() => handleMenuClick("review")}
+              /* onClick={userStore.name ? () => handleMenuClick("review") : () => handleMenuClick("login")} */
             >
               게시판
             </Typography>

@@ -42,7 +42,7 @@ const nextConfig = {
       },
       {
         source : "/interview/start",
-        destination : "http://192.168.53.139:8010/video/"
+        destination : "http://192.168.0.6:8010/video/"
       },
       {
           source : "/review/reviewlist",

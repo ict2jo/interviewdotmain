@@ -12,6 +12,9 @@ import axios from "axios";
 import userStore from "@/stores/UserStore";
 import menuStore from "@/stores/MenuStore";
 import dynamic from "next/dynamic";
+import { menu } from "@nextui-org/react";
+import { useHistory } from "react-router-dom";
+import { useRouter } from "next/navigation";
 
 const ReactQuill = dynamic(() => import('react-quill'), { ssr: false });
 
@@ -21,6 +24,7 @@ export default function Review_List_Write() {
     const [r_content, setContent] = useState('');
     const [snackbarOpen, setSnackbarOpen] = useState(false);
     const [snackbarMessage, setSnackbarMessage] = useState('');
+    const router = useRouter();
 
     const name = userStore.name;
 
@@ -30,7 +34,11 @@ export default function Review_List_Write() {
     }, [name]); */
 
     const typingTimeoutRef = useRef(null); // 타이핑 디바운스를 위한 타이머 참조
-
+    
+    /* const handleBackReview = async(menu) => {
+        
+        
+    } */
     // 리뷰 작성 API 호출 함수
     const handleSubmitReview = async () => {
         try {
@@ -92,6 +100,11 @@ export default function Review_List_Write() {
         console.log('입력 : ', r_content);
     }, [r_content]);
 
+    const handleBackReview = () => {
+        // 이전 페이지로 이동
+        window.history.back();
+    };
+
     return (
         <>
             <Container>
@@ -101,12 +114,12 @@ export default function Review_List_Write() {
                         <div className="review_areas">
                             <div className="review_boxs">
                                 <h2>면접 후기</h2>
-                                작성자 : <input type="text" value={name} disabled /><br />
-                                제목   : <input type="text" value={r_title} onChange={(e) => setTitle(e.target.value)} />
-                            </div>
-                            <div className="review_sub">
+                                작성자 : <span disabled />{name} <br />
+                                제목   : <input type="text" value={r_title} onChange={(e) => setTitle(e.target.value)} /><br />
                                 회사명 : <input type="text" value={r_company} onChange={(e) => setCompany(e.target.value)} />
                             </div>
+                            {/* <div className="review_sub">
+                            </div> */}
                         </div>
                     </div>
                     <div className="review_content" style={{ height: '500px' }}>
@@ -140,8 +153,8 @@ export default function Review_List_Write() {
                         />
                     </div>
                     <div>
-                        <Button className="write_btn1" variant="contained" onClick={() => window.history.back()}>목록</Button>
-                        <Button className="write_btn1" variant="contained" onClick={handleSubmitReview}>작성 완료</Button>
+                        <Button className="write_btn1" variant="contained" sx={{marginBottom:'80px'}} onClick={handleBackReview}>목록</Button>
+                        <Button className="write_btn1" variant="contained" sx={{marginBottom:'80px'}} onClick={handleSubmitReview}>작성 완료</Button>
                     </div>
                 </div>
             </Container>
