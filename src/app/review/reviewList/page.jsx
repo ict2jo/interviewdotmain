@@ -79,12 +79,12 @@ export default function ReviewList() {
     const handleReviewClick = (review) => {
         if (!userStore.id) {
             alert("로그인 후에 볼 수 있습니다.");
-            menuStore.setSelectedMenu("login"); 
+            menuStore.setSelectedMenu("login");
             return;
         }
         setSelectedReview(review);
-        setEditingContent(review.r_content); 
-        fetchComments(review.r_idx); 
+        setEditingContent(review.r_content);
+        fetchComments(review.r_idx);
         setOpenDialog(true);
     };
 
@@ -96,12 +96,36 @@ export default function ReviewList() {
         console.log("comments", comments);
     }, [commentContent])
 
+
+    // useEffect(() => {
+    //     if (selectedReview && userStore.active === '0') {
+    //         // selectedReview가 존재하고, 사용자의 active 상태가 '0'일 때 작동할 코드 추가
+    //         // 예를 들어, 다음과 같은 방법으로 작성, 수정, 삭제 기능을 활성화할 수 있습니다.
+    //         console.log("User can edit or delete their own reviews and comments.");
+    //     }
+    // }, [selectedReview, userStore.active]);
+
+   useEffect(() => {
+    
+   })
+
     const handleContentChange = (event) => {
         setEditingContent(event.target.value); // 수정할 내용 업데이트
     };
 
     const handleUpdate = async () => {
         try {
+
+            if (userStore.id !== selectedReview.r_id) {
+                alert('해당 게시글의 작성자만 수정할 수 있습니다.');
+                return;
+            }
+
+            if (userStore.active === '1') {
+                alert('신고된 사용자는 수정할 수 없습니다.');
+                return;
+            }
+
             // 서버에 수정할 내용 전송
             const response = await axios.post("http://localhost:8080/review/updatereview", {
                 r_idx: selectedReview.r_idx,
@@ -132,6 +156,14 @@ export default function ReviewList() {
 
     const handleDelete = async () => {
         try {
+            if (userStore.id !== selectedReview.r_id) {
+                alert('해당 게시글의 작성자만 삭제할 수 있습니다.');
+                return;
+            }
+            if (userStore.active === '1') {
+                alert('신고된 사용자는 삭제할 수 없습니다.');
+                return;
+            }
             // 서버에 삭제할 리뷰 정보 전송
             const response = await axios.post("http://localhost:8080/review/deletereview", {
                 r_idx: selectedReview.r_idx,
@@ -161,6 +193,10 @@ export default function ReviewList() {
 
     const handlePostComment = async () => {
         try {
+            if (userStore.active === '1') {
+                alert('신고된 사용자는 권한이 없습니다.');
+                return;
+            }
             const response = await axios.post("http://localhost:8080/comments/postcomment", {
                 r_idx: selectedReview.r_idx,
                 id: userStore.id,
@@ -185,12 +221,22 @@ export default function ReviewList() {
 
 
     const handleEditComment = (re_idx, re_content) => {
-        setEditingCommentId(re_idx);
-        setEditingCommentContent(re_content);
+        // 신고된 사용자가 아닌 경우에만 수정 가능
+        if (userStore.active !== '1') {
+            setEditingCommentId(re_idx);
+            setEditingCommentContent(re_content);
+        } else {
+            alert('신고된 사용자는 댓글을 수정할 수 없습니다.');
+        }
     }
 
     const handleUpdateComment = async (re_idx) => {
         try {
+            // 신고된 사용자는 수정할 수 없음
+            if (userStore.active === '1') {
+                alert('신고된 사용자는 댓글을 수정할 수 없습니다.');
+                return;
+            }
             const response = await axios.post("http://localhost:8080/comments/updatecomment", {
                 re_idx: re_idx,
                 re_content: editingCommentContent
@@ -210,6 +256,18 @@ export default function ReviewList() {
 
     const handleDeleteComment = async (re_idx) => {
         try {
+            // 댓글 작성자인지 확인
+            const commentToDelete = comments.find(comment => comment.re_idx === re_idx);
+            if (commentToDelete.id !== userStore.id) {
+                alert('해당 댓글의 작성자만 삭제할 수 있습니다.');
+                return;
+            }
+
+            // 사용자의 active 상태 확인
+            if (userStore.active === '1') {
+                alert('신고된 사용자는 댓글을 삭제할 수 없습니다.');
+                return;
+            }
             const response = await axios.post("http://localhost:8080/comments/deletecomment", {
                 re_idx: re_idx,
             })
@@ -238,16 +296,25 @@ export default function ReviewList() {
     };
 
     const handleMenuClick = async (menu) => {
-        menuStore.setSelectedMenu(menu);
         if (!userStore.id) {
             alert("로그인 후에 작성할 수 있습니다.");
             menuStore.setSelectedMenu("login");
         }
+        if (userStore.active === '1') {
+            alert('신고된 사용자는 권한이 없습니다.');
+            return;
+        }
+        menuStore.setSelectedMenu(menu);
         handleCloseDialog();
+
     };
 
     const handleReportReview = async () => {
         try {
+            if(userStore.active === '1'){
+                alert("신고된 사용자는 권한이 없습니다.");
+                return;
+            }
             const response = await axios.post("http://localhost:8080/report/reportinsert", {
                 u_idx: selectedReview.u_idx,
                 u2_idx: userStore.u_idx,
@@ -335,8 +402,8 @@ export default function ReviewList() {
 
             <Dialog open={openDialog} onClose={handleCloseDialog} PaperProps={{
                 style: {
-                    width: '32%', 
-                    maxWidth: 'none', 
+                    width: '32%',
+                    maxWidth: 'none',
                 },
             }}>
                 <DialogTitle sx={{ fontSize: "20px", borderBottom: "2px solid blue" }}>면접 후기 상세 정보 및 댓글</DialogTitle>
@@ -378,7 +445,7 @@ export default function ReviewList() {
                                     value={commentContent}
                                     onChange={handleCommentChange}
                                 />
-                                <Button onClick={handlePostComment} variant="contained" color="primary" style={{ marginTop: "10px", fontSize: "13px", marginLeft: "385px"}}>
+                                <Button onClick={handlePostComment} variant="contained" color="primary" style={{ marginTop: "10px", fontSize: "13px", marginLeft: "385px" }}>
                                     댓글 작성
                                 </Button>
                             </Box>
