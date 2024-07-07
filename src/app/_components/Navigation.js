@@ -150,7 +150,6 @@ const Navigation = observer(() => {
           >
             <Typography
               className="block"
-              onClick={() => handleMenuClick("pay")}
             >
               이용권
             </Typography>

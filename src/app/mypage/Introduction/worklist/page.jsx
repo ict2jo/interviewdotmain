@@ -4,6 +4,7 @@ import MenuItem from '@mui/material/MenuItem';
 import FormControl from '@mui/material/FormControl';
 import Select from '@mui/material/Select';
 import InputLabel from '@mui/material/InputLabel';
+import { useEffect } from 'react';
 
 const ITEM_HEIGHT = 28;
 const ITEM_PADDING_TOP = 2;
@@ -29,14 +30,18 @@ const worklist = [
     '영업판매',
 ];
 
-export default function Worklist2({ handleWorklistChange }) {
-    const [job, setJob] = React.useState([]);
+export default function Worklist2({ job, handleWorklistChange }) {
+    const [selectedJob, setSelectedJob] = React.useState([]);
 
+    useEffect(() => {
+        if (job) {
+            setSelectedJob(job.split(','));
+        }
+    }, [job]);
 
     const handleChange = (event) => {
         const { value } = event.target;
-
-        setJob(value);
+        setSelectedJob(value);
         handleWorklistChange(value.join(','));
     };
 
@@ -47,7 +52,7 @@ export default function Worklist2({ handleWorklistChange }) {
                 labelId="demo-multiple-name-label"
                 id="demo-multiple-name"
                 multiple
-                value={job}
+                value={selectedJob}
                 onChange={handleChange}
                 input={<OutlinedInput label="job" />}
                 MenuProps={MenuProps}

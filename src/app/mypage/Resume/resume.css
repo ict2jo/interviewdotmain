@@ -1,5 +1,5 @@
 .resume_con {
-    width: 40%;
+    width: 50%;
     padding: 50px;
     margin: 0 auto;
     max-width: 1200px; 
@@ -14,7 +14,7 @@
 }
 
 .resume_card {
-    border: 2px solid blue;
+    border: 3px solid blue;
     width: 100%;
     padding: 20px 10px;
     position: relative;
@@ -24,11 +24,10 @@
 }
 
 .resume_t {
-    width: 80%;
+    width: 60%;
     height: auto;
     margin: 20px 30px 50px;
     text-align: left;
-
 }
 
 .resume_t tr {
@@ -45,19 +44,22 @@
     padding: 10px 0px;
 }
 
-
-
-.resume_card .edit_button {
-    position: absolute; /* 절대 위치 설정 */
-    right: 10px; /* 오른쪽에 배치 */
-    bottom: 10px; /* 아래쪽에 배치 */
+.resume_card .button_group {
+    display: flex; 
+    justify-content: flex-end; 
+    position: absolute; 
+    right: 10px; 
+    bottom: 10px; 
+    gap: 10px;
 }
 
 .resume_con .write_button {
-    display: block; /* 블록 요소로 설정 */
-    margin: 10px 22px 0 auto; /* 오른쪽 아래에 배치 */
+    width: 100%; 
+    margin: 20px 0px 100px;
+    padding: 15px; 
+    font-size: 18px;
 }
 
-.resume_list{
+.resume_list {
     margin: 20px;
 }

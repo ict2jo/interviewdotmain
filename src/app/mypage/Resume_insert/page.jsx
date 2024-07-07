@@ -9,6 +9,11 @@ import Local2 from './local/page';
 import Worklist2 from './worklist/page';
 import Schoollist2 from './school/page';
 import Experience2 from './experience/page';
+import PersonRoundedIcon from '@mui/icons-material/PersonRounded';
+import CakeRoundedIcon from '@mui/icons-material/CakeRounded';
+import EmailRoundedIcon from '@mui/icons-material/EmailRounded';
+import PhoneAndroidRoundedIcon from '@mui/icons-material/PhoneAndroidRounded';
+import HomeRoundedIcon from '@mui/icons-material/HomeRounded';
 
 export default function Resume_insert() {
     const menuStore = useContext(MenuContext);
@@ -39,8 +44,6 @@ export default function Resume_insert() {
 
     useEffect(() => {
         async function fetchData() {
-            console.log("현재아이디"+userStore.u_idx)
-            console.log("현재아이디"+userStore.id)
             try {
                 const selfProfileResponse = await axios.get(`/mypage/selfprofile?id=${userStore.id}`);
                 
@@ -66,7 +69,7 @@ export default function Resume_insert() {
         menuStore.setSelectedMenu(menu);
     };
 
-    const handleSaveChanges = async () => {
+    const handleSaveChanges = async (menu) => {
         try {
             
             // 서버에 수정된 데이터 저장 로직
@@ -83,13 +86,13 @@ export default function Resume_insert() {
                 });
 
             if (response.status === 200) {
-                alert('자기소개서가 성공적으로 저장되었습니다.');
+                alert('이력서가 성공적으로 저장되었습니다.');
+                menuStore.setSelectedMenu(menu);
             } else {
                 throw new Error(response.data.error || `Request failed with status ${response.status}`);
             }
         } catch (error) {
-            alert("데이터 수정 중 오류가 발생했습니다.");
-            console.error("데이터 수정 중 오류가 발생했습니다:", error);
+            alert("이력서 저장 중 오류가 발생했습니다.");
         }
     };
 
@@ -103,17 +106,18 @@ export default function Resume_insert() {
                 <h2 className='mymaintext'>이력서 작성</h2>
                 <p><input 
                     type="text" 
+                    placeholder='이력서 제목을 작성하세요'
                     style={{border:"1px solid blue"}}
-                    value={title} // 상태 변수와 바인딩
-                    onChange={(e) => setTitle(e.target.value)} // 변경 이벤트 핸들러 추가
+                    value={title}
+                    onChange={(e) => setTitle(e.target.value)} 
                 /></p>
                 <div className='profile'>
                     <h3>인적사항</h3>
                     <table className='profile_t'>
                         <tbody>
-                            <tr><td>ㅇ {userStore.name}</td><td>ㅇ {userStore.birth}</td></tr>
-                            <tr><td>ㅇ {userStore.email}</td><td>ㅇ {userStore.phonenumber}</td></tr>
-                            <tr><td colSpan="2">ㅇ {userStore.addr}</td></tr>
+                            <tr><td><PersonRoundedIcon /> &nbsp; {userStore.name}</td><td><CakeRoundedIcon /> &nbsp; {userStore.birth}</td></tr>
+                            <tr><td><EmailRoundedIcon/> &nbsp; {userStore.email}</td><td><PhoneAndroidRoundedIcon /> &nbsp; {userStore.phonenumber}</td></tr>
+                            <tr><td colSpan="2"><HomeRoundedIcon /> &nbsp; {userStore.addr}</td></tr>
                         </tbody>
                     </table>
                 </div>
@@ -141,7 +145,7 @@ export default function Resume_insert() {
 
                 <div className='mybut'>
                     <Button variant="outlined" onClick={() => handleMenuClick("resume")}>뒤로가기</Button>
-                    <Button variant="contained" onClick={handleSaveChanges}>저장하기</Button>
+                    <Button variant="contained" onClick={() => handleSaveChanges("resume")}>저장하기</Button>
                     <Button variant="contained" onClick={() => handleMenuClick("verification")}>자기소개서 피드백 받기</Button>
                 </div>
             </div>

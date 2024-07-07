@@ -80,7 +80,7 @@ export default function Verification() {
     }
   };
 
-  const handleSave = async () => {
+  const handleSave = async (menu) => {
     try {
       const response = await axios.post(
         'http://localhost:8080/introduce/save',
@@ -97,6 +97,7 @@ export default function Verification() {
   
       if (response.status === 200) {
         alert('자기소개서가 성공적으로 저장되었습니다.');
+        menuStore.setSelectedMenu(menu);
       } else {
         throw new Error(response.data.error || `Request failed with status ${response.status}`);
       }
@@ -150,7 +151,7 @@ export default function Verification() {
               style={{ resize: 'none', margin: '0px' }}
             />
             <div className="button-wrapper">
-              <Button onClick={handleSave} disabled={!correctedEssay} variant="contained">
+              <Button onClick={() => handleSave("resume")} disabled={!correctedEssay} variant="contained">
                 저장하기
               </Button>
             </div>
