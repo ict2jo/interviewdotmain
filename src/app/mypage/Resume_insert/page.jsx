@@ -1,3 +1,4 @@
+"use client"
 import React, { useContext, useEffect, useState } from 'react';
 import './introduction.css';
 import { Button, CircularProgress } from '@mui/material';
@@ -17,18 +18,8 @@ export default function Resume_insert() {
     const [classInfo, setClassInfo] = useState('');
     const [career, setCareer] = useState('');
     const [selfIntroduction, setSelfIntroduction] = useState('');
-    const [uvo, setUvo] = useState({
-        u_idx: userStore.u_idx,
-        id: userStore.id,
-        name: userStore.name,
-        phonenumber: userStore.phonenumber,
-        email: userStore.email,
-        p_job: userStore.p_job,
-        p_class: userStore.p_class,
-        p_career: userStore.p_career,
-        p_location: userStore.p_location,
-        addr: userStore.addr
-    });
+    const [title, setTitle] = useState('');
+
 
     const handleWorklistChange = (selectedJob) => {
         setJob(selectedJob);
@@ -48,6 +39,8 @@ export default function Resume_insert() {
 
     useEffect(() => {
         async function fetchData() {
+            console.log("현재아이디"+userStore.u_idx)
+    console.log("현재아이디"+userStore.id)
             try {
                 const selfProfileResponse = await axios.get(`/mypage/selfprofile?id=${userStore.id}`);
                 
@@ -56,11 +49,6 @@ export default function Resume_insert() {
                 } else {
                     const selfProfileData = selfProfileResponse.data[0];
                     userStore.setAddr(selfProfileData.addr);
-                    userStore.setP_job(selfProfileData.p_job);
-                    userStore.setP_class(selfProfileData.p_class);
-                    userStore.setP_career(selfProfileData.p_career);
-                    userStore.setP_location(selfProfileData.p_location);
-                    setDefaultValues(selfProfileData);
                 }
                 setLoading(false);
             } catch (error) {
@@ -72,13 +60,7 @@ export default function Resume_insert() {
         fetchData();
     }, [userStore]);
 
-    const setDefaultValues = (selfProfileData) => {
-        setLocation(selfProfileData.p_location);
-        setJob(selfProfileData.p_job);
-        setClassInfo(selfProfileData.p_class);
-        setCareer(selfProfileData.p_career);
-        setSelfIntroduction(selfProfileData.field);
-    };
+    
 
     const handleMenuClick = (menu) => {
         menuStore.setSelectedMenu(menu);
@@ -86,11 +68,12 @@ export default function Resume_insert() {
 
     const handleSaveChanges = async () => {
         try {
+            
             // 서버에 수정된 데이터 저장 로직
             const response = await axios.post(
                 'http://localhost:8080/introduce/insert',
                 {
-                    u_idx: userStore.u_idx,
+                    id: userStore.id,
                     location: location,
                     job: job,
                     class: classInfo,
@@ -118,7 +101,12 @@ export default function Resume_insert() {
         <>
             <div className='profile_con'>
                 <h2 className='mymaintext'>이력서 작성</h2>
-                <p><input type="text"  style={{border:"1px solid blue"}}/></p>
+                <p><input 
+                    type="text" 
+                    style={{border:"1px solid blue"}}
+                    value={title} // 상태 변수와 바인딩
+                    onChange={(e) => setTitle(e.target.value)} // 변경 이벤트 핸들러 추가
+                /></p>
                 <div className='profile'>
                     <h3>인적사항</h3>
                     <table className='profile_t'>
@@ -134,10 +122,10 @@ export default function Resume_insert() {
                 <h3>희망 근무조건</h3>
                     <table className='profile_t'>
                         <tbody>
-                                <tr><th>근무지</th><td><Local2 uvo={uvo} handleLocationlistChange={handleLocationlistChange} /></td></tr>
-                                <tr><th>업종</th><td><Worklist2 uvo={uvo} handleWorklistChange={handleWorklistChange} /></td></tr>
-                                <tr><th>학력</th><td><Schoollist2 uvo={uvo} handleSchoollistChange={handleSchoollistChange} /></td></tr>
-                                <tr><th>경력</th><td><Experience2 uvo={uvo} handleCareerlistChange={handleCareerlistChange} /></td></tr>
+                                <tr><th>근무지</th><td><Local2  handleLocationlistChange={handleLocationlistChange} /></td></tr>
+                                <tr><th>업종</th><td><Worklist2  handleWorklistChange={handleWorklistChange} /></td></tr>
+                                <tr><th>학력</th><td><Schoollist2 handleSchoollistChange={handleSchoollistChange} /></td></tr>
+                                <tr><th>경력</th><td><Experience2 handleCareerlistChange={handleCareerlistChange} /></td></tr>
                         </tbody>
                     </table>
                 </div>
