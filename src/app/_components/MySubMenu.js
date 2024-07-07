@@ -23,7 +23,7 @@ export default function MySubmenu({handleMenuClick}) {
           onClick={() => handleMenuClick("resume")}
           className="block px-4 py-2 hover:bg-primary-100"
         >
-          이력서
+          이력서 관리
         </div>
       </li>
       <li className="whitespace-nowrap">

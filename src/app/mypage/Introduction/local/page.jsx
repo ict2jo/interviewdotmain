@@ -5,6 +5,7 @@ import FormControl from '@mui/material/FormControl';
 import Select from '@mui/material/Select';
 import InputLabel from '@mui/material/InputLabel';
 import { Typography } from '@mui/material';
+import { useEffect } from 'react';
 
 const ITEM_HEIGHT = 28;
 const ITEM_PADDING_TOP = 2;
@@ -24,13 +25,18 @@ const local = [
   '전북', '제주', '세종', '해외',
 ];
 
-export default function Local2({handleLocationlistChange }) {
-  const [location, setLocation] = React.useState([]);
+export default function Local2({location, handleLocationlistChange }) {
+  const [selectedLocation, setSelectedLocation] = React.useState([]);
 
+  useEffect(() => {
+    if (location) {
+      setSelectedLocation(location.split(','));
+    }
+  }, [location]);
 
   const handleChange = (event) => {
     const { value } = event.target;
-    setLocation(value);
+    setSelectedLocation(value);
     handleLocationlistChange(value.join(',').replace(/^,/, ''));
   };
 
@@ -41,7 +47,7 @@ export default function Local2({handleLocationlistChange }) {
         labelId="demo-multiple-name-label"
         id="local-select"
         multiple
-        value={location}
+        value={selectedLocation}
         onChange={handleChange}
         input={<OutlinedInput label="location" />}
         MenuProps={MenuProps}

@@ -4,6 +4,7 @@ import MenuItem from '@mui/material/MenuItem';
 import FormControl from '@mui/material/FormControl';
 import Select from '@mui/material/Select';
 import InputLabel from '@mui/material/InputLabel';
+import { useEffect } from 'react';
 
 const ITEM_HEIGHT = 28;
 const ITEM_PADDING_TOP = 2;
@@ -26,15 +27,19 @@ const schoollist = [
   '박사',
 ];
 
-export default function Schoollist2({ handleSchoollistChange }) {
-  const [classInfo, setClassInfo] = React.useState([]);
+export default function Schoollist2({ classInfo, handleSchoollistChange }) {
+  const [selectedClassInfo, setSelectedClassInfo] = React.useState([]);
 
-
+  useEffect(() => {
+    if (classInfo) {
+      setSelectedClassInfo(classInfo.split(','));
+    }
+  }, [classInfo]);
 
   const handleChange = (event) => {
     const { value } = event.target;
-    setClassInfo(value);
-    handleSchoollistChange(value.join(',').replace(/^,/, '')); 
+    setSelectedClassInfo(value);
+    handleSchoollistChange(value.join(',').replace(/^,/, ''));
   };
 
   return (
@@ -44,7 +49,7 @@ export default function Schoollist2({ handleSchoollistChange }) {
         labelId="demo-multiple-name-label"
         id="demo-multiple-name"
         multiple
-        value={classInfo}
+        value={selectedClassInfo}
         onChange={handleChange}
         input={<OutlinedInput label="classInfo" />}
         MenuProps={MenuProps}

@@ -8,6 +8,7 @@ import SchoolIcon from '@mui/icons-material/School';
 import BusinessCenterIcon from '@mui/icons-material/BusinessCenter';
 import PlaceIcon from '@mui/icons-material/Place';
 import BuildIcon from '@mui/icons-material/Build';
+import AddIcon from '@mui/icons-material/Add';
 
 export default function Resume() {
     const menuStore = useContext(MenuContext);
@@ -51,6 +52,30 @@ export default function Resume() {
     const handleMenuClick2 = (menu) => {
         menuStore.setSelectedMenu(menu);
     };
+
+
+    const handleDelete = async (resumeIdx) => {
+        if (confirm('해당 이력서를 삭제하시겠습니까?')) {
+            try {
+                const response = await axios.post(
+                    'http://localhost:8080/introduce/re_delete',
+                    {
+                        u_idx: userStore.u_idx,
+                        resume_idx: resumeIdx
+                    }
+                );
+
+                if (response.status === 200) {
+                    alert('이력서가 삭제되었습니다.');
+                    setResume(resume.filter(item => item.resume_idx !== resumeIdx));
+                } else {
+                    throw new Error(response.data.error || `Request failed with status ${response.status}`);
+                }
+            } catch (error) {
+                alert("이력서 삭제 중 오류가 발생했습니다.");
+            }
+        }
+    };
     
 
     if (loading) {
@@ -60,7 +85,7 @@ export default function Resume() {
     return (
         <>
             <div className='resume_con'>
-                <h1>이력서 관리</h1>
+                <h1>나의 이력서</h1>
                 {resume.map((item) => (
                     <div className='resume_card' key={item.resume_idx}>
                         <table className='resume_t'>
@@ -70,16 +95,25 @@ export default function Resume() {
                                 <tr><td><SchoolIcon /> {item.classInfo}</td><td><BusinessCenterIcon /> {item.career}</td></tr>
                             </tbody>
                         </table>
+                        <div className="button_group">
                         <Button
                             variant="outlined"
+                            onClick={() => handleDelete(item.resume_idx)}
+                            className="edit_button"
+                        >
+                            삭제하기
+                        </Button>
+                        <Button
+                            variant="contained"
                             onClick={() => handleMenuClick("intoduction", item.resume_idx, item)}
                             className="edit_button"
                         >
                             수정하기
                         </Button>
                     </div>
+                </div>
                 ))}
-                <Button variant="contained" onClick={() => handleMenuClick2("resume_insert")} className="write_button">작성하기</Button>
+                <Button variant="contained" onClick={() => handleMenuClick2("resume_insert")} className="write_button"><AddIcon /></Button>
             </div>
         </>
     );

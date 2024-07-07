@@ -5,6 +5,7 @@ import FormControl from '@mui/material/FormControl';
 import Select from '@mui/material/Select';
 import InputLabel from '@mui/material/InputLabel';
 import { Typography } from '@mui/material';
+import { useEffect } from 'react';
 
 const ITEM_HEIGHT = 28;
 const ITEM_PADDING_TOP = 2;
@@ -24,14 +25,20 @@ const experience = [
   '외국인 전형',
 ];
 
-export default function Experience2({ handleCareerlistChange }) {
-  const [career, setCareer] = React.useState([]);
- 
+export default function Experience2({ career, handleCareerlistChange }) {
+  const [selectedCareer, setSelectedCareer] = React.useState([]);;
+
+  useEffect(() => {
+    if (career) {
+      setSelectedCareer(career.split(','));
+    }
+  }, [career]);
+
 
   const handleChange = (event) => {
     const { value } = event.target;
-    setCareer(value);
-    handleCareerlistChange(value.join(',').replace(/^,/, '')); 
+    setSelectedCareer(value);
+    handleCareerlistChange(value.join(',').replace(/^,/, ''));
   };
 
   return (
@@ -40,7 +47,7 @@ export default function Experience2({ handleCareerlistChange }) {
       <Select
         labelId="experience-label"
         id="experience-select"
-        value={career}
+        value={selectedCareer}
         multiple
         onChange={handleChange}
         input={<OutlinedInput label="career" />}

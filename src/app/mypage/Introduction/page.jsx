@@ -8,6 +8,11 @@ import Local2 from './local/page';
 import Worklist2 from './worklist/page';
 import Schoollist2 from './school/page';
 import Experience3 from './experience/page';
+import PersonRoundedIcon from '@mui/icons-material/PersonRounded';
+import CakeRoundedIcon from '@mui/icons-material/CakeRounded';
+import EmailRoundedIcon from '@mui/icons-material/EmailRounded';
+import PhoneAndroidRoundedIcon from '@mui/icons-material/PhoneAndroidRounded';
+import HomeRoundedIcon from '@mui/icons-material/HomeRounded';
 
 export default function Introduction() {
     const menuStore = useContext(MenuContext);
@@ -47,33 +52,39 @@ export default function Introduction() {
                 location: userStore.location,
                 addr: userStore.addr
             });
-            setLoading(false);
         };
+
+        
         fetchData();
-    }, []);
+
+    }, [resumeIdx, userStore]);
+
 
 
     const handleWorklistChange = (selectedJob) => {
-        setUvo({ job: selectedJob });
+        setJob(selectedJob);
+        setUvo({ ...uvo, job: selectedJob });
     };
 
     const handleSchoollistChange = (selectedClass) => {
-        setUvo({ classInfo: selectedClass });
+        setClassInfo(selectedClass);
+        setUvo({ ...uvo, classInfo: selectedClass });
     };
 
     const handleCareerlistChange = (selectedCareer) => {
-        setUvo({ career: selectedCareer });
+        setCareer(selectedCareer);
+        setUvo({ ...uvo, career: selectedCareer });
     };
 
     const handleLocationlistChange = (selectedLocation) => {
-        setUvo({ location: selectedLocation });
+        setLocation(selectedLocation);
+        setUvo({ ...uvo, location: selectedLocation });
     };
 
 
     // MenuContext에서 selectedResumeData 가져오기
     useEffect(() => {
         const selectedResumeData = menuStore.selectedResumeData;
-
         if (selectedResumeData) {
             setLocation(selectedResumeData.location);
             setJob(selectedResumeData.job);
@@ -82,6 +93,7 @@ export default function Introduction() {
             setSelfIntroduction(selectedResumeData.content);
             setTitle(selectedResumeData.title);
             setResumeIdx(selectedResumeData.resume_idx);
+            console.log("셀렉트아이디2 " + resumeIdx);
         }
 
         setLoading(false);
@@ -89,23 +101,22 @@ export default function Introduction() {
 
 
 
-
     const handleMenuClick = (menu) => {
         menuStore.setSelectedMenu(menu);
     };
 
-    // 제목 수정 처리
+    // 제목 수정 
     const handleTitleChange = (event) => {
         setTitle(event.target.value);
     };
 
-    // 자기소개서 수정 처리
+    // 자기소개서 수정 
     const handleSelfIntroductionChange = (event) => {
         setSelfIntroduction(event.target.value);
     };
 
-    // 서버에 수정된 데이터 저장 로직
-    const handleSaveChanges = async () => {
+    // 이력서 수정 서버
+    const handleSaveChanges = async (menu) => {
         try {
             const response = await axios.post(
                 'http://localhost:8080/introduce/re_update',
@@ -121,13 +132,13 @@ export default function Introduction() {
                 });
 
             if (response.status === 200) {
-                alert('자기소개서가 성공적으로 저장되었습니다.');
+                alert('이력서가 성공적으로 저장되었습니다.');
+                menuStore.setSelectedMenu(menu);
             } else {
                 throw new Error(response.data.error || `Request failed with status ${response.status}`);
             }
         } catch (error) {
-            alert("데이터 수정 중 오류가 발생했습니다.");
-            console.error("데이터 수정 중 오류가 발생했습니다:", error);
+            alert("이력서 수정 중 오류가 발생했습니다.");
         }
     };
 
@@ -135,12 +146,13 @@ export default function Introduction() {
         return <CircularProgress />;
     }
 
+    // 자기소개서 피드백 받기
     const handleFeedbackClick = () => {
         menuStore.setSelectedResumeData({
             content: selfIntroduction,
-            resume_idx: resumeIdx
+            resume_idx: resumeIdx,
         });
-        handleMenuClick("verification"); // 예시로, 다른 메뉴를 설정합니다.
+        handleMenuClick("verification");
     };
 
     return (
@@ -153,9 +165,9 @@ export default function Introduction() {
                     <h3>인적사항</h3>
                     <table className='profile_t'>
                         <tbody>
-                            <tr><td>ㅇ {userStore.name}</td><td>ㅇ {userStore.birth}</td></tr>
-                            <tr><td>ㅇ {userStore.email}</td><td>ㅇ {userStore.phonenumber}</td></tr>
-                            <tr><td colSpan="2">ㅇ {userStore.addr}</td></tr>
+                            <tr><td><PersonRoundedIcon /> &nbsp; {userStore.name}</td><td><CakeRoundedIcon /> &nbsp; {userStore.birth}</td></tr>
+                            <tr><td><EmailRoundedIcon/> &nbsp; {userStore.email}</td><td><PhoneAndroidRoundedIcon /> &nbsp; {userStore.phonenumber}</td></tr>
+                            <tr><td colSpan="2"><HomeRoundedIcon /> &nbsp; {userStore.addr}</td></tr>
                         </tbody>
                     </table>
                 </div>
@@ -164,10 +176,10 @@ export default function Introduction() {
                 <h3>희망 근무조건</h3>
                     <table className='profile_t'>
                         <tbody>
-                                <tr><th>근무지</th><td><Local2 handleLocationlistChange={handleLocationlistChange} /></td></tr>
-                                <tr><th>업종</th><td><Worklist2 handleWorklistChange={handleWorklistChange} /></td></tr>
-                                <tr><th>학력</th><td><Schoollist2 handleSchoollistChange={handleSchoollistChange} /></td></tr>
-                                <tr><th>경력</th><td><Experience3 handleCareerlistChange={handleCareerlistChange} /></td></tr>
+                                <tr><th>근무지</th><td><Local2 location={location} handleLocationlistChange={handleLocationlistChange} /></td></tr>
+                                <tr><th>업종</th><td><Worklist2 job={job}  handleWorklistChange={handleWorklistChange} /></td></tr>
+                                <tr><th>학력</th><td><Schoollist2 classInfo={classInfo} handleSchoollistChange={handleSchoollistChange} /></td></tr>
+                                <tr><th>경력</th><td><Experience3 career={career} handleCareerlistChange={handleCareerlistChange} /></td></tr>
                         </tbody>
                     </table>
                 </div>
@@ -183,7 +195,7 @@ export default function Introduction() {
 
                 <div className='mybut'>
                     <Button variant="outlined" onClick={() => handleMenuClick("resume")}>뒤로가기</Button>
-                    <Button variant="contained" onClick={handleSaveChanges}>저장하기</Button>
+                    <Button variant="contained" onClick={() => handleSaveChanges("resume")}>저장하기</Button>
                     <Button variant="contained" onClick={handleFeedbackClick }>자기소개서 피드백 받기</Button>
 
                 </div>
