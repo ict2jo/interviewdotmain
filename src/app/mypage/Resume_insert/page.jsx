@@ -40,7 +40,7 @@ export default function Resume_insert() {
     useEffect(() => {
         async function fetchData() {
             console.log("현재아이디"+userStore.u_idx)
-    console.log("현재아이디"+userStore.id)
+            console.log("현재아이디"+userStore.id)
             try {
                 const selfProfileResponse = await axios.get(`/mypage/selfprofile?id=${userStore.id}`);
                 
@@ -73,10 +73,10 @@ export default function Resume_insert() {
             const response = await axios.post(
                 'http://localhost:8080/introduce/insert',
                 {
-                    id: userStore.id,
+                    u_idx: userStore.u_idx,
                     location: location,
                     job: job,
-                    class: classInfo,
+                    classInfo: classInfo,
                     career: career,
                     content: selfIntroduction,
                     title: title

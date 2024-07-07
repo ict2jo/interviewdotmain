@@ -7,7 +7,7 @@ import axios from 'axios';
 import Local2 from './local/page';
 import Worklist2 from './worklist/page';
 import Schoollist2 from './school/page';
-import Experience2 from './experience/page';
+import Experience3 from './experience/page';
 
 export default function Introduction() {
     const menuStore = useContext(MenuContext);
@@ -17,85 +17,107 @@ export default function Introduction() {
     const [classInfo, setClassInfo] = useState('');
     const [career, setCareer] = useState('');
     const [selfIntroduction, setSelfIntroduction] = useState('');
+    const [title, setTitle] = useState('');
+    const [resumeIdx, setResumeIdx] = useState('');
     const [uvo, setUvo] = useState({
         u_idx: userStore.u_idx,
         id: userStore.id,
         name: userStore.name,
         phonenumber: userStore.phonenumber,
         email: userStore.email,
-        p_job: userStore.p_job,
-        p_class: userStore.p_class,
-        p_career: userStore.p_career,
-        p_location: userStore.p_location,
+        job: userStore.job,
+        classInfo: userStore.classInfo,
+        career: userStore.career,
+        location: userStore.location,
         addr: userStore.addr
     });
 
+    useEffect(() => {
+        const fetchData = async () => {
+            await userStore.loadUserFromServer();
+            setUvo({
+                u_idx: userStore.u_idx,
+                id: userStore.id,
+                name: userStore.name,
+                phonenumber: userStore.phonenumber,
+                email: userStore.email,
+                job: userStore.job,
+                classInfo: userStore.classInfo,
+                career: userStore.career,
+                location: userStore.location,
+                addr: userStore.addr
+            });
+            setLoading(false);
+        };
+        fetchData();
+    }, []);
+
+
     const handleWorklistChange = (selectedJob) => {
-        setJob(selectedJob);
+        setUvo({ job: selectedJob });
     };
 
     const handleSchoollistChange = (selectedClass) => {
-        setClassInfo(selectedClass);
+        setUvo({ classInfo: selectedClass });
     };
 
     const handleCareerlistChange = (selectedCareer) => {
-        setCareer(selectedCareer);
+        setUvo({ career: selectedCareer });
     };
 
     const handleLocationlistChange = (selectedLocation) => {
-        setLocation(selectedLocation);
+        setUvo({ location: selectedLocation });
     };
 
+
+    // MenuContext에서 selectedResumeData 가져오기
     useEffect(() => {
-        async function fetchData() {
-            try {
-                const selfProfileResponse = await axios.get(`/mypage/selfprofile?id=${userStore.id}`);
-                
-                if (selfProfileResponse.data.length === 0) {
-                    await axios.post(`/mypage/selfprofileinsert?u_idx=${userStore.u_idx}`);
-                } else {
-                    const selfProfileData = selfProfileResponse.data[0];
-                    userStore.setAddr(selfProfileData.addr);
-                    userStore.setP_job(selfProfileData.p_job);
-                    userStore.setP_class(selfProfileData.p_class);
-                    userStore.setP_career(selfProfileData.p_career);
-                    userStore.setP_location(selfProfileData.p_location);
-                    setDefaultValues(selfProfileData);
-                }
-                setLoading(false);
-            } catch (error) {
-                alert("데이터를 가져오는 중 오류가 발생했습니다.");
-                setLoading(false);
-            }
-        }
-        
-        fetchData();
-    }, [userStore]);
+        const selectedResumeData = menuStore.selectedResumeData;
 
-    const setDefaultValues = (selfProfileData) => {
-        setLocation(selfProfileData.p_location);
-        setJob(selfProfileData.p_job);
-        setClassInfo(selfProfileData.p_class);
-        setCareer(selfProfileData.p_career);
-        setSelfIntroduction(selfProfileData.field);
-    };
+        if (selectedResumeData) {
+            setLocation(selectedResumeData.location);
+            setJob(selectedResumeData.job);
+            setClassInfo(selectedResumeData.classInfo);
+            setCareer(selectedResumeData.career);
+            setSelfIntroduction(selectedResumeData.content);
+            setTitle(selectedResumeData.title);
+            setResumeIdx(selectedResumeData.resume_idx);
+        }
+
+        setLoading(false);
+    }, [menuStore.selectedResumeData]);
+
+
+
 
     const handleMenuClick = (menu) => {
         menuStore.setSelectedMenu(menu);
     };
 
+    // 제목 수정 처리
+    const handleTitleChange = (event) => {
+        setTitle(event.target.value);
+    };
+
+    // 자기소개서 수정 처리
+    const handleSelfIntroductionChange = (event) => {
+        setSelfIntroduction(event.target.value);
+    };
+
+    // 서버에 수정된 데이터 저장 로직
     const handleSaveChanges = async () => {
         try {
-            // 서버에 수정된 데이터 저장 로직
             const response = await axios.post(
-                'http://localhost:8080/introduce/update',
+                'http://localhost:8080/introduce/re_update',
                 {
                     u_idx: userStore.u_idx,
-                    p_location: location,
-                    p_job: job,
-                    p_class: classInfo,
-                    p_career: career,
-                    selfIntroduction: selfIntroduction
+                    resume_idx: resumeIdx,
+                    location: location,
+                    job: job,
+                    classInfo: classInfo,
+                    career: career,
+                    content: selfIntroduction,
+                    title: title
                 });
 
             if (response.status === 200) {
@@ -113,10 +135,20 @@ export default function Introduction() {
         return <CircularProgress />;
     }
 
+    const handleFeedbackClick = () => {
+        menuStore.setSelectedResumeData({
+            content: selfIntroduction,
+            resume_idx: resumeIdx
+        });
+        handleMenuClick("verification"); // 예시로, 다른 메뉴를 설정합니다.
+    };
+
     return (
         <>
             <div className='profile_con'>
-                <h2 className='mymaintext'>이력서</h2>
+                <h2 className='mymaintext'>이력서 수정</h2>
+                <p><input type="text" value={title} onChange={handleTitleChange} /></p>
+
                 <div className='profile'>
                     <h3>인적사항</h3>
                     <table className='profile_t'>
@@ -132,10 +164,10 @@ export default function Introduction() {
                 <h3>희망 근무조건</h3>
                     <table className='profile_t'>
                         <tbody>
-                                <tr><th>근무지</th><td><Local2 uvo={uvo} handleLocationlistChange={handleLocationlistChange} /></td></tr>
-                                <tr><th>업종</th><td><Worklist2 uvo={uvo} handleWorklistChange={handleWorklistChange} /></td></tr>
-                                <tr><th>학력</th><td><Schoollist2 uvo={uvo} handleSchoollistChange={handleSchoollistChange} /></td></tr>
-                                <tr><th>경력</th><td><Experience2 uvo={uvo} handleCareerlistChange={handleCareerlistChange} /></td></tr>
+                                <tr><th>근무지</th><td><Local2 handleLocationlistChange={handleLocationlistChange} /></td></tr>
+                                <tr><th>업종</th><td><Worklist2 handleWorklistChange={handleWorklistChange} /></td></tr>
+                                <tr><th>학력</th><td><Schoollist2 handleSchoollistChange={handleSchoollistChange} /></td></tr>
+                                <tr><th>경력</th><td><Experience3 handleCareerlistChange={handleCareerlistChange} /></td></tr>
                         </tbody>
                     </table>
                 </div>
@@ -144,7 +176,7 @@ export default function Introduction() {
                 <h3>자기소개서</h3>
                     <table className='profile_t'>
                         <tbody>
-                            <tr><td><textarea value={selfIntroduction} onChange={(e) => setSelfIntroduction(e.target.value)} rows={10} /></td></tr>
+                            <tr><td><textarea value={selfIntroduction} onChange={handleSelfIntroductionChange} rows={10} /></td></tr>
                         </tbody>
                     </table>
                 </div>
@@ -152,7 +184,7 @@ export default function Introduction() {
                 <div className='mybut'>
                     <Button variant="outlined" onClick={() => handleMenuClick("resume")}>뒤로가기</Button>
                     <Button variant="contained" onClick={handleSaveChanges}>저장하기</Button>
-                    <Button variant="contained" onClick={() => handleMenuClick("verification")}>자기소개서 피드백 받기</Button>
+                    <Button variant="contained" onClick={handleFeedbackClick }>자기소개서 피드백 받기</Button>
 
                 </div>
             </div>

@@ -26,20 +26,14 @@ const schoollist = [
   '박사',
 ];
 
-export default function Schoollist2({ uvo, handleSchoollistChange }) {
-  const [p_class, setP_class] = React.useState([]);
+export default function Schoollist2({ handleSchoollistChange }) {
+  const [classInfo, setClassInfo] = React.useState([]);
 
-  React.useEffect(() => {
-    if (uvo.p_class) {
-      setP_class(uvo.p_class.split(','));
-    } else {
-      setP_class([]);
-    }
-  }, [uvo.p_class]);
+
 
   const handleChange = (event) => {
     const { value } = event.target;
-    setP_class(value);
+    setClassInfo(value);
     handleSchoollistChange(value.join(',').replace(/^,/, '')); 
   };
 
@@ -50,9 +44,9 @@ export default function Schoollist2({ uvo, handleSchoollistChange }) {
         labelId="demo-multiple-name-label"
         id="demo-multiple-name"
         multiple
-        value={p_class}
+        value={classInfo}
         onChange={handleChange}
-        input={<OutlinedInput label="p_class" />}
+        input={<OutlinedInput label="classInfo" />}
         MenuProps={MenuProps}
       >
         {schoollist.map((k) => (
