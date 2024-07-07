@@ -24,20 +24,13 @@ const local = [
   '전북', '제주', '세종', '해외',
 ];
 
-export default function Local2({handleLocationlistChange, uvo }) {
-  const [p_location, setP_location] = React.useState([]);
-  
-  React.useEffect(() => {
-    if (uvo.p_location) {
-      setP_location(uvo.p_location.split(','));
-    } else {
-      setP_location([]);
-    }
-  }, [uvo.p_location]);
+export default function Local2({handleLocationlistChange }) {
+  const [location, setLocation] = React.useState([]);
+
 
   const handleChange = (event) => {
     const { value } = event.target;
-    setP_location(value);
+    setLocation(value);
     handleLocationlistChange(value.join(',').replace(/^,/, ''));
   };
 
@@ -48,9 +41,9 @@ export default function Local2({handleLocationlistChange, uvo }) {
         labelId="demo-multiple-name-label"
         id="local-select"
         multiple
-        value={p_location}
+        value={location}
         onChange={handleChange}
-        input={<OutlinedInput label="p_location" />}
+        input={<OutlinedInput label="location" />}
         MenuProps={MenuProps}
       >
         {local.map((k) => (

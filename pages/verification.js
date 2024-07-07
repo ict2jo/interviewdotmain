@@ -1,9 +1,10 @@
-import React, { useEffect, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import './verification.css'; 
 import userStore from '@/stores/UserStore';
 import axios from 'axios';
 import menuStore from '@/stores/MenuStore';
 import { Button } from '@mui/material';
+import { MenuContext } from '@/stores/StoreContext';
 
 export default function Verification() {
   const [question, setQuestion] = useState('');
@@ -12,7 +13,19 @@ export default function Verification() {
   const [inputDisabled, setInputDisabled] = useState(false);
   const [loading, setLoading] = useState(false);
   const [loading2, setLoading2] = useState(false);
+  const menuStore = useContext(MenuContext);
+  const [selfIntroduction, setSelfIntroduction] = useState('');
+  const [resumeIdx, setResumeIdx] = useState('');
+  useEffect(() => {
+    const selectedResumeData = menuStore.selectedResumeData;
 
+    if (selectedResumeData) {
+        setSelfIntroduction(selectedResumeData.content);
+        setResumeIdx(selectedResumeData.resume_idx);
+    }
+
+    setLoading(false);
+}, [menuStore.selectedResumeData]);
   const handleCorrection = async () => {
     setLoading(true);
     try {
@@ -21,7 +34,7 @@ export default function Verification() {
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ question: userStore.field, type: 'correction' }),
+        body: JSON.stringify({ question: selfIntroduction, type: 'correction' }),
       });
       
       const data = await response.json();
@@ -48,7 +61,7 @@ export default function Verification() {
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ question: userStore.field, feedback, type: 'rewrite' }),
+        body: JSON.stringify({ question: selfIntroduction, feedback, type: 'rewrite' }),
       });
       
       const data = await response.json();
@@ -72,8 +85,8 @@ export default function Verification() {
       const response = await axios.post(
         'http://localhost:8080/introduce/save',
         {
-          id: userStore.id,
-          correctedEssay: correctedEssay,
+          resume_idx: resumeIdx,
+          content: correctedEssay,
         },
         {
           headers: {
@@ -110,7 +123,7 @@ export default function Verification() {
           <div className="header">자기소개서</div>
           <form className="input-section" onSubmit={(e) => e.preventDefault()}>
             <textarea
-              value={userStore.field}
+              value={selfIntroduction}
               onChange={(e) => setQuestion(e.target.value)}
 
               disabled={inputDisabled || loading}
@@ -171,7 +184,7 @@ export default function Verification() {
       
       {/* 뒤로가기 버튼 */}
       <div className="button-back">
-        <Button onClick={() => handleMenuClick("introduction")} variant="outlined">뒤로가기</Button>
+        <Button onClick={() => handleMenuClick("resume")} variant="outlined">뒤로가기</Button>
       </div>
     </div>
   );

@@ -16,6 +16,10 @@ class UserStore {
   addr = "";
   birth = "";
   active = "";
+  job = "";
+  classInfo = "";
+  career = "";
+  location = "";
 
   constructor() {
     makeAutoObservable(this);
@@ -30,6 +34,7 @@ class UserStore {
   setId(id) {
     this.id = id;
   }
+
   setActive(active) {
     this.active = active;
   }
@@ -69,6 +74,7 @@ class UserStore {
   setAddr(addr) {
     this.addr = addr;
   }
+
   setBirth(birth) {
     this.birth = birth;
   }
@@ -76,7 +82,23 @@ class UserStore {
   setPhonenumber(phonenumber) {
     this.phonenumber = phonenumber;
   }
+  
+  setJob(job) {
+    this.job = job;
+  }
 
+  setClassInfo(classInfo) {
+    this.classInfo = classInfo;
+  }
+
+  setCareer(career) {
+    this.career = career;
+  }
+  
+  setLocation(location) {
+    this.location = location;
+  }
+  
   loadUserFromServer() {
     const token = localStorage.getItem("token");
     let userData;

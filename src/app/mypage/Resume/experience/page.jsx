@@ -6,6 +6,7 @@ import Select from '@mui/material/Select';
 import InputLabel from '@mui/material/InputLabel';
 import { Typography } from '@mui/material';
 
+
 const ITEM_HEIGHT = 28;
 const ITEM_PADDING_TOP = 2;
 const MenuProps = {
@@ -24,19 +25,21 @@ const experience = [
   '외국인 전형',
 ];
 
-export default function Experience2({ uvo, handleCareerlistChange }) {
-  const [p_career, setP_career] = React.useState([]);
+export default function Experience3({ uvo, handleCareerlistChange }) {
+  const [career, setCareer] = React.useState([]);
+
   React.useEffect(() => {
-    if (uvo.p_career) {
-      setP_career(uvo.p_career.split(','));
+    if (uvo.career) {
+      setCareer(uvo.career.split(','));
     } else {
-      setP_career([]);
+      setCareer([]);
     }
-  }, [uvo.p_class]);
+  }, [uvo.class]);
+
 
   const handleChange = (event) => {
     const { value } = event.target;
-    setP_career(value);
+    setCareer(value);
     handleCareerlistChange(value.join(',').replace(/^,/, '')); 
   };
 
@@ -46,10 +49,10 @@ export default function Experience2({ uvo, handleCareerlistChange }) {
       <Select
         labelId="experience-label"
         id="experience-select"
-        value={p_career}
+        value={career}
         multiple
         onChange={handleChange}
-        input={<OutlinedInput label="p_career" />}
+        input={<OutlinedInput label="career" />}
         MenuProps={MenuProps}
       >
         {experience.map((k) => (
