@@ -34,6 +34,15 @@ class AuthStore {
         name: '',
         email: '',
         phonenumber: '',
+        u_idx: '',
+        p_job: '',
+        p_class: '',
+        p_career: '',
+        p_location: '',
+        field: '',
+        addr: '',
+        birth: '',
+        active: '',
         provider: '',
         kakao: '',
         naver: '',
@@ -53,6 +62,16 @@ class AuthStore {
     userStore.setName(userInfo.name);
     userStore.setEmail(userInfo.email);
     userStore.setPhonenumber(userInfo.phonenumber);
+    userStore.setU_idx(userInfo.u_idx);
+    userStore.setP_job(userInfo.p_job);
+    userStore.setP_class(userInfo.p_class);
+    userStore.setP_career(userInfo.p_career);
+    userStore.setP_location(userInfo.p_location);
+    userStore.setField(userInfo.field);
+    userStore.setAddr(userInfo.addr);
+    userStore.setBirth(userInfo.birth);
+    userStore.setActive(userInfo.active);
+
   }
 
   setToken(token) {

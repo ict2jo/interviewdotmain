@@ -13,6 +13,8 @@ import userStore from "@/stores/UserStore";
 import menuStore from "@/stores/MenuStore";
 import dynamic from "next/dynamic";
 import { menu } from "@nextui-org/react";
+import { useHistory } from "react-router-dom";
+import { useRouter } from "next/navigation";
 
 const ReactQuill = dynamic(() => import('react-quill'), { ssr: false });
 
@@ -22,6 +24,7 @@ export default function Review_List_Write() {
     const [r_content, setContent] = useState('');
     const [snackbarOpen, setSnackbarOpen] = useState(false);
     const [snackbarMessage, setSnackbarMessage] = useState('');
+    const router = useRouter();
 
     const name = userStore.name;
 
@@ -96,6 +99,11 @@ export default function Review_List_Write() {
     useEffect(() => {
         console.log('입력 : ', r_content);
     }, [r_content]);
+
+    const handleBackReview = () => {
+        // 이전 페이지로 이동
+        window.history.back();
+    };
 
     return (
         <>

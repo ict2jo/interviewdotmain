@@ -110,6 +110,12 @@ export default function SuccessList() {
 
     const handlePostComment = async () => {
         try {
+
+            // 사용자의 active 상태 확인
+            if(userStore.active === '1'){
+                alert('신고된 사용자는 권한이 없습니다.');
+                return;
+            }
             const response = await axios.post("http://localhost:8080/commentsucc/postcomment", {
                 s_idx: selectedSuccess.s_idx,
                 id: userStore.id,
@@ -128,6 +134,15 @@ export default function SuccessList() {
 
     const handleUpdate = async () => {
         try {
+
+            if(userStore.id !== selectedSuccess.s_id){
+                alert('해당 게시글의 작성자만 수정할 수 있습니다.');
+                return;
+            }
+            if(userStore.active === '1'){
+                alert('신고된 사용자는 수정할 수 없습니다.');
+                return;
+            }
             // 서버에 수정할 내용 전송
             const response = await axios.post("http://localhost:8080/success/updatesuccess", {
                 s_idx: selectedSuccess.s_idx,
@@ -157,6 +172,16 @@ export default function SuccessList() {
 
     const handleDelete = async () => {
         try {
+            // 게시글 작성자인지 확인
+            if(userStore.id !== selectedSuccess.s_id){
+                alert('해당 게시글의 작성자만 삭제할 수 있습니다.');
+                return;
+            }
+            // 사용자의 active 상태 확인
+            if(userStore.active === '1'){
+                alert('신고된 사용자는 삭제할 수 없습니다.');
+                return;
+            }
             // 서버에 삭제할 후기 정보 전송
             const response = await axios.post("http://localhost:8080/success/deletesuccess", {
                 s_idx: selectedSuccess.s_idx,
@@ -197,6 +222,18 @@ export default function SuccessList() {
 
     const handleDeleteComment = async (su_idx) => {
         try {
+            const commentToDelete = comments.find(comment => comment.su_idx === su_idx);
+            if (commentToDelete.id !== userStore.id) {
+                alert('해당 댓글의 작성자만 삭제할 수 있습니다.');
+                return;
+            }
+    
+            // 사용자의 active 상태 확인
+            if (userStore.active === '1') {
+                alert('신고된 사용자는 댓글을 삭제할 수 없습니다.');
+                return;
+            }
+
             const response = await axios.post("http://localhost:8080/commentsucc/deletecomment", {
                 su_idx: su_idx,
             })
@@ -227,12 +264,16 @@ export default function SuccessList() {
     };
 
     const handleMenuClick = async (menu) => {
-        menuStore.setSelectedMenu(menu);
         if (!userStore.id) {
             alert("로그인 후에 작성할 수 있습니다.");
             menuStore.setSelectedMenu("login");
             return;
         }
+        if(userStore.active === '1'){
+            alert('신고된 사용자는 권한이 없습니다.');
+            return;
+        }
+        menuStore.setSelectedMenu(menu);
         handleCloseDialog();
     };
 
@@ -242,6 +283,10 @@ export default function SuccessList() {
 
     const handleReportReview = async () => {
         try {
+            if(userStore.active === '1'){
+                alert("신고된 사용자는 권한이 없습니다.");
+                return;
+            }
             const response = await axios.post("http://localhost:8080/reportsucc/reportinsert", {
                 u_idx: selectedSuccess.u_idx,
                 u2_idx: userStore.u_idx,
