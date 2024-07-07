@@ -29,17 +29,14 @@ const worklist = [
     '영업판매',
 ];
 
-export default function Worklist2({ uvo, handleWorklistChange }) {
-    const [p_job, setP_job] = React.useState([]);
+export default function Worklist2({ handleWorklistChange }) {
+    const [job, setJob] = React.useState([]);
 
-    React.useEffect(() => {
-        setP_job(uvo.p_job ? uvo.p_job.split(',') : []);
-    }, [uvo.p_job]);
 
     const handleChange = (event) => {
         const { value } = event.target;
 
-        setP_job(value);
+        setJob(value);
         handleWorklistChange(value.join(','));
     };
 
@@ -50,9 +47,9 @@ export default function Worklist2({ uvo, handleWorklistChange }) {
                 labelId="demo-multiple-name-label"
                 id="demo-multiple-name"
                 multiple
-                value={p_job}
+                value={job}
                 onChange={handleChange}
-                input={<OutlinedInput label="p_job" />}
+                input={<OutlinedInput label="job" />}
                 MenuProps={MenuProps}
             >
                 {worklist.map((work) => (

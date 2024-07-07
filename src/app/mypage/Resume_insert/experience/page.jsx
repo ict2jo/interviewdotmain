@@ -24,19 +24,13 @@ const experience = [
   '외국인 전형',
 ];
 
-export default function Experience2({ uvo, handleCareerlistChange }) {
-  const [p_career, setP_career] = React.useState([]);
-  React.useEffect(() => {
-    if (uvo.p_career) {
-      setP_career(uvo.p_career.split(','));
-    } else {
-      setP_career([]);
-    }
-  }, [uvo.p_class]);
+export default function Experience2({ handleCareerlistChange }) {
+  const [career, setCareer] = React.useState([]);
+ 
 
   const handleChange = (event) => {
     const { value } = event.target;
-    setP_career(value);
+    setCareer(value);
     handleCareerlistChange(value.join(',').replace(/^,/, '')); 
   };
 
@@ -46,10 +40,10 @@ export default function Experience2({ uvo, handleCareerlistChange }) {
       <Select
         labelId="experience-label"
         id="experience-select"
-        value={p_career}
+        value={career}
         multiple
         onChange={handleChange}
-        input={<OutlinedInput label="p_career" />}
+        input={<OutlinedInput label="career" />}
         MenuProps={MenuProps}
       >
         {experience.map((k) => (
