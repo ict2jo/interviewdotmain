@@ -19,6 +19,16 @@
     margin-bottom: 30px;
 }
 
+.profile_con input {
+    width: 100%;
+    font-size: 30px;
+    font-weight: bold;
+    margin: 30px 0px;
+    border: 2px solid blue;
+    border-radius: 10px;
+    padding: 5px;
+}
+
 .profile_con h3 {
     width: 100%;
     border-bottom: 2px solid blue;
@@ -34,7 +44,7 @@
 
 .profile{
     width: 100%;
-    margin: 10px 0 ;
+    margin: 10px 0px 60px;
     text-align: left;
     border-radius: 10px;
 }
@@ -55,13 +65,6 @@
     border: 1px solid lightgray;
 }
 
-.profile_t th{
-    width: 10%;
-}
-
-.profile_t td{
-    width: 30%;
-}
 
 .profile_t textarea {
 width: 100%;
