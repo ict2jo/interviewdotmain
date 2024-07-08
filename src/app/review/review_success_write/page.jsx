@@ -12,6 +12,7 @@ import axios from 'axios';
 import userStore from '@/stores/UserStore';
 import menuStore from '@/stores/MenuStore';
 import dynamic from 'next/dynamic'; // Next.js에서 동적으로 컴포넌트를 불러오기 위해 필요
+import { useRouter } from 'next/navigation';
 
 // Quill 에디터를 동적으로 import하여 서버 사이드 렌더링 문제를 피합니다
 const ReactQuill = dynamic(() => import('react-quill'), { ssr: false });
@@ -23,6 +24,7 @@ export default function Review_Success_Write() {
     const [snackbarOpen, setSnackbarOpen] = useState(false);
     const [snackbarMessage, setSnackbarMessage] = useState('');
 
+    const router = useRouter();
     const name = userStore.name;
 
      /* useEffect(() => {
@@ -100,6 +102,9 @@ export default function Review_Success_Write() {
         console.log('입력 : ', s_content);
     }, [s_content]) 
 
+    const handleBackReview = () => {
+        menuStore.setSelectedMenu("SuccessList");
+    };
     return (
         <>
             <Container>
@@ -147,7 +152,7 @@ export default function Review_Success_Write() {
                         />
                     </div>
                     <div>
-                        <Button className="write_btn1" variant="contained" sx={{marginBottom:'80px'}} onClick={() => window.history.back()}>목록</Button>
+                        <Button className="write_btn1" variant="contained" sx={{marginBottom:'80px'}} onClick={handleBackReview}>목록</Button>
                         <Button className="write_btn1" variant="contained" sx={{marginBottom:'80px'}} onClick={handleSubmitReview}>작성 완료</Button>
                     </div>
                 </div>
