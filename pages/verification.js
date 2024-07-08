@@ -26,6 +26,8 @@ export default function Verification() {
 
     setLoading(false);
 }, [menuStore.selectedResumeData]);
+
+  // 피드백
   const handleCorrection = async () => {
     setLoading(true);
     try {
@@ -38,14 +40,11 @@ export default function Verification() {
       });
       
       const data = await response.json();
-      
       if (!response.ok) {
         throw new Error(data.error || `Request failed with status ${response.status}`);
       }
-      
       setFeedback(data.answer);
     } catch (error) {
-      console.error('Error:', error);
       alert(error.message);
     } finally {
       setLoading(false);
@@ -53,6 +52,7 @@ export default function Verification() {
     }
   };
 
+  // 예시
   const handleRewrite = async () => {
     setLoading2(true);
     try {
@@ -65,14 +65,11 @@ export default function Verification() {
       });
       
       const data = await response.json();
-      
       if (!response.ok) {
         throw new Error(data.error || `Request failed with status ${response.status}`);
       }
-      
       setCorrectedEssay(data.answer);
     } catch (error) {
-      console.error('Error:', error);
       alert(error.message);
     } finally {
       setLoading2(false);

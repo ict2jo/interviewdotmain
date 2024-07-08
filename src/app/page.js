@@ -129,7 +129,7 @@ function Home() {
         return <SuccessList/>; //면접후기
       case "profile":
         return <Selfprofile />;
-      case "intoduction":
+      case "introduction":
         return <Introduction />;
       case "schedule":
         return <Calendar />;

@@ -15,8 +15,6 @@ export default function Resume() {
     const [loading, setLoading] = useState(true);
     const [resume, setResume] = useState([]);
 
-    
-
     const fetchData = async () => {
         try {
             const response = await axios.get(
@@ -37,6 +35,7 @@ export default function Resume() {
 
 
 
+    // 수정하기 
     const handleMenuClick = (menu, resumeIdx) => {
         const selectedResumeData = resume.find(item => item.resume_idx === resumeIdx);
         if (selectedResumeData) {
@@ -47,7 +46,6 @@ export default function Resume() {
             console.error(`Resume with resume_idx ${resumeIdx} not found.`);
         }
     };
-
 
     const handleMenuClick2 = (menu) => {
         menuStore.setSelectedMenu(menu);
@@ -64,7 +62,7 @@ export default function Resume() {
                         resume_idx: resumeIdx
                     }
                 );
-
+                
                 if (response.status === 200) {
                     alert('이력서가 삭제되었습니다.');
                     setResume(resume.filter(item => item.resume_idx !== resumeIdx));
@@ -105,7 +103,7 @@ export default function Resume() {
                         </Button>
                         <Button
                             variant="contained"
-                            onClick={() => handleMenuClick("intoduction", item.resume_idx, item)}
+                            onClick={() => handleMenuClick("introduction", item.resume_idx, item)}
                             className="edit_button"
                         >
                             수정하기
