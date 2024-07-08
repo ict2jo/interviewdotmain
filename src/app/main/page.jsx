@@ -56,7 +56,8 @@ export default function Main() {
 
     return (
         <>
-            <div className="w-full flex flex-col justify-center items-center mb-20 h-[80vh]">
+            <div className="w-full flex flex-col justify-center items-center mb-20 h-[80vh]"
+                 style={{backgroundColor: 'white'}}>
                 <div className="w-1/3 mt-10">
                     <Image src={bg} className="" alt="background image" />
                 </div>
