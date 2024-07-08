@@ -4,7 +4,6 @@ import MenuItem from '@mui/material/MenuItem';
 import FormControl from '@mui/material/FormControl';
 import Select from '@mui/material/Select';
 import InputLabel from '@mui/material/InputLabel';
-import { Typography } from '@mui/material';
 
 const ITEM_HEIGHT = 28;
 const ITEM_PADDING_TOP = 2;
@@ -26,17 +25,18 @@ const experience = [
 
 export default function Experience({ uvo, handleCareerlistChange }) {
   const [p_career, setP_career] = React.useState([]);
+
   React.useEffect(() => {
-    if (uvo.p_career) {
+    if (uvo && uvo.p_career) {
       setP_career(uvo.p_career.split(','));
     } else {
       setP_career([]);
     }
-  }, [uvo.p_class]);
+  }, [uvo.p_career]);
 
   const handleChange = (event) => {
     const { value } = event.target;
-    setP_career(value);
+    setP_career(typeof value === 'string' ? value.split(',') : value);
     handleCareerlistChange(value.join(',').replace(/^,/, '')); 
   };
 
@@ -49,7 +49,7 @@ export default function Experience({ uvo, handleCareerlistChange }) {
         value={p_career}
         multiple
         onChange={handleChange}
-        input={<OutlinedInput label="p_career" />}
+        input={<OutlinedInput label="경력을 선택하세요" />}
         MenuProps={MenuProps}
       >
         {experience.map((k) => (

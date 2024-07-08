@@ -33,13 +33,15 @@ export default function Worklist({ uvo, handleWorklistChange }) {
     const [p_job, setP_job] = React.useState([]);
 
     React.useEffect(() => {
-        setP_job(uvo.p_job ? uvo.p_job.split(',') : []);
+        if (uvo.p_job) {
+            setP_job(uvo.p_job.split(','));
+        }
     }, [uvo.p_job]);
 
     const handleChange = (event) => {
         const { value } = event.target;
 
-        setP_job(value);
+        setP_job(typeof value === 'string' ? value.split(',') : value);
         handleWorklistChange(value.join(','));
     };
 
@@ -52,7 +54,7 @@ export default function Worklist({ uvo, handleWorklistChange }) {
                 multiple
                 value={p_job}
                 onChange={handleChange}
-                input={<OutlinedInput label="p_job" />}
+                input={<OutlinedInput label="업종을 선택하세요" />}
                 MenuProps={MenuProps}
             >
                 {worklist.map((work) => (
