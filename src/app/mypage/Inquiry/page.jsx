@@ -71,9 +71,9 @@ export default function Inquiry() {
         <TableHead sx={{ borderBottom: '3px solid blue' }}>
           <TableRow>
             <TableCell sx={{ width: '100px', textAlign:'center'}}>No</TableCell>
-            <TableCell sx={{ width: '200px', textAlign:'center' }}>Subject</TableCell>
-            <TableCell sx={{ width: '200px', textAlign:'center' }}>Content</TableCell>
-            <TableCell sx={{ width: '100px', textAlign:'center' }}>Active</TableCell>
+            <TableCell sx={{ width: '200px', textAlign:'center' }}>제목</TableCell>
+            <TableCell sx={{ width: '200px', textAlign:'center' }}>내용</TableCell>
+            <TableCell sx={{ width: '100px', textAlign:'center' }}>답변</TableCell>
           </TableRow>
         </TableHead>
         <TableBody>

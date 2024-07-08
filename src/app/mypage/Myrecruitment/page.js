@@ -4,7 +4,7 @@ import axios from "axios";
 import { useEffect, useState } from "react";
 import './recruitmentlist.css';
 import userStore from "@/stores/UserStore";
-import { CircularProgress, Table, TableBody, TableCell, TableContainer, TableFooter, TableHead, TableRow, Pagination, Button } from "@mui/material";
+import { CircularProgress, Table, TableBody, TableCell, TableContainer, TableFooter, TableHead, TableRow, Pagination, Button, Typography } from "@mui/material";
 import menuStore from "@/stores/MenuStore";
 import StarBorderIcon from '@mui/icons-material/StarBorder';
 import StarIcon from '@mui/icons-material/Star';
@@ -147,11 +147,11 @@ export default function Myrecruitment() {
                             <TableCell sx={{ width: '10px', textAlign: 'center' }}>No</TableCell>
                             <TableCell sx={{ width: '200px', textAlign: 'center' }}>공고제목</TableCell>
                             <TableCell sx={{ width: '100px', textAlign: 'center' }}>회사</TableCell>
-                            <TableCell sx={{ width: '50px', textAlign: 'center' }}>고용유형</TableCell>
-                            <TableCell sx={{ width: '50px', textAlign: 'center' }}>채용유형</TableCell>
-                            <TableCell sx={{ width: '50px', textAlign: 'center' }}>채용인원</TableCell>
-                            <TableCell sx={{ width: '50px', textAlign: 'center' }}>지역</TableCell>
-                            <TableCell sx={{ width: '50px', textAlign: 'center' }}>기간</TableCell>
+                            <TableCell sx={{ width: '60px', textAlign: 'center' }}>고용유형</TableCell>
+                            <TableCell sx={{ width: '60px', textAlign: 'center' }}>채용유형</TableCell>
+                            <TableCell sx={{ width: '60px', textAlign: 'center' }}>채용인원</TableCell>
+                            <TableCell sx={{ width: '60px', textAlign: 'center' }}>지역</TableCell>
+                            <TableCell sx={{ width: '60px', textAlign: 'center' }}>기간</TableCell>
                             <TableCell sx={{ width: '100px', textAlign: 'center' }}>지원하기</TableCell>
                         </TableRow>
                     </TableHead>
@@ -159,29 +159,29 @@ export default function Myrecruitment() {
                         {list.slice((page - 1) * rowsPerPage, (page - 1) * rowsPerPage + rowsPerPage).map((item, index) => (
                             <TableRow key={index}>
                                 <TableCell sx={{ width: '10px', textAlign: 'center' }}>{calculateIndex(page, index)}</TableCell>
-                                <TableCell sx={{ width: '300px', textAlign: 'center' }}>
+                                <TableCell sx={{ width: '200px', textAlign: 'center' }}>
                                     <div style={{display:'flex', itemAlign: 'center'}}>
                                     <p  onClick={() => handleMenuClick(`detail/${item.recrutPblntSn}`)}>{item.recrutPbancTtl}
                                     </p>
                                     {renderStarIcon(item.recrutPblntSn)}
                                         </div>
                                 </TableCell>
-                                <TableCell sx={{ width: '70px', textAlign: 'center' }}>
+                                <TableCell sx={{ width: '100px', textAlign: 'center' }}>
                                     <p>{item.instNm}</p>
                                 </TableCell>
-                                <TableCell sx={{ width: '30px', textAlign: 'center' }} onClick={() => handleMenuClick(`detail/${item.recrutPblntSn}`)}>
+                                <TableCell sx={{ width: '60px', textAlign: 'center' }} onClick={() => handleMenuClick(`detail/${item.recrutPblntSn}`)}>
                                     <p>{item.hireTypeNmLst}</p>
                                 </TableCell>
-                                <TableCell sx={{ width: '30px', textAlign: 'center' }}>
+                                <TableCell sx={{ width: '60px', textAlign: 'center' }}>
                                     <p>{item.recrutSeNm}</p>
                                 </TableCell>
-                                <TableCell sx={{ width: '30px', textAlign: 'center' }}>
+                                <TableCell sx={{ width: '60px', textAlign: 'center' }}>
                                     <p>{item.recrutNope}</p>
                                 </TableCell>
-                                <TableCell sx={{ width: '30px', textAlign: 'center' }}>
+                                <TableCell sx={{ width: '60px', textAlign: 'center' }}>
                                     <p>{item.workRgnNmLst}</p>
                                 </TableCell>
-                                <TableCell sx={{ width: '30px', textAlign: 'center' }}>
+                                <TableCell sx={{ width: '60px', textAlign: 'center' }}>
                                     <p>D-{item.decimalDay}</p>
                                 </TableCell>
                                 <TableCell sx={{ width: '100px', textAlign: 'center' }}>
