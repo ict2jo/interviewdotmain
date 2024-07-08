@@ -62,17 +62,15 @@ export default function Resume_insert() {
         
         fetchData();
     }, [userStore]);
-
     
-
     const handleMenuClick = (menu) => {
         menuStore.setSelectedMenu(menu);
     };
 
+    // 이력서 등록하기
     const handleSaveChanges = async (menu) => {
         try {
             
-            // 서버에 수정된 데이터 저장 로직
             const response = await axios.post(
                 'http://localhost:8080/introduce/insert',
                 {
@@ -84,7 +82,7 @@ export default function Resume_insert() {
                     content: selfIntroduction,
                     title: title
                 });
-
+                
             if (response.status === 200) {
                 alert('이력서가 성공적으로 저장되었습니다.');
                 menuStore.setSelectedMenu(menu);
@@ -146,7 +144,6 @@ export default function Resume_insert() {
                 <div className='mybut'>
                     <Button variant="outlined" onClick={() => handleMenuClick("resume")}>뒤로가기</Button>
                     <Button variant="contained" onClick={() => handleSaveChanges("resume")}>저장하기</Button>
-                    <Button variant="contained" onClick={() => handleMenuClick("verification")}>자기소개서 피드백 받기</Button>
                 </div>
             </div>
         </>

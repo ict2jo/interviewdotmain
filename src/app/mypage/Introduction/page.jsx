@@ -95,9 +95,8 @@ export default function Introduction() {
             setSelfIntroduction(selectedResumeData.content);
             setTitle(selectedResumeData.title);
             setResumeIdx(selectedResumeData.resume_idx);
-            console.log("셀렉트아이디2 " + resumeIdx);
         }
-
+        
         setLoading(false);
     }, [menuStore.selectedResumeData]);
 
@@ -132,7 +131,7 @@ export default function Introduction() {
                     content: selfIntroduction,
                     title: title
                 });
-
+                
             if (response.status === 200) {
                 alert('이력서가 성공적으로 저장되었습니다.');
                 menuStore.setSelectedMenu(menu);

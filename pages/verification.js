@@ -7,21 +7,89 @@ import {Button} from '@mui/material';
 import {MenuContext} from '@/stores/StoreContext';
 
 export default function Verification() {
-    const [question, setQuestion] = useState('');
-    const [feedback, setFeedback] = useState('');
-    const [correctedEssay, setCorrectedEssay] = useState('');
-    const [inputDisabled, setInputDisabled] = useState(false);
-    const [loading, setLoading] = useState(false);
-    const [loading2, setLoading2] = useState(false);
-    const menuStore = useContext(MenuContext);
-    const [selfIntroduction, setSelfIntroduction] = useState('');
-    const [resumeIdx, setResumeIdx] = useState('');
-    useEffect(() => {
-        const selectedResumeData = menuStore.selectedResumeData;
+  const [question, setQuestion] = useState('');
+  const [feedback, setFeedback] = useState('');
+  const [correctedEssay, setCorrectedEssay] = useState('');
+  const [inputDisabled, setInputDisabled] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [loading2, setLoading2] = useState(false);
+  const menuStore = useContext(MenuContext);
+  const [selfIntroduction, setSelfIntroduction] = useState('');
+  const [resumeIdx, setResumeIdx] = useState('');
+  useEffect(() => {
+    const selectedResumeData = menuStore.selectedResumeData;
 
-        if (selectedResumeData) {
-            setSelfIntroduction(selectedResumeData.content);
-            setResumeIdx(selectedResumeData.resume_idx);
+    if (selectedResumeData) {
+        setSelfIntroduction(selectedResumeData.content);
+        setResumeIdx(selectedResumeData.resume_idx);
+    }
+
+    setLoading(false);
+}, [menuStore.selectedResumeData]);
+
+  // 피드백
+  const handleCorrection = async () => {
+    setLoading(true);
+    try {
+      const response = await fetch('/api/generate', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ question: selfIntroduction, type: 'correction' }),
+      });
+      
+      const data = await response.json();
+      if (!response.ok) {
+        throw new Error(data.error || `Request failed with status ${response.status}`);
+      }
+      setFeedback(data.answer);
+    } catch (error) {
+      alert(error.message);
+    } finally {
+      setLoading(false);
+      setInputDisabled(false);
+    }
+  };
+
+  // 예시
+  const handleRewrite = async () => {
+    setLoading2(true);
+    try {
+      const response = await fetch('/api/generate', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ question: selfIntroduction, feedback, type: 'rewrite' }),
+      });
+      
+      const data = await response.json();
+      if (!response.ok) {
+        throw new Error(data.error || `Request failed with status ${response.status}`);
+      }
+      setCorrectedEssay(data.answer);
+    } catch (error) {
+      alert(error.message);
+    } finally {
+      setLoading2(false);
+      setInputDisabled(false);
+    }
+  };
+
+  const handleSave = async (menu) => {
+    try {
+      const response = await axios.post(
+        'http://localhost:8080/introduce/save',
+        {
+          resume_idx: resumeIdx,
+          content: correctedEssay,
+        },
+        {
+          headers: {
+            'Content-Type': 'application/json',
+          },
+
         }
 
         setLoading(false);
