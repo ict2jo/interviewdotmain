@@ -113,7 +113,7 @@ export default function SuccessList() {
 
             // 사용자의 active 상태 확인
             if(userStore.active === '1'){
-                alert('신고된 사용자는 권한이 없습니다.');
+                alert('신고된 사용자는 댓글 작성 권한이 없습니다.');
                 return;
             }
             const response = await axios.post("http://localhost:8080/commentsucc/postcomment", {
@@ -140,7 +140,7 @@ export default function SuccessList() {
                 return;
             }
             if(userStore.active === '1'){
-                alert('신고된 사용자는 수정할 수 없습니다.');
+                alert('신고된 사용자는 게시글을 수정할 수 없습니다.');
                 return;
             }
             // 서버에 수정할 내용 전송
@@ -179,7 +179,7 @@ export default function SuccessList() {
             }
             // 사용자의 active 상태 확인
             if(userStore.active === '1'){
-                alert('신고된 사용자는 삭제할 수 없습니다.');
+                alert('신고된 사용자는 게시글을 삭제할 수 없습니다.');
                 return;
             }
             // 서버에 삭제할 후기 정보 전송
@@ -284,7 +284,7 @@ export default function SuccessList() {
     const handleReportReview = async () => {
         try {
             if(userStore.active === '1'){
-                alert("신고된 사용자는 권한이 없습니다.");
+                alert("신고된 사용자는 신고 권한이 없습니다.");
                 return;
             }
             const response = await axios.post("http://localhost:8080/reportsucc/reportinsert", {

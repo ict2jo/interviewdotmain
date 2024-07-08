@@ -122,7 +122,7 @@ export default function ReviewList() {
             }
 
             if (userStore.active === '1') {
-                alert('신고된 사용자는 수정할 수 없습니다.');
+                alert('신고된 사용자는 게시글을 수정할 수 없습니다.');
                 return;
             }
 
@@ -161,7 +161,7 @@ export default function ReviewList() {
                 return;
             }
             if (userStore.active === '1') {
-                alert('신고된 사용자는 삭제할 수 없습니다.');
+                alert('신고된 사용자는 게시글을 삭제할 수 없습니다.');
                 return;
             }
             // 서버에 삭제할 리뷰 정보 전송
@@ -194,7 +194,7 @@ export default function ReviewList() {
     const handlePostComment = async () => {
         try {
             if (userStore.active === '1') {
-                alert('신고된 사용자는 권한이 없습니다.');
+                alert('신고된 사용자는 댓글 작성 권한이 없습니다.');
                 return;
             }
             const response = await axios.post("http://localhost:8080/comments/postcomment", {
@@ -312,14 +312,13 @@ export default function ReviewList() {
     const handleReportReview = async () => {
         try {
             if(userStore.active === '1'){
-                alert("신고된 사용자는 권한이 없습니다.");
+                alert("신고된 사용자는 신고 권한이 없습니다.");
                 return;
             }
             const response = await axios.post("http://localhost:8080/report/reportinsert", {
                 u_idx: selectedReview.u_idx,
                 u2_idx: userStore.u_idx,
-                r_idx: selectedReview.r_idx,
-                rep_active: "1"
+                r_idx: selectedReview.r_idx
             });
             console.log("리뷰리스트_idx", selectedReview.u_idx),
                 console.log("Review reported:", response.data);
