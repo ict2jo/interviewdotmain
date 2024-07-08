@@ -140,7 +140,7 @@ export default function PayDetail() {
                                             </td>
                                         </tr>
                                         <tr>
-                                            <td>{payment.canceledAt ? payment.canceledAt : <span style={{color: 'white'}}>없음</span>}</td>
+                                            <td>{payment.canceledAt ? payment.canceledAt : <span style={{color: 'white'}}>&nbsp;</span>}</td>
                                         </tr>
                                     </React.Fragment>
                                 ))
