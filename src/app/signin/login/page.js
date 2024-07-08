@@ -94,7 +94,7 @@ const Login = observer(() => {
   }
 
   function handleKakaoLogin() {
-    window.location.href = "http://localhost:8080/oauth2/authorization/kakao"
+    window.location.href = "http://192.168.0.68:8080/oauth2/authorization/kakao"
   }
   function handleNaverLogin() {
     window.location.href = "http://localhost:8080/oauth2/authorization/naver"
