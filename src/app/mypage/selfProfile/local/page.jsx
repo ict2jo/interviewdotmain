@@ -4,7 +4,6 @@ import MenuItem from '@mui/material/MenuItem';
 import FormControl from '@mui/material/FormControl';
 import Select from '@mui/material/Select';
 import InputLabel from '@mui/material/InputLabel';
-import { Typography } from '@mui/material';
 
 const ITEM_HEIGHT = 28;
 const ITEM_PADDING_TOP = 2;
@@ -24,20 +23,20 @@ const local = [
   '전북', '제주', '세종', '해외',
 ];
 
-export default function Local({handleLocationlistChange, uvo }) {
+export default function Local({ handleLocationlistChange, uvo }) {
   const [p_location, setP_location] = React.useState([]);
-  
+
   React.useEffect(() => {
-    if (uvo.p_location) {
+    if (uvo && uvo.p_location) {
       setP_location(uvo.p_location.split(','));
     } else {
       setP_location([]);
     }
-  }, [uvo.p_location]);
+  }, [uvo]);
 
   const handleChange = (event) => {
     const { value } = event.target;
-    setP_location(value);
+    setP_location(typeof value === 'string' ? value.split(',') : value);
     handleLocationlistChange(value.join(',').replace(/^,/, ''));
   };
 

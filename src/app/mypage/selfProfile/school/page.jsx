@@ -39,8 +39,8 @@ export default function Schoollist({ uvo, handleSchoollistChange }) {
 
   const handleChange = (event) => {
     const { value } = event.target;
-    setP_class(value);
-    handleSchoollistChange(value.join(',').replace(/^,/, '')); 
+    setP_class(typeof value === 'string' ? value.split(',') : value);
+    handleSchoollistChange(value.join(',').replace(/^,/, ''));
   };
 
   return (
