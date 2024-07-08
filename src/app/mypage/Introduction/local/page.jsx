@@ -1,3 +1,5 @@
+"use client";
+
 import * as React from 'react';
 import OutlinedInput from '@mui/material/OutlinedInput';
 import MenuItem from '@mui/material/MenuItem';

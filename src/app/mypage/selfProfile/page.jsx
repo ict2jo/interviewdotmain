@@ -1,3 +1,4 @@
+"use client";
 import React, { useEffect, useState } from 'react';
 import './selfprofile.css';
 import { Button, Input, Typography, CircularProgress } from '@mui/material';

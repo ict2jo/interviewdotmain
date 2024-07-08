@@ -1,3 +1,5 @@
+"use client";
+
 import React, { useContext, useEffect, useState } from 'react';
 import './introduction.css';
 import { Button, CircularProgress } from '@mui/material';

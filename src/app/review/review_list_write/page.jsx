@@ -102,7 +102,7 @@ export default function Review_List_Write() {
 
     const handleBackReview = () => {
         // 이전 페이지로 이동
-        window.history.back();
+        menuStore.setSelectedMenu("ReviewList");
     };
 
     return (

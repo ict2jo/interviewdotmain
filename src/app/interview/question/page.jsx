@@ -1,5 +1,5 @@
 "use client";
-import React, {useEffect, useState} from 'react';
+import React, {Suspense, useEffect, useState} from 'react';
 import {observer} from 'mobx-react-lite';
 import './question.css';
 import questionStore from '@/stores/questionStore';
@@ -84,6 +84,7 @@ const Question = observer(() => {
     const paginatedQuestions = questions.slice(startIndex, endIndex);
 
     return (
+        <Suspense fallback={<div>Loading...</div>}>
         <div className="q_container">
             <div className="q_white_box">
                 <div className="q_title">
@@ -128,7 +129,8 @@ const Question = observer(() => {
                 </div>
             </div>
         </div>
-    );
+</Suspense>
+);
 });
 
 export default Question;
